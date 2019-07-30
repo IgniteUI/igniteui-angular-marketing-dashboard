@@ -1,0 +1,63 @@
+igxButton + igxButton {
+  margin-left: 10px;
+}
+
+
+.igx-divider--vertical {
+  width: 2px;
+  height: 3rem;
+  background: white;
+}
+
+.navigation-container {
+  width:60%;
+  margin: 0 auto;
+}
+
+.datePicker-container {
+  display: inline-flex;
+  margin-bottom: 0.8em;
+  margin-right: 4.5rem;
+}
+
+igx-input-group {
+  width: 80px;
+}
+
+.igx-date-picker__input-date {
+  font-size: 0.7em;
+}
+
+.igx-date-picker {
+  width: 10%;
+}
+
+:host ::ng-deep {
+
+  .igx-navbar__left {
+    display: none;
+  }
+
+  .igx-input-group__bundle{
+    padding: 0
+  }
+
+  .igx-navbar{
+    height: 70px;
+  }
+
+  .igx-divider{
+    margin: 5px;
+  }
+
+  .igx-button--flat{
+    color: white;
+  }
+  .igx-divider{
+    margin: 5px !important;
+  }
+}
+
+.logo-container{
+  margin-right: 30px;
+}

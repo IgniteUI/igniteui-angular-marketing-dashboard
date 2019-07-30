@@ -1,0 +1,74 @@
+<div class="navigation-container">
+  <igx-navbar>
+    <span class="logo-container">
+      <img src="../../assets/logo.png" alt="marketing dashboard">
+    </span>
+    <span >
+      {{text1 | uppercase}}
+    </span>
+      <button *ngFor="let range of ranges" (click) = "updateDates(range.text)" igxButton='flat'>{{range.text | uppercase}}</button>
+    <igx-divider [middle]="true" [vertical]="true" type="dotted"></igx-divider>
+    <span>{{text2}}</span>
+    <div class="datePicker-container">
+      <div class="start-ranges">
+          <span>
+              <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown">
+                  <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                      let-displayData="displayData">
+                      <igx-input-group>
+                          <input #dropDownTarget1 class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                          <igx-suffix (click)="openDialog(dropDownTarget1)">
+                              <igx-icon>arrow_drop_down</igx-icon>
+                          </igx-suffix>
+                      </igx-input-group>
+                  </ng-template>
+              </igx-date-picker>
+          </span>
+          <span>
+              <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown">
+                  <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                      let-displayData="displayData">
+                      <igx-input-group>
+                          <input #dropDownTarget2 class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                          <igx-suffix (click)="openDialog(dropDownTarget2)">
+                              <igx-icon>arrow_drop_down</igx-icon>
+                          </igx-suffix>
+                      </igx-input-group>
+                  </ng-template>
+              </igx-date-picker>
+          </span>
+        </div>
+        <span style="margin: 10%">TO</span>
+        <div class="end-ranges">
+            <span>
+                <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                        let-displayData="displayData">
+                        <igx-input-group>
+                            <input #dropDownTarget3 class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                            <igx-suffix (click)="openDialog(dropDownTarget3)">
+                                <igx-icon>arrow_drop_down</igx-icon>
+                            </igx-suffix>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-date-picker>
+            </span>
+            <span>
+                <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                        let-displayData="displayData">
+                        <igx-input-group>
+                            <input #dropDownTarget4 class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                            <igx-suffix (click)="openDialog(dropDownTarget4)">
+                                <igx-icon>arrow_drop_down</igx-icon>
+                            </igx-suffix>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-date-picker>
+            </span>
+        </div>
+      </div>
+
+      <button igxButton>Compare</button>
+  </igx-navbar>
+</div>
