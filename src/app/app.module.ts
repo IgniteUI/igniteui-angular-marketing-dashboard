@@ -4,7 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
-import {IgxNavbarModule, IgxButtonGroupModule, IgxDividerModule, IgxButtonModule, IgxDatePickerModule, IgxInputGroupModule, IgxIconModule} from 'igniteui-angular';
+import {IgxNavbarModule,
+        IgxButtonGroupModule,
+        IgxDividerModule,
+        IgxButtonModule,
+        IgxDatePickerModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        IgxMaskModule} from 'igniteui-angular';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
@@ -22,7 +29,8 @@ import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     IgxDatePickerModule,
     IgxInputGroupModule,
-    IgxIconModule
+    IgxIconModule,
+    IgxMaskModule
   ],
   providers: [FormBuilder],
   bootstrap: [AppComponent]

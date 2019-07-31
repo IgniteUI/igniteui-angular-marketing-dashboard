@@ -1,14 +1,17 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
-import * as moment from 'moment';
+import * as timespan from 'timespan';
 
-const monthsDaysCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-const monthsDaysCountLeapYear = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+export interface IRange {
+  endRangeEnd: Date;
+  endRangeBegin: Date;
+  startRangeBegin: Date;
+  startRangeEnd: Date;
+}
+const ts = new timespan.TimeSpan();
+
 
 export function shuffle(items: any[]): void {
   let count: number = items.length;
-
   while (count > 1) {
-
     count--;
     const rdm = Math.floor(Math.random() * items.length);
 
@@ -20,8 +23,7 @@ export function shuffle(items: any[]): void {
 
 }
 
-function isLeapYear(year)
-{
+function isLeapYear(year) {
   return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 }
 
@@ -38,18 +40,24 @@ export function dateRangeEqualize( startRangeBegin: Date,
 }
 
 
-export function getDays(date: Date, monthsToSubstract: number): number {
-  let monthsDays;
+export function getDateRange(numberOfDays: number): IRange {
 
-  if (isLeapYear(date.getFullYear())) {
-    monthsDays = monthsDaysCountLeapYear;
-  } else {
-    monthsDays = monthsDaysCount;
-  }
+    const dayMiliseconds = 1000 * 60 * 60 * 24;
+    if (!numberOfDays) {
+        numberOfDays = 365;
+    }
 
-  let days = 0;
-  for (let index = date.getMonth() - monthsToSubstract; index < date.getMonth(); index++) {
-    days += monthsDays[index];
-  }
-  return days;
+    const current = new Date();
+
+    const range = {
+        endRangeEnd: current,
+
+        endRangeBegin: new Date(current.getTime() - dayMiliseconds * numberOfDays),
+
+        startRangeBegin: new Date(current.getTime() - dayMiliseconds * numberOfDays * 2),
+
+        startRangeEnd: new Date(current.getTime() - dayMiliseconds * numberOfDays)
+    };
+
+    return range;
 }

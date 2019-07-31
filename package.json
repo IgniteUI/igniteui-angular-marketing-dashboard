@@ -26,8 +26,8 @@
     "igniteui-angular-core": "^8.0.0",
     "jszip": "^3.1.5",
     "minireset.css": "~0.0.4",
-    "moment": "^2.24.0",
     "rxjs": "~6.4.0",
+    "timespan": "^2.3.0",
     "tslib": "^1.9.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.9.1"
