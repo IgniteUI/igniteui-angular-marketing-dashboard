@@ -20,13 +20,8 @@ igxButton + igxButton {
   margin-right: 4.5rem;
 }
 
-igx-input-group {
-  width: 90px;
-}
 
-.igx-date-picker__input-date {
-  font-size: 0.7em;
-}
+
 
 .igx-date-picker {
   width: 10%;
@@ -57,6 +52,27 @@ igx-input-group {
   .igx-divider{
     margin: 5px !important;
   }
+
+  .igx-date-picker__input-date {
+    font-size: 0.8em;
+  }
+
+  .igx-input-group__label{
+    display: none;
+  }
+
+  igx-suffix{
+    display: none;
+  }
+
+  igx-input-group {
+    width: 100px;
+  }
+
+  igx-date-picker{
+    margin-top: 10px;
+  }
+
 }
 
 .logo-container{

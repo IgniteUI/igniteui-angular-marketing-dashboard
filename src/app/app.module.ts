@@ -11,8 +11,8 @@ import {IgxNavbarModule,
         IgxDatePickerModule,
         IgxInputGroupModule,
         IgxIconModule,
-        IgxMaskModule} from 'igniteui-angular';
-import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+        IgxMaskModule,
+        IgxDialogModule} from 'igniteui-angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,14 +25,13 @@ import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
     IgxButtonGroupModule,
     IgxDividerModule,
     IgxButtonModule,
-    FormsModule,
-    ReactiveFormsModule,
     IgxDatePickerModule,
     IgxInputGroupModule,
     IgxIconModule,
-    IgxMaskModule
+    IgxMaskModule,
+    IgxDialogModule
   ],
-  providers: [FormBuilder],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
