@@ -13,6 +13,7 @@ import {IgxNavbarModule,
         IgxIconModule,
         IgxMaskModule,
         IgxDialogModule} from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +30,7 @@ import {IgxNavbarModule,
     IgxInputGroupModule,
     IgxIconModule,
     IgxMaskModule,
+    FormsModule,
     IgxDialogModule
   ],
   providers: [],
