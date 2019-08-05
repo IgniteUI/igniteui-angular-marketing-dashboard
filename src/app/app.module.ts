@@ -16,10 +16,14 @@ import {IgxNavbarModule,
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
+import { CurrentTrendComponent } from './current-trend/current-trend.component';
+import { TrendItemComponent } from './trend-item/trend-item.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    CurrentTrendComponent,
+    TrendItemComponent
   ],
   imports: [
     BrowserModule,

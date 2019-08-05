@@ -1,0 +1,14 @@
+.item-container{
+  display: inline;
+  margin: 0 100px 0 100px;
+}
+
+.data-container{
+  float: right;
+}
+
+:host ::ng-deep{
+  igx-icon{
+    font-size: 4.5rem;
+  }
+}

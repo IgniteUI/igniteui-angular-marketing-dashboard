@@ -1,0 +1,18 @@
+<div class="item-container" id="{{name}}-item-container">
+  <div *ngIf="direction" class="{{directionColor}} icon-container">
+      <igx-icon>keyboard_arrow_{{direction}}</igx-icon>
+  </div>
+  <div class="data-container">
+    <span class="name-container">{{name | uppercase}}</span>
+    <div class="percent-container">
+      <span>{{percent}}</span>
+      <span>%</span>
+    </div>
+    <div class="start-container">
+      <span>{{start}} Previous</span>
+    </div>
+    <div class="end-container {{endRes}}">
+      <span>{{end}} Current</span>
+    </div>
+  </div>
+</div>

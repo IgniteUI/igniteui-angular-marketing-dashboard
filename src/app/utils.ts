@@ -1,13 +1,4 @@
-import * as timespan from 'timespan';
-import { error } from '@angular/compiler/src/util';
-
-export interface IRange {
-  endRangeEnd: Date;
-  endRangeBegin: Date;
-  startRangeBegin: Date;
-  startRangeEnd: Date;
-}
-const ts = new timespan.TimeSpan();
+import { IRange } from './models/range';
 
 
 export function shuffle(items: any[]): void {
@@ -76,4 +67,8 @@ export function getDateRange(numberOfDays: number): IRange {
   };
 
   return range;
+}
+
+export function convertToInt(numStr: string) {
+  return parseInt(numStr.replace(/,/g, ''));
 }
