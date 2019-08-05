@@ -14,6 +14,8 @@ import {IgxNavbarModule,
         IgxMaskModule,
         IgxDialogModule} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
+import { DataService } from './data.service';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,9 +33,10 @@ import { FormsModule } from '@angular/forms';
     IgxIconModule,
     IgxMaskModule,
     FormsModule,
-    IgxDialogModule
+    IgxDialogModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
