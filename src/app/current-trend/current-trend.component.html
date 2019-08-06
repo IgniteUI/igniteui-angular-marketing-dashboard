@@ -1,10 +1,12 @@
 <div class="trend-info-container">
   <div class="status-container">
-    <span style="font-weight: bold">{{'current'| uppercase}}</span>
-    {{'trend'| uppercase}}
-    <span>
-      <img src= "../../assets/{{status==='negative' ? 'sad' : status==='neutral' ? 'neutral' : 'happy'}}_face.png" >
-    </span>
+    <div class="image-container">
+      <span><span style="font-weight: bold">{{'current'| uppercase}}</span>
+      {{'trend'| uppercase}}</span>
+      <span style="margin: 14px">
+        <img src= "../../assets/{{status==='negative' ? 'sad' : status==='neutral' ? 'neutral' : 'happy'}}_face.png" >
+      </span>
+    </div>
     <div class="trend-items">
       <app-trend-item *ngFor="let item of trendItems"
                         [direction]="item.direction"
@@ -15,6 +17,5 @@
                         [start]="item.start"
                         [endRes]="item.endRes">
       </app-trend-item>
-    </div>
   </div>
 </div>

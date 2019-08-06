@@ -1,18 +1,26 @@
-<div class="item-container" id="{{name}}-item-container">
-  <div *ngIf="direction" class="{{directionColor}} icon-container">
-      <igx-icon>keyboard_arrow_{{direction}}</igx-icon>
-  </div>
-  <div class="data-container">
-    <span class="name-container">{{name | uppercase}}</span>
-    <div class="percent-container">
-      <span>{{percent}}</span>
-      <span>%</span>
+<article class="card-wrapper">
+  <igx-card>
+    <igx-card-header igxHeaderTitle>
+      <h5>{{name | uppercase}}</h5>
+    </igx-card-header>
+    <igx-card-content>
+      <div class="{{directionColor}} icon-container">
+        <igx-icon *ngIf="direction">keyboard_arrow_{{direction}}</igx-icon>
     </div>
-    <div class="start-container">
-      <span>{{start}} Previous</span>
+    <div class="data-container">
+      <div class="percent-container">
+        <span>{{percent}}</span>
+        <span>%</span>
+      </div>
+      <div class="start-end-container">
+        <div class="start-container">
+          <span>{{start}} Previous</span>
+        </div>
+        <div class="end-container {{endRes}}">
+          <span>{{end}} Current</span>
+        </div>
+      </div>
     </div>
-    <div class="end-container {{endRes}}">
-      <span>{{end}} Current</span>
-    </div>
-  </div>
-</div>
+    </igx-card-content>
+  </igx-card>
+</article>

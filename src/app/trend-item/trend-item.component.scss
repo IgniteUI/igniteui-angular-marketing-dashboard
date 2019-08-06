@@ -3,12 +3,42 @@
   margin: 0 100px 0 100px;
 }
 
+.icon-container{
+  display: inline;
+  margin-right: 1.0rem;
+
+}
+
 .data-container{
   float: right;
+  justify-content: end;
+
 }
 
 :host ::ng-deep{
   igx-icon{
     font-size: 4.5rem;
   }
+}
+
+.success{
+  color: green;
+}
+
+.danger{
+  color: red;
+}
+
+.percent-container{
+  font-size: 4rem;
+  margin: 1.5rem;
+}
+
+.card-wrapper {
+  margin-left: 1rem;
+ width: 280px
+}
+
+.start-end-container{
+  font-size: 1.5em;
 }

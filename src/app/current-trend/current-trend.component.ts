@@ -47,7 +47,7 @@ export class CurrentTrendComponent implements OnInit {
       this.trendItems = [];
       this.initTrendIndicators(data);
       ['sessions', 'conversions', 'spend', 'conversionCosts'].forEach(item => {
-        if (item === 'spend' || 'conversionCosts') {
+        if (item === 'spend' || item === 'conversionCosts') {
           this.generateTrendItems(item, data, true);
         } else {
           this.generateTrendItems(item, data);
@@ -76,7 +76,6 @@ export class CurrentTrendComponent implements OnInit {
   private initTrendIndicators(data: IRangeData) {
     this.trendIndicators.forEach(item => {
       Object.keys(item.indicator).forEach(key => {
-        // tslint:disable-next-line: radix
         item.indicator[key] = parseInt(data[item.period][key].replace(/,/g, ''));
       });
     });

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-
+import { setTitle } from '../utils';
 @Component({
   selector: 'app-trend-item',
   templateUrl: './trend-item.component.html',
@@ -9,10 +9,10 @@ export class TrendItemComponent implements OnInit {
 
   constructor() { }
   @Input()
-  public end: number;
+  public end: string;
 
   @Input()
-  public start: number;
+  public start: string;
 
   @Input()
   public percent: number;
@@ -21,7 +21,7 @@ export class TrendItemComponent implements OnInit {
   public direction: number;
 
   @Input()
-  public name: number;
+  public name: string;
 
   @Input()
   public directionColor: string;
@@ -30,7 +30,17 @@ export class TrendItemComponent implements OnInit {
   public endRes: string;
 
   ngOnInit() {
+    if (this.shouldSetTitle(this.name)) {
+      this.name = setTitle(this.name);
+    }
+  }
 
+  private shouldSetTitle(name: string): boolean {
+    const temp = name.match(/[A-Z]{1,}/g);
+    if (temp) {
+      return true;
+    }
+    return false;
   }
 
 }
