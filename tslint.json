@@ -7,8 +7,11 @@
       "severity": "warning"
     },
     "component-class-suffix": true,
+    "radix": false,
+    "variable-name": false,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,
+    "object-literal-shorthand": false,
     "directive-selector": [
       true,
       "attribute",

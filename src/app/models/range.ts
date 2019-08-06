@@ -4,3 +4,8 @@ export interface IRange {
    endRangeBegin: Date;
    endRangeEnd: Date;
 }
+
+export interface IRangeData {
+  start: any;
+  end: any;
+}

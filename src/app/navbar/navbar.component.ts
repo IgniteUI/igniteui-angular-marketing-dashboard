@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
-import {dateRangesValidator, getDateRange} from '../../app/date-utils';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { dateRangesValidator, getDateRange } from '../../app/utils';
 import { DisplayDensityToken, DisplayDensity, IgxDialogComponent } from 'igniteui-angular';
 import { DataService } from '../data.service';
-import { IRange} from '../models/range'
+import { IRange } from '../models/range'
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact}}]
+  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
 })
 export class NavbarComponent implements OnInit {
 
-  @ViewChild(IgxDialogComponent, {static: true})
+  @ViewChild(IgxDialogComponent, { static: true })
   public dialog: IgxDialogComponent;
 
   public today = new Date();
@@ -20,25 +20,25 @@ export class NavbarComponent implements OnInit {
   public endRangeBegin: Date;
   public endRangeEnd: Date;
 
-  constructor(private dataService: DataService ) {
+  constructor(private dataService: DataService) {
 
-    this.startRangeBegin = new Date(this.today.getFullYear() - 2 , this.today.getMonth(), this.today.getDate());
-    this.startRangeEnd = new Date(this.today.getFullYear() - 1 , this.today.getMonth(), this.today.getDate());
-    this.endRangeBegin = new Date(this.today.getFullYear() - 1 , this.today.getMonth(), this.today.getDate());
+    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
+    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
+    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
     this.endRangeEnd = this.today;
-   }
+  }
 
   public text1 = 'select range';
   public text2 = 'range of days';
 
   public ranges = [
-      {text: '1 week'},
-      {text: '1 month'},
-      {text: '3 months'},
-      {text: '1 year'}];
+    { text: '1 week' },
+    { text: '1 month' },
+    { text: '3 months' },
+    { text: '1 year' }];
 
 
-  public updateDates(range: string ) {
+  public updateDates(range: string) {
     let dateRange: IRange;
     const current = new Date();
     let days = 0;
@@ -46,33 +46,35 @@ export class NavbarComponent implements OnInit {
 
     switch (range) {
       case '1 week':
-          dateRange = getDateRange(7);
-          this.applyRanges(dateRange);
-          break;
+        dateRange = getDateRange(7);
+        this.applyRanges(dateRange);
+        break;
       case '1 month':
-          current.setMonth(current.getMonth() - 1);
-          days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
-          dateRange = getDateRange(days);
-          this.applyRanges(dateRange);
-          break;
+        current.setMonth(current.getMonth() - 1);
+        days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
+        dateRange = getDateRange(days);
+        this.applyRanges(dateRange);
+        break;
       case '3 months':
-          current.setMonth(current.getMonth() - 3);
-          days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
-          dateRange = getDateRange(days);
-          this.applyRanges(dateRange);
-          break;
+        current.setMonth(current.getMonth() - 3);
+        days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
+        dateRange = getDateRange(days);
+        this.applyRanges(dateRange);
+        break;
       case '1 year':
-          dateRange = getDateRange(365);
-          this.applyRanges(dateRange);
-          break;
-}
+        dateRange = getDateRange(365);
+        this.applyRanges(dateRange);
+        break;
+    }
+    this.dataService.getSummaryData(dateRange);
+
   }
 
   private applyRanges(ranges: IRange): void {
-      this.endRangeEnd = ranges.endRangeEnd;
-      this.endRangeBegin = ranges.endRangeBegin;
-      this.startRangeEnd = ranges.startRangeEnd;
-      this.startRangeBegin = ranges.startRangeBegin;
+    this.endRangeEnd = ranges.endRangeEnd;
+    this.endRangeBegin = ranges.endRangeBegin;
+    this.startRangeEnd = ranges.startRangeEnd;
+    this.startRangeBegin = ranges.startRangeBegin;
   }
 
   public compareRanges(event) {
