@@ -12,18 +12,21 @@ import {IgxNavbarModule,
         IgxInputGroupModule,
         IgxIconModule,
         IgxMaskModule,
-        IgxDialogModule} from 'igniteui-angular';
+        IgxDialogModule,
+        IgxCardModule} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CurrentTrendComponent } from './current-trend/current-trend.component';
 import { TrendItemComponent } from './trend-item/trend-item.component';
+import { DataChartComponent } from './data-chart/data-chart.component';
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     CurrentTrendComponent,
-    TrendItemComponent
+    TrendItemComponent,
+    DataChartComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import { TrendItemComponent } from './trend-item/trend-item.component';
     IgxMaskModule,
     FormsModule,
     IgxDialogModule,
+    IgxCardModule,
     HttpClientModule
   ],
   providers: [DataService],
