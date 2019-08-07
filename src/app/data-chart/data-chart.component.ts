@@ -32,6 +32,12 @@ export class DataChartComponent implements OnInit {
   @ViewChild('areaChartTooltipTemplate', {read: TemplateRef, static: false})
   public areaChartTooltipTemplate: TemplateRef<any>;
 
+  @ViewChild('emptyAreChartTooltipTemplate', {read: TemplateRef, static: false})
+  public emptyreAChartTooltipTemplate: TemplateRef<any>;
+
+  @ViewChild('columnChartTooltipTemplate', {read: TemplateRef, static: false})
+  public columnChartTooltipTemplate: TemplateRef<any>;
+
   public columnSeriesData: IColumnSeriesData[] = [];
 
   public areaSeriesData: IAreaSeriesData[] = [];
@@ -113,13 +119,14 @@ export class DataChartComponent implements OnInit {
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = seriesData.xAxis;
         series.yAxis = this.yAxis;
+        series.title = seriesData.title;
         series.brush = seriesData.brush;
         series.outline = seriesData.outline;
         series.isTransitionInEnabled = true;
         series.transitionDuration = 800;
         series.radiusX = 0;
         series.radiusY = 0;
-        series.showDefaultTooltip = true;
+        series.tooltipTemplate = this.columnChartTooltipTemplate;
         if (seriesData.dataSource) {
           series.dataSource = seriesData.dataSource;
         }
@@ -128,6 +135,7 @@ export class DataChartComponent implements OnInit {
     } else if (this.chartData !== this.areaChartData) {
       this.chart.series.clear();
       this.chartData = this.areaChartData;
+      let count = 0;
       for (const seriesData of this.areaSeriesData) {
         const series = new IgxAreaSeriesComponent();
         series.name = seriesData.name;
@@ -140,8 +148,13 @@ export class DataChartComponent implements OnInit {
         series.isTransitionInEnabled = true;
         series.transitionDuration = 800;
         series.areaFillOpacity = 0.5;
-        series.tooltipTemplate = this.areaChartTooltipTemplate;
+        if (count > 0) {
+          series.tooltipTemplate = this.emptyreAChartTooltipTemplate;
+        }  else {
+          series.tooltipTemplate = this.areaChartTooltipTemplate;
+        }
         this.chart.series.add(series);
+        count++;
       }
     }
     const toolTipLayer = new IgxCategoryToolTipLayerComponent();
@@ -149,7 +162,6 @@ export class DataChartComponent implements OnInit {
     toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
     toolTipLayer.transitionDuration = 200;
     this.chart.series.add(toolTipLayer);
-    debugger;
   }
 
   public setColumnSeriesData(name: string,
