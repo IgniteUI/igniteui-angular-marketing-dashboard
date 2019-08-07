@@ -1,4 +1,6 @@
-<div class="chart-container">
+<div  class="chart-container">
+  <button igxButton='raised' (click)="setSeries(false)">All</button>
+  <button igxButton='raised' (click)="setSeries(true)">By medium</button>
   <igx-data-chart #chart width="60%" height="400px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
@@ -6,19 +8,5 @@
 
     <igx-numeric-y-axis #yAxis name="yAxis" [titleAngle]="270" title="LOG" [isLogarithmic]="true"></igx-numeric-y-axis>
 
-    <igx-column-series *ngFor="let serie of columnChartCurrentData"
-                       [name]="serie.name"
-                       [xAxis]="serie.xAxis === 'time' ? time : timeConvers"
-                       [yAxis]="yAxis"
-                       [valueMemberPath]="serie.valueMemberPath"
-                       [brush]="serie.brush"
-                       [outline]="serie.outline"
-                       [dataSource]="serie.dataSource ? prevSeriesDataSource : chartData"
-                       [isTransitionInEnabled]="true"
-                       [transitionDuration]="800"
-                       [radiusX]="0"
-                       [radiusY]="0"
-                       [showDefaultTooltip]="true">
-    </igx-column-series>
   </igx-data-chart>
 </div>
