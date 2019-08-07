@@ -10,3 +10,20 @@
 
   </igx-data-chart>
 </div>
+
+
+<ng-template let-series="series" let-item="item" #areaChartTooltipTemplate>
+  <div class="chart-tooltip">
+    <div class="item bold">{{item.title}}</div>
+    <div><span class="caps-muted">{{'session' | uppercase}}</span>: {{item.session}}</div>
+    <div><span class="caps-muted">{{'conversion' | uppercase}}</span>: {{item.conversion}}</div>
+  </div>
+</ng-template>
+
+<ng-template let-series="series" let-item="item" #columnChartTooltipTemplate>
+    <div class="chart-tooltip">
+
+      <div class="item bold">{{item.title}}</div>
+      <div><span class="caps-muted">{{'session' | uppercase}}</span>: {{item.session}}</div>
+    </div>
+  </ng-template>

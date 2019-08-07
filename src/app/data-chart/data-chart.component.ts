@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts/ES5/igx-category-x-axis-component';
 import { IgxDataChartComponent } from 'igniteui-angular-charts/ES5/igx-data-chart-component';
@@ -6,7 +6,10 @@ import { IgxNumericYAxisComponent } from 'igniteui-angular-charts/ES5/igx-numeri
 import { IRangeData } from '../models/range';
 import { IgxColumnSeriesComponent } from 'igniteui-angular-charts/ES5/igx-column-series-component';
 import { IgxAreaSeriesComponent } from 'igniteui-angular-charts/ES5/igx-area-series-component';
+import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-component';
+
 import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
+import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts/ES5/CategoryTooltipLayerPosition';
 @Component({
   selector: 'app-data-chart',
   templateUrl: './data-chart.component.html',
@@ -25,6 +28,9 @@ export class DataChartComponent implements OnInit {
 
   @ViewChild('yAxis', { read: IgxNumericYAxisComponent, static: true })
   public yAxis: IgxNumericYAxisComponent;
+
+  @ViewChild('areaChartTooltipTemplate', {read: TemplateRef, static: false})
+  public areaChartTooltipTemplate: TemplateRef<any>;
 
   public columnSeriesData: IColumnSeriesData[] = [];
 
@@ -99,6 +105,7 @@ export class DataChartComponent implements OnInit {
   public setSeries(isMediumMode: boolean) {
     this.mediumMode = isMediumMode;
     if (!isMediumMode && this.chartData !== this.columnChartData) {
+      this.chart.series.clear();
       this.chartData = this.columnChartData;
       for (const seriesData of this.columnSeriesData) {
         const series = new IgxColumnSeriesComponent();
@@ -133,10 +140,16 @@ export class DataChartComponent implements OnInit {
         series.isTransitionInEnabled = true;
         series.transitionDuration = 800;
         series.areaFillOpacity = 0.5;
-        series.showDefaultTooltip = true;
+        series.tooltipTemplate = this.areaChartTooltipTemplate;
         this.chart.series.add(series);
       }
     }
+    const toolTipLayer = new IgxCategoryToolTipLayerComponent();
+    toolTipLayer.name = 'categorySeries';
+    toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
+    toolTipLayer.transitionDuration = 200;
+    this.chart.series.add(toolTipLayer);
+    debugger;
   }
 
   public setColumnSeriesData(name: string,
