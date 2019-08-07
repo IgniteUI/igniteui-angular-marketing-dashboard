@@ -1,0 +1,15 @@
+.chart-container{
+  margin: 5%;
+}
+
+:host ::ng-deep{
+  .chart-tooltip {
+    div {
+        padding: 2px;
+    }
+    .item {
+        border-bottom: 1px solid #453f4e;
+    }
+  }
+}
+

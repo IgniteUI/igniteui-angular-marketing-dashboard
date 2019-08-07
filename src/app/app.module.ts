@@ -20,6 +20,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { CurrentTrendComponent } from './current-trend/current-trend.component';
 import { TrendItemComponent } from './trend-item/trend-item.component';
 import { DataChartComponent } from './data-chart/data-chart.component';
+import { IgxNumericXAxisModule } from 'igniteui-angular-charts/ES5/igx-numeric-x-axis-module';
+import {IgxDataChartStackedModule} from 'igniteui-angular-charts/ES5/igx-data-chart-stacked-module';
+import { IgxFinancialChartModule } from 'igniteui-angular-charts/ES5/igx-financial-chart-module';
+import { IgxDataChartCoreModule } from 'igniteui-angular-charts/ES5/igx-data-chart-core-module';
+import { IgxCategoryToolTipLayerModule } from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +48,12 @@ import { DataChartComponent } from './data-chart/data-chart.component';
     FormsModule,
     IgxDialogModule,
     IgxCardModule,
-    HttpClientModule
+    IgxNumericXAxisModule,
+    HttpClientModule,
+    IgxDataChartStackedModule,
+    IgxFinancialChartModule,
+    IgxDataChartCoreModule,
+    IgxCategoryToolTipLayerModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
