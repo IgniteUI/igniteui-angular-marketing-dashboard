@@ -13,3 +13,9 @@
   }
 }
 
+.buttons-container {
+  margin-bottom: 40px;
+  button + button {
+    margin-left: 5px;
+  }
+}

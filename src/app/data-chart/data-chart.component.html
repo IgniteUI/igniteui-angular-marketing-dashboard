@@ -1,7 +1,9 @@
 <div class="chart-container">
-  <button igxButton='raised' (click)="setSeries(false)">All</button>
-  <button igxButton='raised' (click)="setSeries(true)">By medium</button>
-  <igx-data-chart #chart width="60%" height="400px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true">
+  <div class="buttons-container">
+    <button igxButton='raised' (click)="setSeries(false)">All</button>
+    <button igxButton='raised' (click)="setSeries(true)">By medium</button>
+  </div>
+  <igx-data-chart #chart width="100%" height="400px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">

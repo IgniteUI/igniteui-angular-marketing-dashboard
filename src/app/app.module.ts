@@ -13,7 +13,8 @@ import {IgxNavbarModule,
         IgxIconModule,
         IgxMaskModule,
         IgxDialogModule,
-        IgxCardModule} from 'igniteui-angular';
+        IgxCardModule,
+        IgxProgressBarModule} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,6 +26,9 @@ import {IgxDataChartStackedModule} from 'igniteui-angular-charts/ES5/igx-data-ch
 import { IgxFinancialChartModule } from 'igniteui-angular-charts/ES5/igx-financial-chart-module';
 import { IgxDataChartCoreModule } from 'igniteui-angular-charts/ES5/igx-data-chart-core-module';
 import { IgxCategoryToolTipLayerModule } from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-module';
+import { SessionByRegionComponent } from './session-region/session-region.component';
+import { IgxScatterSeriesDynamicModule} from 'igniteui-angular-charts/ES5/igx-scatter-series-dynamic-module';
+import { IgxGeographicMapModule } from 'igniteui-angular-maps/ES5/igx-geographic-map-module';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,8 @@ import { IgxCategoryToolTipLayerModule } from 'igniteui-angular-charts/ES5/igx-c
     NavbarComponent,
     CurrentTrendComponent,
     TrendItemComponent,
-    DataChartComponent
+    DataChartComponent,
+    SessionByRegionComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +58,10 @@ import { IgxCategoryToolTipLayerModule } from 'igniteui-angular-charts/ES5/igx-c
     IgxDataChartStackedModule,
     IgxFinancialChartModule,
     IgxDataChartCoreModule,
-    IgxCategoryToolTipLayerModule
+    IgxCategoryToolTipLayerModule,
+    IgxScatterSeriesDynamicModule,
+    IgxGeographicMapModule,
+    IgxProgressBarModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
