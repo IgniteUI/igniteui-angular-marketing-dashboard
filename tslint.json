@@ -10,6 +10,7 @@
     "radix": false,
     "variable-name": false,
     "contextual-lifecycle": true,
+    "no-string-literal": false,
     "directive-class-suffix": true,
     "object-literal-shorthand": false,
     "directive-selector": [

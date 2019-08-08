@@ -110,7 +110,7 @@ export class DataChartComponent implements OnInit {
 
   public setSeries(isMediumMode: boolean) {
     this.mediumMode = isMediumMode;
-    if (!isMediumMode && this.chartData !== this.columnChartData) {
+    if (this.mediumMode === false && this.chartData !== this.columnChartData) {
       this.chart.series.clear();
       this.chartData = this.columnChartData;
       for (const seriesData of this.columnSeriesData) {
@@ -131,8 +131,9 @@ export class DataChartComponent implements OnInit {
           series.dataSource = seriesData.dataSource;
         }
         this.chart.series.add(series);
+        this.addToolTipLayer();
       }
-    } else if (this.chartData !== this.areaChartData) {
+    } else if (this.mediumMode === true && this.chartData !== this.areaChartData) {
       this.chart.series.clear();
       this.chartData = this.areaChartData;
       let count = 0;
@@ -156,12 +157,9 @@ export class DataChartComponent implements OnInit {
         this.chart.series.add(series);
         count++;
       }
+      this.addToolTipLayer();
     }
-    const toolTipLayer = new IgxCategoryToolTipLayerComponent();
-    toolTipLayer.name = 'categorySeries';
-    toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
-    toolTipLayer.transitionDuration = 200;
-    this.chart.series.add(toolTipLayer);
+
   }
 
   public setColumnSeriesData(name: string,
@@ -200,5 +198,13 @@ export class DataChartComponent implements OnInit {
       title: name,
       color: color
     };
+  }
+
+  public addToolTipLayer() {
+    const toolTipLayer = new IgxCategoryToolTipLayerComponent();
+    toolTipLayer.name = 'categorySeries';
+    toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
+    toolTipLayer.transitionDuration = 200;
+    this.chart.series.add(toolTipLayer);
   }
 }

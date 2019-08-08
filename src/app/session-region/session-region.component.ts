@@ -12,13 +12,14 @@ import { Visibility } from 'igniteui-angular-core/ES5/Visibility';
 import { SeriesCollection, Series } from 'igniteui-angular-charts/ES5/SeriesViewer_combined';
 import { MarkerType } from 'igniteui-angular-charts/ES5/MarkerType';
 import { IgxSizeScaleComponent } from 'igniteui-angular-charts/ES5/igx-size-scale-component';
+import { IgxLinearProgressBarComponent } from 'igniteui-angular';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  selector: 'app-session-region',
+  templateUrl: './session-region.component.html',
+  styleUrls: ['./session-region.component.scss']
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class SessionByRegionComponent implements OnInit, AfterViewInit {
 
   constructor( private service: DataService) {
     this.shapeSeriesModel = {
@@ -43,6 +44,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   public mapData: IMapData;
   public shapeSeriesModel: IGeographicShapeSeries;
   public proportionalSymbolModel: IGeographicProportionalSymbolSeries;
+  public inProgressMode = false;
+  public range: number;
+  public interval: any;
 
   @ViewChild('map', {static: true})
     public map: IgxGeographicMapComponent;
@@ -50,14 +54,24 @@ export class MapComponent implements OnInit, AfterViewInit {
     @ViewChild('template', {static: false})
     public toolTipTemplate: TemplateRef<any>;
 
+    @ViewChild(IgxLinearProgressBarComponent, {static: false})
+    public linearBar: IgxLinearProgressBarComponent;
+
   ngOnInit() {
     this.service.onDataFetch.subscribe((data: IRangeData) => {
+      this.inProgressMode = false;
+      if (this.interval) {
+        this.interval = window.clearInterval(this.interval);
+      }
+      this.linearBar.value = 0;
+
       this.mapData = {
         start: data.start,
         end: data.end,
         mapCurrent: data.end.trafficStats[0]
       };
-
+      this.mapData.mapCurrent['current'] = 0;
+      this.range = data.end.trafficStats.length - 1;
       this.generateMapData(this.map);
 
     });
@@ -103,6 +117,31 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.generateMapSeries(this.shapeSeriesModel, this.proportionalSymbolModel).forEach( s => {
       map.series.add(s);
     });
+  }
+
+  public toggleUpdate(event) {
+    this.inProgressMode = this.inProgressMode ? false : true;
+    if (this.inProgressMode) {
+        this.interval = window.setInterval( () => {
+          if (++this.mapData.mapCurrent.current >= this.mapData.end.trafficStats.length) {
+              this.mapData.mapCurrent.current = 0;
+          }
+          this.linearBar.value = this.mapData.mapCurrent.current;
+          this.updateMapData(this.mapData.end.trafficStats[this.mapData.mapCurrent.current].perLocation);
+      }, 1000);
+    } else {
+      this.interval = window.clearInterval(this.interval);
+    }
+  }
+
+  public updateMapData(data: any) {
+    const currentMapData = this.mapData.mapCurrent.perLocation;
+    const newMapData = this.mapData.mapCurrent.perLocation;
+    for (let i = 0; i < currentMapData.length; i++) {
+      newMapData[i].scaledSessions = data[i].scaledSessions;
+      newMapData[i].session = data[i].session;
+      this.map.notifySetItem(currentMapData, i, currentMapData[i], newMapData[i]);
+    }
   }
 
 }
