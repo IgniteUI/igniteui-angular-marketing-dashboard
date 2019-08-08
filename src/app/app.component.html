@@ -1,3 +1,10 @@
 <app-navbar></app-navbar>
 <app-current-trend></app-current-trend>
-<app-data-chart></app-data-chart>
+<div style="display: flex" width="100%">
+  <div class="chart" style="width: 50%">
+    <app-data-chart></app-data-chart>
+  </div>
+  <div class="map" style="width: 50%">
+    <app-map></app-map>
+  </div>
+</div>
