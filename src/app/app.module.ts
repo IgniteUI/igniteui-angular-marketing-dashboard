@@ -29,7 +29,9 @@ import { IgxCategoryToolTipLayerModule } from 'igniteui-angular-charts/ES5/igx-c
 import { SessionByRegionComponent } from './session-region/session-region.component';
 import { IgxScatterSeriesDynamicModule} from 'igniteui-angular-charts/ES5/igx-scatter-series-dynamic-module';
 import { IgxGeographicMapModule } from 'igniteui-angular-maps/ES5/igx-geographic-map-module';
-
+import { CampaignHealthComponent } from './campaign-health/campaign-health.component';
+import { IgxDoughnutChartModule } from 'igniteui-angular-charts/ES5/igx-doughnut-chart-module';
+import { IgxRingSeriesModule } from 'igniteui-angular-charts/ES5/igx-ring-series-module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +39,8 @@ import { IgxGeographicMapModule } from 'igniteui-angular-maps/ES5/igx-geographic
     CurrentTrendComponent,
     TrendItemComponent,
     DataChartComponent,
-    SessionByRegionComponent
+    SessionByRegionComponent,
+    CampaignHealthComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,9 @@ import { IgxGeographicMapModule } from 'igniteui-angular-maps/ES5/igx-geographic
     IgxCategoryToolTipLayerModule,
     IgxScatterSeriesDynamicModule,
     IgxGeographicMapModule,
-    IgxProgressBarModule
+    IgxProgressBarModule,
+    IgxDoughnutChartModule,
+    IgxRingSeriesModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
