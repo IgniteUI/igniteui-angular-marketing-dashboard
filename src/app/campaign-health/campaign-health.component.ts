@@ -5,6 +5,7 @@ import { IRangeData } from '../models/range';
 import { IgxDoughnutChartComponent} from 'igniteui-angular-charts/ES5/igx-doughnut-chart-component';
 import { IgxRingSeriesComponent} from 'igniteui-angular-charts/ES5/igx-ring-series-component';
 import { LabelsPosition } from 'igniteui-angular-charts/ES5/LabelsPosition';
+import { IBulletGraph } from '../models/bullet-graph';
 
 @Component({
   selector: 'app-campaign-health',
@@ -15,6 +16,7 @@ export class CampaignHealthComponent implements OnInit {
 
   public doughnutChartColors: IDoughnutColors;
   public doughnutData: IDoughnutDataRecord[];
+  public bulletGraphs: IBulletGraph[] = [];
   private formatter;
 
   @ViewChild(IgxDoughnutChartComponent, {static: true})
@@ -64,6 +66,8 @@ export class CampaignHealthComponent implements OnInit {
       ];
 
       this.renderDoughnutChart(this.chart, this.doughnutChartColors);
+
+
     });
   }
 
@@ -117,4 +121,14 @@ export class CampaignHealthComponent implements OnInit {
 
     return series;
   }
+
+  // public renderBulletGraphs(data: IRangeData, colors: IDoughnutColors) {
+  //   Object.keys(colors).forEach(approach => {
+  //     Object.keys(approach).forEach(record => {
+  //       this.bulletGraphs.push({
+  //         value: data.end.ppc;
+  //       });
+  //     });
+  //   });
+  // }
 }
