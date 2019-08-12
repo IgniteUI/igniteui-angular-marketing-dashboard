@@ -32,6 +32,7 @@ import { IgxGeographicMapModule } from 'igniteui-angular-maps/ES5/igx-geographic
 import { CampaignHealthComponent } from './campaign-health/campaign-health.component';
 import { IgxDoughnutChartModule } from 'igniteui-angular-charts/ES5/igx-doughnut-chart-module';
 import { IgxRingSeriesModule } from 'igniteui-angular-charts/ES5/igx-ring-series-module';
+import { IgxBulletGraphModule } from 'igniteui-angular-gauges/ES5/igx-bullet-graph-module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +67,8 @@ import { IgxRingSeriesModule } from 'igniteui-angular-charts/ES5/igx-ring-series
     IgxGeographicMapModule,
     IgxProgressBarModule,
     IgxDoughnutChartModule,
-    IgxRingSeriesModule
+    IgxRingSeriesModule,
+    IgxBulletGraphModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

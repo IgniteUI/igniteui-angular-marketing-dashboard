@@ -1,1 +1,26 @@
-<igx-doughnut-chart #doughnut></igx-doughnut-chart>
+<div class="doughnut-container">
+  <igx-doughnut-chart #doughnut></igx-doughnut-chart>
+</div>
+<div class="graphs-container">
+  <div *ngFor= "let model of adModels" class= "graph-container {{model}}">
+      <igx-bullet-graph *ngFor="let graph of getbulletGraphModels(model)"
+                    height="40px"
+                    width="100%"
+                    [minimumValue]="0"
+                    [maximumValue]="getMaxValue(graph.maximumValue)"
+                    backingBrush="transparent"
+                    backingOutline = "transparent"
+                    [interval]="getMaxValue(graph.maximumValue)"
+                    transitionDuration = "800"
+                    labelExtent = "0.4"
+                    font = "bold 14px Helvetica, Arial, sans-serif"
+                    [fontBrush]="graph.labelBrush"
+                    [targetValue]="graph.target"
+                    (alignLabel)="alignLabel($event)"
+                    (formatLabel)="formatLabel($event, graph)">
+     <igx-linear-graph-range name="value" [startValue]="0" [endValue]="graph.value" [brush]="graph.valueBrush"></igx-linear-graph-range>
+     <igx-linear-graph-range name="remaining" [startValue]="graph.value" [endValue]="getMaxValue(graph.maximumValue)" [brush]="graph.bkgBrush"></igx-linear-graph-range>
+</igx-bullet-graph>
+  </div>
+
+</div>

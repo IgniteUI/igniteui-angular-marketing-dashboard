@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { IDoughnutColors, IDoughnutDataRecord } from '../models/doughnut-charts';
 import { IRangeData } from '../models/range';
@@ -6,21 +6,17 @@ import { IgxDoughnutChartComponent} from 'igniteui-angular-charts/ES5/igx-doughn
 import { IgxRingSeriesComponent} from 'igniteui-angular-charts/ES5/igx-ring-series-component';
 import { LabelsPosition } from 'igniteui-angular-charts/ES5/LabelsPosition';
 import { IBulletGraph } from '../models/bullet-graph';
-
+import {convertToInt} from '../utils';
+import {IgxBulletGraphComponent} from 'igniteui-angular-gauges/ES5/igx-bullet-graph-component';
+import {  IgxLinearGraphRangeComponent } from 'igniteui-angular-gauges/ES5/igx-linear-graph-range-component';
+import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/FormatLinearGraphLabelEventArgs';
+import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/AlignLinearGraphLabelEventArgs';
 @Component({
   selector: 'app-campaign-health',
   templateUrl: './campaign-health.component.html',
   styleUrls: ['./campaign-health.component.scss']
 })
 export class CampaignHealthComponent implements OnInit {
-
-  public doughnutChartColors: IDoughnutColors;
-  public doughnutData: IDoughnutDataRecord[];
-  public bulletGraphs: IBulletGraph[] = [];
-  private formatter;
-
-  @ViewChild(IgxDoughnutChartComponent, {static: true})
-  chart: IgxDoughnutChartComponent;
 
   constructor(private service: DataService) {
 
@@ -48,6 +44,16 @@ export class CampaignHealthComponent implements OnInit {
     };
   }
 
+  public doughnutChartColors: IDoughnutColors;
+  public doughnutData: IDoughnutDataRecord[];
+  public bulletGraphs: IBulletGraph[] = [];
+  private formatter;
+
+  @ViewChild(IgxDoughnutChartComponent, {static: true})
+  chart: IgxDoughnutChartComponent;
+
+  public adModels = ['ppc', 'email', 'banners', 'thirdParty'];
+
   ngOnInit() {
     this.chart.sliceClick.subscribe( event => {
       event.args.i.dataContext.showLabel = event.args.i.slice.isSelected;
@@ -57,6 +63,7 @@ export class CampaignHealthComponent implements OnInit {
     });
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
+      this.bulletGraphs = [];
       this.chart.series.clear();
       this.doughnutData = [
         { label: 'PPC', value: data.end.ppc , prev: data.start.ppc},
@@ -66,8 +73,7 @@ export class CampaignHealthComponent implements OnInit {
       ];
 
       this.renderDoughnutChart(this.chart, this.doughnutChartColors);
-
-
+      this.renderBulletGraphs(data, this.doughnutChartColors);
     });
   }
 
@@ -77,18 +83,23 @@ export class CampaignHealthComponent implements OnInit {
       chart.innerExtent = 20;
       chart.allowSliceSelection = true;
       chart.selectedSliceStrokeThickness = 7;
-
       const colors = [];
       const fadedColors = [];
 
       Object.keys(doughnutColors).forEach(key => {
         colors.push(doughnutColors[key].end.value);
-        fadedColors.push(doughnutColors[key].end.value);
+        fadedColors.push(doughnutColors[key].start.value);
       });
 
       this.generateSeries('End', this.doughnutData, colors, fadedColors).forEach(s => {
         chart.series.add(s);
       });
+  }
+
+ public getbulletGraphModels(model) {
+    return this.bulletGraphs.filter(g => {
+      return g.adModel === model;
+    });
   }
 
   public generateSeries(name: string, data: IDoughnutDataRecord[], colors: string[], fadedColors: string[]) {
@@ -122,13 +133,48 @@ export class CampaignHealthComponent implements OnInit {
     return series;
   }
 
-  // public renderBulletGraphs(data: IRangeData, colors: IDoughnutColors) {
-  //   Object.keys(colors).forEach(approach => {
-  //     Object.keys(approach).forEach(record => {
-  //       this.bulletGraphs.push({
-  //         value: data.end.ppc;
-  //       });
-  //     });
-  //   });
-  // }
+  public renderBulletGraphs(data: IRangeData, colors: IDoughnutColors) {
+    const periods = ['start', 'end'];
+
+
+    for (let index = 0; index < this.adModels.length; index++) {
+      for (let i = 0; i < periods.length; i++) {
+        this.bulletGraphs.push({
+          adModel: this.adModels[index],
+          value: data[periods[i]][this.adModels[index]],
+          maximumValue: data[periods[i]].conversions,
+          valueBrush: colors[this.adModels[index]][periods[i]].value,
+          bkgBrush: colors[this.adModels[index]][periods[i]].bkg,
+          labelBrush: colors[this.adModels[index]][periods[i]].label,
+          target: data[periods[i]][`${this.adModels[index]}Target`]
+        });
+      }
+    }
+  }
+
+  public getMaxValue(value): number {
+    return convertToInt(value);
+  }
+
+  public formatLabel(eventArgs: {sender: any; args: FormatLinearGraphLabelEventArgs}, graphModel: IBulletGraph) {
+    eventArgs.args.label = ` ${eventArgs.args.label}`;
+    if (eventArgs.args.value === 0) {
+        if(graphModel.value >= 1000) {
+          eventArgs.args.label = `${(graphModel.value / 1000).toFixed(1)}K`;
+        } else {
+          eventArgs.args.label = `${(graphModel.value / 1000)}`;
+        }
+    } else {
+      eventArgs.args.label = `${Math.round((graphModel.value / eventArgs.args.value * 2) * 100)}%`;
+    }
+  }
+
+  public alignLabel(eventArgs: {sender: any; args: AlignLinearGraphLabelEventArgs}) {
+    eventArgs.args.height = 0;
+    if(eventArgs.args.value === 0) {
+      eventArgs.args.offsetX += 25;
+    } else {
+      eventArgs.args.offsetX -= 25;
+    }
+  }
 }
