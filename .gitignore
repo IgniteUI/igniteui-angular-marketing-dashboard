@@ -45,7 +45,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-/apiServer/MarketingDashboardAPI/.vs
-/apiServer/MarketingDashboardAPI/packages/
-/apiServer/MarketingDashboardAPI/PostProcessors/bin/
-/apiServer/MarketingDashboardAPI/PostProcessors/obj/
+# Server Files
+/apiServer/MarketingDashboardAPI/.vs/
+/apiServer/MarketingDashboardAPI/bin/
+/apiServer/MarketingDashboardAPI/obj/
