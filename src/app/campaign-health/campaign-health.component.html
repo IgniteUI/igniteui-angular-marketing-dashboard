@@ -1,3 +1,4 @@
+<h3>CAMPAIGN HEALTH</h3>
 <div class="doughnut-container">
   <igx-doughnut-chart #doughnut></igx-doughnut-chart>
   <div class="trend-container">
@@ -15,7 +16,10 @@
   </igx-item-legend>
 </div>
 </div>
-
+  <div class="labels">
+  <div id="conversions-label">CONVERSIONS</div>
+  <div id="target-label">TARGET</div>
+  </div>
 <div class="graphs-container">
   <div *ngFor= "let model of adModels" class= "graph-container">
       <igx-bullet-graph *ngFor="let graph of getbulletGraphModels(model); let i = index"

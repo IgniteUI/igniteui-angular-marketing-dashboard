@@ -19,3 +19,15 @@
 .trend-container {
   margin: auto 0;
 }
+
+.labels{
+  display: flex;
+  #conversions-label{
+    margin-left: 20px;
+  }
+
+  #target-label{
+    margin-left: 125px;
+    margin-bottom: -4px;
+  }
+}
