@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { IDoughnutColors, IDoughnutDataRecord } from '../models/doughnut-charts';
 import { IRangeData } from '../models/range';
@@ -7,16 +7,21 @@ import { IgxRingSeriesComponent} from 'igniteui-angular-charts/ES5/igx-ring-seri
 import { LabelsPosition } from 'igniteui-angular-charts/ES5/LabelsPosition';
 import { IBulletGraph } from '../models/bullet-graph';
 import {convertToInt} from '../utils';
-import {IgxBulletGraphComponent} from 'igniteui-angular-gauges/ES5/igx-bullet-graph-component';
-import {  IgxLinearGraphRangeComponent } from 'igniteui-angular-gauges/ES5/igx-linear-graph-range-component';
 import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/FormatLinearGraphLabelEventArgs';
 import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/AlignLinearGraphLabelEventArgs';
+import { ITrendItem, generateTrendItem } from '../models/trend-item';
 @Component({
   selector: 'app-campaign-health',
   templateUrl: './campaign-health.component.html',
   styleUrls: ['./campaign-health.component.scss']
 })
 export class CampaignHealthComponent implements OnInit {
+
+  public doughnutChartColors: IDoughnutColors;
+  public doughnutData: IDoughnutDataRecord[];
+  public bulletGraphs: IBulletGraph[] = [];
+  private formatter;
+  public trendItem: ITrendItem;
 
   constructor(private service: DataService) {
 
@@ -38,19 +43,27 @@ export class CampaignHealthComponent implements OnInit {
         start: { value: '#7f7f7f', bkg: '#3e334f', label: '#ccc' }
       }
     };
+    this.trendItem = {
+      name: undefined,
+      end: undefined,
+      start: undefined,
+      percent: undefined,
+      direction: undefined,
+      directionColor: undefined,
+      endRes: undefined
+    };
+
     this.formatter = (context) => {
       if (!context.item.showLabel) { return ''; }
       return Math.round(context.percentValue) + '%';
     };
   }
 
-  public doughnutChartColors: IDoughnutColors;
-  public doughnutData: IDoughnutDataRecord[];
-  public bulletGraphs: IBulletGraph[] = [];
-  private formatter;
-
   @ViewChild(IgxDoughnutChartComponent, {static: true})
   chart: IgxDoughnutChartComponent;
+
+  @ViewChild('legend', {static: true})
+  legend: TemplateRef<any>;
 
   public adModels = ['ppc', 'email', 'banners', 'thirdParty'];
 
@@ -64,6 +77,7 @@ export class CampaignHealthComponent implements OnInit {
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
       this.bulletGraphs = [];
+      this.trendItem = generateTrendItem('conversions', data);
       this.chart.series.clear();
       this.doughnutData = [
         { label: 'PPC', value: data.end.ppc , prev: data.start.ppc},
@@ -119,6 +133,7 @@ export class CampaignHealthComponent implements OnInit {
         ringSeries.brushes = colors;
         ringSeries.outlines = colors;
         ringSeries.valueMemberPath = 'value';
+        ringSeries.legend = this.legend;
       }
 
       ringSeries.labelsPosition = LabelsPosition.Center;
@@ -159,7 +174,7 @@ export class CampaignHealthComponent implements OnInit {
   public formatLabel(eventArgs: {sender: any; args: FormatLinearGraphLabelEventArgs}, graphModel: IBulletGraph) {
     eventArgs.args.label = ` ${eventArgs.args.label}`;
     if (eventArgs.args.value === 0) {
-        if(graphModel.value >= 1000) {
+        if (graphModel.value >= 1000) {
           eventArgs.args.label = `${(graphModel.value / 1000).toFixed(1)}K`;
         } else {
           eventArgs.args.label = `${(graphModel.value / 1000)}`;
@@ -171,7 +186,7 @@ export class CampaignHealthComponent implements OnInit {
 
   public alignLabel(eventArgs: {sender: any; args: AlignLinearGraphLabelEventArgs}) {
     eventArgs.args.height = 0;
-    if(eventArgs.args.value === 0) {
+    if (eventArgs.args.value === 0) {
       eventArgs.args.offsetX += 25;
     } else {
       eventArgs.args.offsetX -= 25;

@@ -1,9 +1,25 @@
 <div class="doughnut-container">
   <igx-doughnut-chart #doughnut></igx-doughnut-chart>
+  <div class="trend-container">
+    <app-trend-item [direction]="trendItem.direction"
+    [directionColor]="trendItem.directionColor"
+    [percent]="trendItem.percent"
+    [name]="trendItem.name"
+    [end]="trendItem.end"
+    [start]="trendItem.start"
+    [endRes]="trendItem.endRes">
+</app-trend-item>
+  </div>
+<div class="legend">
+  <igx-item-legend #legend height="100px" width="100px">
+  </igx-item-legend>
 </div>
+</div>
+
 <div class="graphs-container">
-  <div *ngFor= "let model of adModels" class= "graph-container {{model}}">
-      <igx-bullet-graph *ngFor="let graph of getbulletGraphModels(model)"
+  <div *ngFor= "let model of adModels" class= "graph-container">
+      <igx-bullet-graph *ngFor="let graph of getbulletGraphModels(model); let i = index"
+                    class="{{ i=== 0 ? model : ''}}"
                     height="40px"
                     width="100%"
                     [minimumValue]="0"
@@ -22,5 +38,4 @@
      <igx-linear-graph-range name="remaining" [startValue]="graph.value" [endValue]="getMaxValue(graph.maximumValue)" [brush]="graph.bkgBrush"></igx-linear-graph-range>
 </igx-bullet-graph>
   </div>
-
 </div>

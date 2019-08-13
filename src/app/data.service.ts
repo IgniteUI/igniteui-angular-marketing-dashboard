@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError, Observer } from 'rxjs';
+import { throwError, Observer, BehaviorSubject, AsyncSubject } from 'rxjs';
 import { IRange, IRangeData } from './models/range';
 
 

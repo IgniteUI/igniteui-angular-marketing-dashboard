@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { IRangeData } from '../models/range';
 import { convertToInt } from '../utils';
+import { generateTrendItem, ITrendItem } from '../models/trend-item';
 
 class TrendIndicator {
   sessions: any;
@@ -14,16 +15,6 @@ class TrendIndicator {
     this.spend = undefined;
     this.conversionCosts = undefined;
   }
-}
-
-interface ITrendItem {
-  name: string;
-  end: string;
-  start: string;
-  percent: number;
-  direction: string;
-  directionColor: string;
-  endRes: string;
 }
 
 @Component({
@@ -48,9 +39,9 @@ export class CurrentTrendComponent implements OnInit {
       this.initTrendIndicators(data);
       ['sessions', 'conversions', 'spend', 'conversionCosts'].forEach(item => {
         if (item === 'spend' || item === 'conversionCosts') {
-          this.generateTrendItems(item, data, true);
+          this.trendItems.push(generateTrendItem(item, data, true));
         } else {
-          this.generateTrendItems(item, data);
+          this.trendItems.push(generateTrendItem(item, data));
         }
       });
       this.setStatus();
@@ -80,60 +71,4 @@ export class CurrentTrendComponent implements OnInit {
       });
     });
   }
-
-  private generateTrendItems(inditicatorName: string, data: IRangeData, invertStyleRule?: boolean) {
-    const endString = data.end[inditicatorName];
-    const end = convertToInt(endString);
-    const startString = data.start[inditicatorName];
-    const start = convertToInt(startString);
-    const change = end - start;
-    const isPositiveChange = change >= 0;
-    const dec = change / start;
-    const percent = Math.abs(Math.round(dec * 100));
-
-
-    let direction = 'down';
-    let endRes = 'danger';
-
-    if (isPositiveChange) {
-      direction = 'up';
-      endRes = 'success';
-    }
-
-    if (percent === 0) {
-      direction = '';
-      endRes = '';
-    }
-
-
-    if (invertStyleRule) {
-      endRes = (endRes === 'success') ? 'danger' : 'success';
-    }
-
-    let directionColor = 'success';
-    if (direction === 'up') {
-      directionColor = 'success';
-    } else {
-      directionColor = 'danger';
-    }
-
-    if (invertStyleRule) {
-      if (direction === 'up') {
-        directionColor = 'danger';
-      } else {
-        directionColor = 'success';
-      }
-    }
-
-    this.trendItems.push({
-      name: inditicatorName,
-      end: endString,
-      start: startString,
-      percent: percent,
-      direction: direction,
-      directionColor: directionColor,
-      endRes: endRes
-    });
-  }
-
 }

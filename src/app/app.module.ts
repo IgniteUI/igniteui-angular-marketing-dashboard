@@ -33,6 +33,8 @@ import { CampaignHealthComponent } from './campaign-health/campaign-health.compo
 import { IgxDoughnutChartModule } from 'igniteui-angular-charts/ES5/igx-doughnut-chart-module';
 import { IgxRingSeriesModule } from 'igniteui-angular-charts/ES5/igx-ring-series-module';
 import { IgxBulletGraphModule } from 'igniteui-angular-gauges/ES5/igx-bullet-graph-module';
+import { IgxItemLegendModule } from 'igniteui-angular-charts/ES5/igx-item-legend-module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +70,8 @@ import { IgxBulletGraphModule } from 'igniteui-angular-gauges/ES5/igx-bullet-gra
     IgxProgressBarModule,
     IgxDoughnutChartModule,
     IgxRingSeriesModule,
-    IgxBulletGraphModule
+    IgxBulletGraphModule,
+    IgxItemLegendModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
