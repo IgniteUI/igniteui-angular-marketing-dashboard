@@ -14,7 +14,8 @@ import {IgxNavbarModule,
         IgxMaskModule,
         IgxDialogModule,
         IgxCardModule,
-        IgxProgressBarModule} from 'igniteui-angular';
+        IgxProgressBarModule,
+        IgxListModule} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -34,6 +35,8 @@ import { IgxDoughnutChartModule } from 'igniteui-angular-charts/ES5/igx-doughnut
 import { IgxRingSeriesModule } from 'igniteui-angular-charts/ES5/igx-ring-series-module';
 import { IgxBulletGraphModule } from 'igniteui-angular-gauges/ES5/igx-bullet-graph-module';
 import { IgxItemLegendModule } from 'igniteui-angular-charts/ES5/igx-item-legend-module';
+import { SideNavIndicatorsComponent } from './side-nav-indicators/side-nav-indicators.component';
+import { IgxLegendModule } from 'igniteui-angular-charts/ES5/igx-legend-module';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,8 @@ import { IgxItemLegendModule } from 'igniteui-angular-charts/ES5/igx-item-legend
     TrendItemComponent,
     DataChartComponent,
     SessionByRegionComponent,
-    CampaignHealthComponent
+    CampaignHealthComponent,
+    SideNavIndicatorsComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +75,9 @@ import { IgxItemLegendModule } from 'igniteui-angular-charts/ES5/igx-item-legend
     IgxDoughnutChartModule,
     IgxRingSeriesModule,
     IgxBulletGraphModule,
-    IgxItemLegendModule
+    IgxItemLegendModule,
+    IgxLegendModule,
+    IgxListModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
