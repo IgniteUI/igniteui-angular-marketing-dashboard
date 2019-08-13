@@ -1,11 +1,17 @@
 <app-navbar></app-navbar>
 <app-current-trend></app-current-trend>
 <div style="display: flex" width="100%">
-  <div class="chart" style="width: 33%">
+  <div class="chart" style="width: 38%; height: fit-content;">
     <app-data-chart></app-data-chart>
   </div>
-  <div class="map" style="width: 33%">
+  <div class="map" style="width: 38%; height: fit-content;">
     <app-session-region></app-session-region>
   </div>
 </div>
-<app-campaign-health></app-campaign-health>
+<div class="side-nav">
+    <app-side-nav-indicators></app-side-nav-indicators>
+  </div>
+  <app-campaign-health></app-campaign-health>
+
+
+

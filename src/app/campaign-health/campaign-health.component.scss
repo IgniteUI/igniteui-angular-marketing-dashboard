@@ -1,11 +1,16 @@
 .graphs-container {
   height: 170px;
   width: 25%;
+  display: grid;
+  grid-row-gap: 10px;
+  grid-column-gap: 20px;
+  grid-template-columns: auto auto;
+  margin-left: 20px;
 }
 
 .doughnut-container {
-  width: 50%;
-  display: flex;
+  width: 35%;
+  display: inline-flex;
 }
 
 .email , .banners, .ppc, .thirdParty {
@@ -13,7 +18,7 @@
 }
 
 .legend {
-  margin: 10px;
+  margin:0.5rem 0 0 3rem;
 }
 
 .trend-container {
@@ -27,7 +32,24 @@
   }
 
   #target-label{
-    margin-left: 125px;
+    margin-left: 20px;
     margin-bottom: -4px;
   }
 }
+
+::ng-deep{
+  .legend{
+    .ig-chart-legend-items-list {
+      display: grid;
+      grid-row-gap: 10px;
+      grid-column-gap: 20px;
+      grid-template-columns: auto auto;
+    }
+  }
+  .igx-doughnut-chart{
+    width: 40%;
+  }
+
+}
+
+

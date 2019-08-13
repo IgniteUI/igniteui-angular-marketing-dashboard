@@ -1,0 +1,28 @@
+<div class="stats-container">
+  <div class="trends-container">
+      <app-trend-item *ngFor="let item of trendItems"
+                        [direction]="item.direction"
+                        [directionColor]="item.directionColor"
+                        [percent]="item.percent"
+                        [name]="item.name"
+                        [end]="item.end"
+                        [start]="item.start"
+                        [endRes]="item.endRes">
+      </app-trend-item>
+  </div>
+  <div class="keywords-container">
+    <igx-card>
+        <igx-card-header igxHeaderTitle>
+            <h5>Top Pages</h5>
+          </igx-card-header>
+          <igx-card-content>
+              <igx-list>
+                  <igx-list-item *ngFor="let word of endKeywords; let i = index" [ngClass]="{'last': i === endKeywords.length - 1}">
+                            <div class=".end" style="font-weight: bold">{{i + 1}}. {{word | uppercase}}</div>
+                             <div class=".start" style="font-weight: bold; color: #969595">{{i + 1}}. {{startKeywords[i]  | uppercase}}</div>
+                  </igx-list-item>
+              </igx-list>
+          </igx-card-content>
+    </igx-card>
+  </div>
+</div>
