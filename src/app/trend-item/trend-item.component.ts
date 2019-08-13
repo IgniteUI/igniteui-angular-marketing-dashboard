@@ -36,9 +36,11 @@ export class TrendItemComponent implements OnInit {
   }
 
   private shouldSetTitle(name: string): boolean {
-    const temp = name.match(/[A-Z]{1,}/g);
-    if (temp) {
-      return true;
+    if (name) {
+      const temp = name.match(/[A-Z]{1,}/g);
+      if (temp) {
+        return true;
+      }
     }
     return false;
   }

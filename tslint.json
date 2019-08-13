@@ -9,6 +9,7 @@
     "component-class-suffix": true,
     "radix": false,
     "variable-name": false,
+    "prefer-for-of":false,
     "contextual-lifecycle": true,
     "no-string-literal": false,
     "directive-class-suffix": true,

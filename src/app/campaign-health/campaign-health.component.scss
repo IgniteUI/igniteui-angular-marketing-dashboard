@@ -1,0 +1,21 @@
+.graphs-container {
+  height: 170px;
+  width: 25%;
+}
+
+.doughnut-container {
+  width: 50%;
+  display: flex;
+}
+
+.email , .banners, .ppc, .thirdParty {
+  margin-bottom: -10px;
+}
+
+.legend {
+  margin: 10px;
+}
+
+.trend-container {
+  margin: auto 0;
+}
