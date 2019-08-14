@@ -19,7 +19,7 @@ import { IgxLinearProgressBarComponent } from 'igniteui-angular';
   templateUrl: './session-region.component.html',
   styleUrls: ['./session-region.component.scss']
 })
-export class SessionByRegionComponent implements OnInit, AfterViewInit {
+export class SessionByRegionComponent implements OnInit{
 
   constructor( private service: DataService) {
     this.shapeSeriesModel = {
@@ -48,6 +48,10 @@ export class SessionByRegionComponent implements OnInit, AfterViewInit {
   public range: number;
   public interval: any;
 
+  public topPages: string[];
+  public users: string;
+  public conversionRate: string;
+
   @ViewChild('map', {static: true})
     public map: IgxGeographicMapComponent;
 
@@ -59,6 +63,11 @@ export class SessionByRegionComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.service.onDataFetch.subscribe((data: IRangeData) => {
+
+      this.users = data.end.users;
+      this.conversionRate = data.end.conversionRate;
+      this.topPages = data.end.topPages;
+
       this.inProgressMode = false;
       if (this.interval) {
         this.interval = window.clearInterval(this.interval);
@@ -75,10 +84,6 @@ export class SessionByRegionComponent implements OnInit, AfterViewInit {
       this.generateMapData(this.map);
 
     });
-  }
-
-  ngAfterViewInit() {
-
   }
 
   public generateMapSeries(shape: IGeographicShapeSeries, proportionalS: IGeographicProportionalSymbolSeries): any[] {
