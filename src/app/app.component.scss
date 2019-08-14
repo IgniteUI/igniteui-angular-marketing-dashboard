@@ -1,7 +1,22 @@
-.side-nav{
-  margin: 0 2.5rem;
-  position: absolute;
-  right: 0;
-  display: inline-block;
-  top: 20rem;
+.md-data-chart {
+  width: 100%;
+}
+
+.md-charts {
+  flex: 1 0 0%;
+}
+
+.md-content,
+.md-content__row {
+  display: flex;
+}
+
+.md-content__row {
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 8px 32px;
+}
+
+.md-sidebar {
+  padding: 30px 30px 0 0;
 }

@@ -1,21 +1,28 @@
-.chart-container{
-  margin: 5%;
-}
-
 :host ::ng-deep{
   .chart-tooltip {
     div {
-        padding: 2px;
+      padding: 2px;
     }
     .item {
-        border-bottom: 1px solid #453f4e;
+      border-bottom: 1px solid #453f4e;
     }
+  }
+
+  .igx-button-group {
+    min-width: 250px;
   }
 }
 
-.buttons-container {
-  margin-bottom: 40px;
-  button + button {
-    margin-left: 5px;
+.md-data-filter {
+  padding: 32px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 16px;
+
+  h5 {
+    margin-top: 0;
   }
 }

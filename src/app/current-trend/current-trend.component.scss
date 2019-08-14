@@ -1,13 +1,36 @@
-.trend-items{
-  display:inline-flex;
+.md-trend-container {
+  display: flex;
+  background: #444;
+  justify-content: center;
+  padding: 16px;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+  }
 }
 
-.trend-info-container{
-  margin: 50px 0 0 0;
+.trend-items{
+  display: flex;
 }
 
 .image-container{
- padding: 20px;
- display: inline-flex;
- flex-flow: column;
+  padding: 16px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  img {
+    margin-bottom: 16px;
+  }
+  span {
+    &:first-of-type {
+      font-weight: 900;
+    }
+  }
+
+  span + span {
+    margin-left: 10px;
+  }
 }

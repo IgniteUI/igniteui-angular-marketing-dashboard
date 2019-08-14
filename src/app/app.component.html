@@ -1,17 +1,27 @@
 <app-navbar></app-navbar>
 <app-current-trend></app-current-trend>
-<div style="display: flex" width="100%">
-  <div class="chart" style="width: 38%; height: fit-content;">
-    <app-data-chart></app-data-chart>
+
+<div class="md-content">
+  <div class="md-charts">
+    <div class="md-content__row">
+      <app-data-chart class="md-data-chart"></app-data-chart>
+    </div>
+
+    <div class="md-content__row">
+      <div class="md-map" style="width: 38%; height: fit-content;">
+        <app-session-region></app-session-region>
+      </div>
+
+      <app-campaign-health></app-campaign-health>
+    </div>
   </div>
-  <div class="map" style="width: 38%; height: fit-content;">
-    <app-session-region></app-session-region>
-  </div>
-</div>
-<div class="side-nav">
+
+  <div class="md-sidebar">
     <app-side-nav-indicators></app-side-nav-indicators>
   </div>
-  <app-campaign-health></app-campaign-health>
+</div>
+
+
 
 
 

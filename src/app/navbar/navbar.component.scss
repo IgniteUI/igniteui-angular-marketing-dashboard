@@ -2,6 +2,21 @@ igxButton + igxButton {
   margin-left: 10px;
 }
 
+.md-navbar-label {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.md-navbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-height: 100%;
+
+  >* {
+    margin-left: 30px !important;
+  }
+}
 
 .igx-divider--vertical {
   width: 2px;
@@ -20,14 +35,16 @@ igxButton + igxButton {
   margin-right: 4.5rem;
 }
 
-
-
-
 .igx-date-picker {
   width: 10%;
 }
 
 :host ::ng-deep {
+  .igx-navbar__right {
+    width: 100%;
+    max-height: 100%;
+    justify-content: space-between;
+  }
 
   .igx-navbar__left {
     display: none;
@@ -38,19 +55,7 @@ igxButton + igxButton {
   }
 
   .igx-navbar{
-    background: red;
     height: 70px;
-  }
-
-  .igx-divider{
-    margin: 5px;
-  }
-
-  .igx-button--flat{
-    color: white;
-  }
-  .igx-divider{
-    margin: 5px !important;
   }
 
   .igx-date-picker__input-date {
@@ -76,5 +81,8 @@ igxButton + igxButton {
 }
 
 .logo-container{
-  margin-right: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
 }
