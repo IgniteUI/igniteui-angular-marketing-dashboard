@@ -52,6 +52,19 @@ export class CampaignHealthComponent implements OnInit {
       directionColor: undefined,
       endRes: undefined
     };
+    for (let index = 0; index < 8; index++) {
+        this.bulletGraphs.push(
+          {
+          adModel: undefined,
+          value: undefined,
+          maximumValue: undefined,
+          valueBrush: undefined,
+          bkgBrush: undefined,
+          labelBrush: undefined,
+          target: undefined
+         });
+      }
+
 
     this.formatter = (context) => {
       if (!context.item.showLabel) { return ''; }
@@ -76,7 +89,6 @@ export class CampaignHealthComponent implements OnInit {
     });
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.bulletGraphs = [];
       this.trendItem = generateTrendItem('conversions', data);
       this.chart.series.clear();
       this.doughnutData = [
@@ -151,18 +163,18 @@ export class CampaignHealthComponent implements OnInit {
   public renderBulletGraphs(data: IRangeData, colors: IDoughnutColors) {
     const periods = ['start', 'end'];
 
-
+    let graphIndex = 0;
     for (let index = 0; index < this.adModels.length; index++) {
       for (let i = 0; i < periods.length; i++) {
-        this.bulletGraphs.push({
-          adModel: this.adModels[index],
-          value: data[periods[i]][this.adModels[index]],
-          maximumValue: data[periods[i]].conversions,
-          valueBrush: colors[this.adModels[index]][periods[i]].value,
-          bkgBrush: colors[this.adModels[index]][periods[i]].bkg,
-          labelBrush: colors[this.adModels[index]][periods[i]].label,
-          target: data[periods[i]][`${this.adModels[index]}Target`]
-        });
+         this.bulletGraphs[graphIndex].adModel = this.adModels[index];
+         this.bulletGraphs[graphIndex].value = data[periods[i]][this.adModels[index]];
+         this.bulletGraphs[graphIndex].maximumValue = data[periods[i]].conversions;
+         this.bulletGraphs[graphIndex].valueBrush = colors[this.adModels[index]][periods[i]].value;
+         this.bulletGraphs[graphIndex].bkgBrush = colors[this.adModels[index]][periods[i]].bkg;
+         this.bulletGraphs[graphIndex].labelBrush =  colors[this.adModels[index]][periods[i]].label;
+         this.bulletGraphs[graphIndex].target = data[periods[i]][`${this.adModels[index]}Target`];
+
+         graphIndex++;
       }
     }
   }
