@@ -1,24 +1,34 @@
-.item-container{
-  display: inline;
-  margin: 0 100px 0 100px;
-}
-
-.icon-container{
-  display: inline;
-  margin-right: 1.0rem;
-
-}
-
-.data-container{
-  float: right;
-  justify-content: end;
-
-}
-
 :host ::ng-deep{
   igx-icon{
-    font-size: 4.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2.5rem;
   }
+}
+
+.igx-card {
+  min-height: 100%;
+  min-width: 200px;
+  margin: 10px;
+  text-align: center;
+}
+
+.igx-card-header {
+  padding-bottom: 0;
+  text-align: center;
+  justify-content: center;
+}
+
+igx-icon {
+  margin-right: 0.5rem;
+}
+
+.md-trend-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 900;
 }
 
 .success{
@@ -27,18 +37,4 @@
 
 .danger{
   color: red;
-}
-
-.percent-container{
-  font-size: 4rem;
-  margin: 1.5rem;
-}
-
-.card-wrapper {
-  margin-left: 1rem;
- width: 280px
-}
-
-.start-end-container{
-  font-size: 1.5em;
 }

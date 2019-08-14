@@ -1,19 +1,21 @@
 .graphs-container {
   height: 170px;
-  width: 25%;
+  width: 100%;
   display: grid;
   grid-row-gap: 10px;
   grid-column-gap: 20px;
   grid-template-columns: auto auto;
-  margin-left: 20px;
 }
 
 .doughnut-container {
-  width: 35%;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
 }
 
-.email , .banners, .ppc, .thirdParty {
+.email,
+.banners,
+.ppc,
+.thirdParty {
   margin-bottom: -10px;
 }
 

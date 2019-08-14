@@ -9,4 +9,20 @@
 // $app-palette: igx-palette($primary, $secondary);
 
 @include igx-core();
-@include igx-theme($default-palette);
+@include igx-dark-theme($green-palette);
+
+$dark-bg: #333;
+$light-color: #fff;
+$dark-color: #666;
+
+body {
+  background: $dark-bg;
+  color: $light-color;
+}
+
+$md-navbar-theme: igx-navbar-theme(
+  $schema: $dark-schema,
+  $background: #111
+);
+
+@include igx-navbar($md-navbar-theme);
