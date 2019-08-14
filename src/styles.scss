@@ -26,3 +26,36 @@ $md-navbar-theme: igx-navbar-theme(
 );
 
 @include igx-navbar($md-navbar-theme);
+
+$md-card-theme: igx-card-theme(
+  $schema: $dark-schema,
+  $background: transparent,
+  $resting-shadow: none,
+  $hover-shadow: none,
+  $content-text-color: #444
+);
+
+$md-divider-theme: igx-divider-theme(
+  $color: #aeaeae
+);
+
+.md-trend-container {
+  @include igx-card($md-card-theme);
+  @include igx-divider($md-divider-theme);
+}
+
+
+
+
+
+.global-wrapper {
+  max-width: 1240px;
+  margin: 0 auto;
+  box-shadow: 2px 2px 10px #111;
+  &--nav {
+    box-shadow: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

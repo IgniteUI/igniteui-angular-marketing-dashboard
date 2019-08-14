@@ -11,18 +11,12 @@
       </app-trend-item>
   </div>
   <div class="keywords-container">
-    <igx-card>
-        <igx-card-header igxHeaderTitle>
-            <h5>Top Pages</h5>
-          </igx-card-header>
-          <igx-card-content>
-              <igx-list>
-                  <igx-list-item *ngFor="let word of endKeywords; let i = index" [ngClass]="{'last': i === endKeywords.length - 1}">
-                            <div class=".end" style="font-weight: bold">{{i + 1}}. {{word | uppercase}}</div>
-                             <div class=".start" style="font-weight: bold; color: #969595">{{i + 1}}. {{startKeywords[i]  | uppercase}}</div>
-                  </igx-list-item>
-              </igx-list>
-          </igx-card-content>
-    </igx-card>
+    <igx-list>
+      <igx-list-item isHeader>Top Pages</igx-list-item>
+      <igx-list-item *ngFor="let word of endKeywords; let i = index" [ngClass]="{'last': i === endKeywords.length - 1}">
+        <div igxListLine class=".end" style="font-weight: bold">{{i + 1}}. {{word | uppercase}}</div>
+        <div igxListLine class=".start" style="font-weight: bold; color: #969595">{{i + 1}}. {{startKeywords[i]  | uppercase}}</div>
+      </igx-list-item>
+    </igx-list>
   </div>
 </div>

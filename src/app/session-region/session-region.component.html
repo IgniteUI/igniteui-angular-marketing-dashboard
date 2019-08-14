@@ -9,7 +9,7 @@
 
 <div class="progress-container">
   <button class="play-btn" (click)="toggleUpdate($event)"
-    igxButton>{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
+    igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
     <span style="margin: 1rem">Start</span>
   <div style="width: 50%; margin: 0 auto; display: inline-flex;">
     <igx-linear-bar type="default" [textVisibility]="false"  [max]="range" [value]="0" [step]="1" [animate]="false"> </igx-linear-bar>

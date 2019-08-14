@@ -1,6 +1,3 @@
-.keywords-container{
-  margin-left: 1rem;
-}
 .list-container{
   display: flex;
   .igx-card-header{
@@ -12,11 +9,17 @@
 }
 
 :host ::ng-deep{
-  .igx-list__item-content{
-    display: block;
-  }
-  .last .igx-list__item-content{
-    display: block;
-    padding: 0.5rem;
+  .keywords-container{
+    max-width: 100%;
+
+    .igx-list__item-content {
+      padding: 0 .5rem;
+    }
+    .igx-list__item-lines {
+      font-size: 10px !important;
+      line-height: 1.4;
+    }
   }
 }
+
+
