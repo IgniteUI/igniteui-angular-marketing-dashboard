@@ -1,0 +1,268 @@
+{
+  "data": [
+     {
+        "name": "Alert_info",
+        "value": "ダッシュボードの使用について"
+     },
+     {
+        "name": "Alert_Paragraph_BarChart",
+        "value": "棒チャートは、2 つのデータ セットを表示するために Y 軸で対数目盛を使用します。コンバージョン (緑色で比較的少数) はチャートの下部にプロットされます。スケールの範囲は 1 ~ 100 です。セッション (黄色で比較的多数) はチャートの上部にプロットされます。スケールが 1,000 から 10,000 へすばやく変わります。この方法を使用すると、集合形式チャートで別のスケールを持つデータ セットと共に表示できます。"
+     },
+     {
+        "name": "Alert_Paragraph_Data",
+        "value": "サンプルを簡単にダウンロードしてインストールするには、このアプリケーションのすべてのデータは日付範囲によってランダムに生成されます。同じ日付範囲を選択しても別の値が作成されます。"
+     },
+     {
+        "name": "Alert_Text_Title_BarChart",
+        "value": "棒チャートについて"
+     },
+     {
+        "name": "Alert_Text_Title_Data",
+        "value": "データについて"
+     },
+     {
+        "name": "All",
+        "value": "すべて"
+     },
+     {
+        "name": "Banners",
+        "value": "バナー"
+     },
+     {
+        "name": "Branded_Searches",
+        "value": "ブランド検索"
+     },
+     {
+        "name": "By_Medium",
+        "value": "メディア別"
+     },
+     {
+        "name": "Campaign_Health",
+        "value": "キャンペーンの状況"
+     },
+     {
+        "name": "Compare",
+        "value": "比較"
+     },
+     {
+        "name": "Confirm_button",
+        "value": "閉じる"
+     },
+     {
+        "name": "Conversions",
+        "value": "コンバージョン"
+     },
+     {
+        "name": "Conversion_Costs",
+        "value": "コンバージョン単価"
+     },
+     {
+        "name": "Conversion_Rate",
+        "value": "コンバージョン レート"
+     },
+     {
+        "name": "Current",
+        "value": "現在"
+     },
+     {
+        "name": "Email",
+        "value": "メール"
+     },
+     {
+        "name": "End",
+        "value": "終了"
+     },
+     {
+        "name": "Error_Message",
+        "value": "エラー"
+     },
+     {
+        "name": "Error_Message_Button",
+        "value": "OK"
+     },
+     {
+        "name": "One_month",
+        "value": "1 か月"
+     },
+     {
+        "name": "One_week",
+        "value": "1 週間"
+     },
+     {
+        "name": "One_year",
+        "value": "1 年間"
+     },
+     {
+        "name": "Online_Sales",
+        "value": "オンライン セールス"
+     },
+     {
+        "name": "Overall_Health",
+        "value": "パフォーマンス概要"
+     },
+     {
+        "name": "Play",
+        "value": "再生"
+     },
+     {
+        "name": "PPC",
+        "value": "PPC"
+     },
+     {
+        "name": "Previous",
+        "value": "前回"
+     },
+     {
+        "name": "Range_of_days",
+        "value": "日付範囲"
+     },
+     {
+        "name": "Referring_Domains",
+        "value": "参照元ドメイン"
+     },
+     {
+        "name": "Select_Range",
+        "value": "範囲の選択"
+     },
+     {
+        "name": "Sessions",
+        "value": "セッション"
+     },
+     {
+        "name": "Sessions_by_Region",
+        "value": "地域別セッション"
+     },
+     {
+        "name": "Social_Trend",
+        "value": "ソーシャル トレンド"
+     },
+     {
+        "name": "Spend",
+        "value": "支出"
+     },
+     {
+        "name": "Start",
+        "value": "開始"
+     },
+     {
+        "name": "Support_Text",
+        "value": "<p class=\"lead\">このダッシュボードは、コンパクトサイズのデバイスではサポートされていません。<\/p>より大きい画面でダッシュボードを表示してください。"
+     },
+     {
+        "name": "Target",
+        "value": "対象"
+     },
+     {
+        "name": "Third_Party",
+        "value": "サードパーティー"
+     },
+     {
+        "name": "Three_months",
+        "value": "3 か月"
+     },
+     {
+        "name": "To",
+        "value": "～"
+     },
+     {
+        "name": "Top_Pages",
+        "value": "閲覧頻度の高いページ"
+     },
+     {
+        "name": "Top_Unbranded_Keywords",
+        "value": "一般キーワード"
+     },
+     {
+        "name": "Trend",
+        "value": "トレンド"
+     },
+     {
+        "name": "Users",
+        "value": "ユーザー"
+     },
+     {
+        "name": "Welcome_message",
+        "value": "マーケティング ダッシュボード"
+     },
+     {
+        "name": "Top_Pages_List",
+        "value": "get-to-your-work, the-solution-is-dashboards, ios-controls-help, top-5-UX-projects, make-the-time, if-you-build-it-they-will-come, marketing-projects-with-roi, top-resources-for seo, 10-events-you-must-attend, top-five-reasons-to-buy, 3-secrets-to-building-loyalty, why-customers-are-wrong, ceo-interview, from-red-to-black-in-one-quarter, monthly-sales-goals, summer-extravaganza, unfortunate-turn-of-events, my-iphone-is-my-computer, 7-deadly-assumptions, what-our-customers-wont-say, why-we-love-our-customers, the-smell-of-success, if-henry-ford-was-in-charge, how-we-can-do-better, 11-ways-to-say-yes, the-pointy-haired-boss, the-opening-farewell, luck-doesnt-close-deals, all-your-base-are-belong-to-us"
+     },
+     {
+        "name": "Top_Unbranded_Keywords_List",
+        "value": "プレス リリース, メディア, マーケティング ROI, SEO, チェック リスト, オンライン マーケティング, オフィス マネージメント, オンライン支払ソリューション, オンライン ストア, 半導体, ショッピング カート ソリューション, ソフトウェア, スタートアップ, 技術, 転送, 仮想サーバー ホスト, web デザイン, web 開発, web ホスト, 業株製品, 政府と交換, 食品飲料, オフィス製品, バイオテック"
+     },
+     {
+        "name": "Australia",
+        "value": "オーストラリア"
+     },
+     {
+        "name": "Brasil",
+        "value": "ブラジル"
+     },
+     {
+        "name": "Bulgaria",
+        "value": "ブルガリア"
+     },
+     {
+        "name": "China",
+        "value": "中国"
+     },
+     {
+        "name": "England",
+        "value": "イギリス"
+     },
+     {
+        "name": "Germany",
+        "value": "ドイツ"
+     },
+     {
+        "name": "India",
+        "value": "インド"
+     },
+     {
+        "name": "Japan",
+        "value": "日本"
+     },
+     {
+        "name": "Mexico",
+        "value": "メキシコ"
+     },
+     {
+        "name": "Philippines",
+        "value": "フィリピン"
+     },
+     {
+        "name": "Poland",
+        "value": "ポーランド"
+     },
+     {
+        "name": "Russia",
+        "value": "ロシア"
+     },
+     {
+        "name": "South_Korea",
+        "value": "韓国"
+     },
+     {
+        "name": "United_States",
+        "value": "米国"
+     },
+     {
+        "name": "Day",
+        "value": "{0} 日目"
+     },
+     {
+        "name": "Month",
+        "value": "{0} か月目"
+     },
+     {
+        "name": "Week",
+        "value": "{0} 週目"
+     },
+     {
+        "name": "Current_Trend",
+        "value": "<span class=\"bold center-block\">現在の<\/span>トレンド"
+     }
+  ]
+}
