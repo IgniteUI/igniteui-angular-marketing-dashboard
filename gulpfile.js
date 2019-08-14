@@ -4,7 +4,7 @@ const path = require('path');
 
 
 
-gulp.task('run-server', gulp.parallel(
+gulp.task('run-app', gulp.parallel(
   shell.task([`dotnet run --project ${path.join(__dirname, './apiServer/MarketingDashboardAPI')}`]),
   shell.task(['ng serve -o'])
 ));

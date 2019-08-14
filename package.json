@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "gulp run-server && ng serve -o",
+    "start": "gulp run-app",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
