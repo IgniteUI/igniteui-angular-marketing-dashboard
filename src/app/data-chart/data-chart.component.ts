@@ -144,7 +144,7 @@ export class DataChartComponent implements OnInit {
         series.xAxis = this.time;
         series.yAxis = this.yAxis;
         series.brush = seriesData.color;
-        series.title = (series.title as string).toUpperCase();
+        series.title = (seriesData.title as string).toUpperCase();
         series.outline = seriesData.color;
         series.isTransitionInEnabled = true;
         series.transitionDuration = 800;
