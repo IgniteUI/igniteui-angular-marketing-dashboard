@@ -7,3 +7,15 @@
 .progress-container {
   color: #fff;
 }
+
+.status-container{
+  display: inline-flex;
+  margin-top: 10px;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+}
+
+.conversion-rate, .top-pages {
+  border-left: 1px solid white;
+
+}
