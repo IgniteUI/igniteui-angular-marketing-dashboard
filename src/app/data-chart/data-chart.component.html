@@ -8,7 +8,7 @@
 </div>
 
 <div>
-  <igx-data-chart #chart width="100%" height="400px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
+  <igx-data-chart #chart width="100%" height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">
@@ -31,8 +31,7 @@
   </div>
 </ng-template>
 
-<ng-template #emptyAreaChartTooltipTemplate>
-</ng-template>
+<ng-template #emptyAreaChartTooltipTemplate></ng-template>
 
 <ng-template let-series="series" let-item="item" #columnChartTooltipTemplate>
   <div *ngIf="series.name === 'sessions'" class="chart-tooltip">
