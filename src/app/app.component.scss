@@ -1,9 +1,17 @@
 .md-data-chart {
   width: 100%;
+
+  &.md-content__col {
+    padding: 16px 16px;
+  }
 }
 
 .md-charts {
   flex: 1 0 0%;
+}
+
+.nav-placeholder {
+  width:70px;
 }
 
 .md-content,
@@ -14,11 +22,16 @@
 .md-content__row {
   align-items: flex-start;
   justify-content: space-around;
-  padding: 8px 16px;
 }
 
 .md-content__col {
   flex: 1 0 0%;
+  padding:8px 16px;
+  border-right:1px solid #444;
+
+  + .md-content__col {
+    border-right: none;
+  }
 }
 
 .md-sidebar {

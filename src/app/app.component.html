@@ -1,17 +1,15 @@
 <app-navbar></app-navbar>
 
-
 <div class="global-wrapper">
   <app-current-trend></app-current-trend>
   <div class="md-content">
     <div class="md-charts">
       <div class="md-content__row">
-        <app-data-chart class="md-data-chart"></app-data-chart>
+        <app-data-chart class="md-data-chart md-content__col"></app-data-chart>
       </div>
       <igx-divider [middle]="true"></igx-divider>
       <div class="md-content__row">
         <app-session-region class="md-content__col"></app-session-region>
-        <igx-divider [middle]="true" [vertical]="true"></igx-divider>
         <app-campaign-health class="md-content__col"></app-campaign-health>
       </div>
     </div>

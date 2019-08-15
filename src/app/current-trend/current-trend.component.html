@@ -1,7 +1,9 @@
 <div class="md-trend-container">
   <div class="md-trend-container__inner">
     <div class="image-container">
-      <img src= "../../assets/{{status==='negative' ? 'sad' : status==='neutral' ? 'neutral' : 'happy'}}_face.png" >
+      <igx-icon>
+        sentiment_very_{{status==='negative' ? 'dissatisfied' : status==='neutral' ? 'neutral' : 'satisfied'}}
+      </igx-icon>
       <div>
         <span>{{'current'| uppercase}}</span>
         <span>{{'trend'| uppercase}}</span>
@@ -9,13 +11,13 @@
     </div>
     <div class="trend-items">
       <app-trend-item class="md-trend-item" *ngFor="let item of trendItems"
-                      [direction]="item.direction"
-                      [directionColor]="item.directionColor"
-                      [percent]="item.percent"
-                      [name]="item.name"
-                      [end]="item.end"
-                      [start]="item.start"
-                      [endRes]="item.endRes">
+        [direction]="item.direction"
+        [directionColor]="item.directionColor"
+        [percent]="item.percent"
+        [name]="item.name"
+        [end]="item.end"
+        [start]="item.start"
+        [endRes]="item.endRes">
       </app-trend-item>
     </div>
   </div>
