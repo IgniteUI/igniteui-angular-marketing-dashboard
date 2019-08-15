@@ -35,9 +35,21 @@ $md-card-theme: igx-card-theme(
   $content-text-color: #444
 );
 
+$md-card-theme_2: igx-card-theme(
+  $schema: $dark-schema,
+  $background: transparent,
+  $resting-shadow: none,
+  $hover-shadow: none,
+  $content-text-color: #ddd
+);
+
 $md-divider-theme: igx-divider-theme(
   $color: #aeaeae
 );
+
+.trend-container {
+  @include igx-card($md-card-theme_2);
+}
 
 .md-trend-container {
   @include igx-card($md-card-theme);

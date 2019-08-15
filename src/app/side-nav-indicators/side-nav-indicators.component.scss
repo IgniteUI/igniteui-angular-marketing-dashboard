@@ -20,6 +20,12 @@
       line-height: 1.4;
     }
   }
+
+  .stats-container {
+    igx-divider {
+      display: none;
+    }
+  }
 }
 
 

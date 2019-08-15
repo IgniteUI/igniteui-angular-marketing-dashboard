@@ -1,3 +1,7 @@
+<div class="md-data-filter">
+  <h5>SESSIONS BY REGION</h5>
+</div>
+
 <div class="map-container">
   <igx-geographic-map #map>
   </igx-geographic-map>
@@ -8,14 +12,14 @@
 </ng-template>
 
 <div class="progress-container">
-  <button class="play-btn" (click)="toggleUpdate($event)"
-    igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
-  <span style="margin: 1rem">Start</span>
-  <div style="width: 50%; margin: 0 auto; display: inline-flex;">
-    <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false">
-    </igx-linear-bar>
+  <div class="md-progress-bar">
+    <button class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
+    <span>Start</span>
+    <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false"></igx-linear-bar>
+    <span>End</span>
   </div>
-  <span style="margin: 1rem">End</span>
+
+
   <div class="status-container">
     <div class="users">
       <div>{{'users' | uppercase}}</div>

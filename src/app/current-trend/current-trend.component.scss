@@ -18,16 +18,8 @@
       }
     }
 
-    igx-card {
-      min-width: auto;
-      min-height: auto;
-      padding: 10px 20px;
-    }
-
     .igx-card-content {
-      align-items: flex-start;
       justify-content: center;
-      padding: 0;
     }
 
     .percent-container {
@@ -56,6 +48,12 @@
     &:first-of-type {
       font-weight: 900;
     }
+  }
+
+  igx-icon {
+    font-size: 70px;
+    width: 70px;
+    height: 70px;
   }
 
   span + span {

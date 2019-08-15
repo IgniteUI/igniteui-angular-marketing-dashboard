@@ -8,6 +8,20 @@
   color: #fff;
 }
 
+.md-progress-bar {
+  display: flex;
+  align-items: center;
+
+  igx-linear-bar {
+    flex: 1;
+    margin: 0 8px;
+  }
+}
+
+.play-btn {
+  margin-right: 16px;
+}
+
 .status-container{
   display: inline-flex;
   margin-top: 10px;
