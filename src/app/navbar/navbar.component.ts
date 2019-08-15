@@ -21,7 +21,6 @@ export class NavbarComponent implements OnInit {
   public endRangeEnd: Date;
 
   constructor(private dataService: DataService) {
-
     this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
     this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
     this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
@@ -29,22 +28,22 @@ export class NavbarComponent implements OnInit {
   }
 
   public text1 = 'select range';
-  public text2 = 'range of days';
+  public text2 = 'Compare range';
 
   public ranges = [
-    { text: '1 week' },
-    { text: '1 month' },
-    { text: '3 months' },
-    { text: '1 year' }];
+    { text: '1 week', selected: false},
+    { text: '1 month', selected: false },
+    { text: '3 months', selected: false},
+    { text: '1 year', selected: true }];
 
 
-  public updateDates(range: string) {
+  public updateDates(ranges: string) {
     let dateRange: IRange;
     const current = new Date();
     let days = 0;
     const dayMiliseconds = 1000 * 60 * 60 * 24;
 
-    switch (range) {
+    switch (ranges) {
       case '1 week':
         dateRange = getDateRange(7);
         this.applyRanges(dateRange);
@@ -62,12 +61,12 @@ export class NavbarComponent implements OnInit {
         this.applyRanges(dateRange);
         break;
       case '1 year':
+      default:
         dateRange = getDateRange(365);
         this.applyRanges(dateRange);
         break;
     }
     this.dataService.getSummaryData(dateRange);
-
   }
 
   private applyRanges(ranges: IRange): void {

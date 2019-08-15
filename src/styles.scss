@@ -44,7 +44,11 @@ $md-card-theme_2: igx-card-theme(
 );
 
 $md-divider-theme: igx-divider-theme(
-  $color: #aeaeae
+  $color: #444
+);
+
+$md-divider-theme_2: igx-divider-theme(
+  $color: #d6d6d6
 );
 
 .trend-container {
@@ -53,7 +57,7 @@ $md-divider-theme: igx-divider-theme(
 
 .md-trend-container {
   @include igx-card($md-card-theme);
-  @include igx-divider($md-divider-theme);
+  @include igx-divider($md-divider-theme_2);
 }
 
 

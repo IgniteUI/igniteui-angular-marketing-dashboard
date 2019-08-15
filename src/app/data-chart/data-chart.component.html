@@ -2,8 +2,8 @@
   <h5>OVERALL HEALTH</h5>
 
   <igx-buttongroup>
-    <button igxButton (click)="setSeries(false)">All</button>
-    <button igxButton (click)="setSeries(true)">By medium</button>
+    <button igxRipple igxButton (click)="setSeries(false)">All</button>
+    <button igxRipple igxButton (click)="setSeries(true)">By medium</button>
   </igx-buttongroup>
 </div>
 
@@ -50,5 +50,4 @@
   <div *ngIf="series.name === 'conversionPrev'" class="chart-tooltip">
     <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.conversion}}</div>
   </div>
-
 </ng-template>

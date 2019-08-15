@@ -7,9 +7,10 @@
         {{text1 | uppercase}}
       </span>
 
-        <igx-buttongroup>
-          <button *ngFor="let range of ranges" (click)="updateDates(range.text)"
-                  igxButton>{{range.text | uppercase}}</button>
+        <igx-buttongroup [multiSelection]="false">
+          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
+            {{range.text}}
+          </button>
         </igx-buttongroup>
 
         <igx-divider [middle]="true" [vertical]="true"></igx-divider>
@@ -26,7 +27,7 @@
               <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
         </div>
-        <button igxButton="raised" (click)="compareRanges($event)">Compare</button>
+        <button igxRipple igxButton="raised" (click)="compareRanges($event)">Compare</button>
       </div>
     </div>
   </igx-navbar>

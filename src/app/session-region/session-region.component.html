@@ -13,31 +13,28 @@
 
 <div class="progress-container">
   <div class="md-progress-bar">
-    <button class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
+    <button igxRipple class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
     <span>Start</span>
     <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false"></igx-linear-bar>
     <span>End</span>
   </div>
 
+  <igx-divider [middle]="true"></igx-divider>
 
   <div class="status-container">
-    <div class="users">
+    <div class="status-container__col users">
       <div>{{'users' | uppercase}}</div>
-      <div style="font-size: 28pt; margin-right: 10px">{{users}}</div>
+      <div>{{users}}</div>
     </div>
-    <div class="conversion-rate">
-      <div style="margin:0 5px 0 10px">
+    <div class="status-container__col conversion-rate">
         <div>{{'conversion rate' | uppercase}}</div>
         <div style="font-size: 28pt">{{conversionRate}}%</div>
-      </div>
     </div>
-    <div class="top-pages">
-      <div style="margin-left: 5px">
+    <div class="status-container__col top-pages">
         <div>{{'Top Pages' | uppercase}}</div>
         <ul>
           <li *ngFor="let page of topPages">{{page}}</li>
         </ul>
-      </div>
     </div>
   </div>
 </div>
