@@ -13,7 +13,12 @@
 
 <div class="progress-container">
   <div class="md-progress-bar">
-    <button igxRipple class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">{{ inProgressMode ? 'Pause' : 'Play' | uppercase}}</button>
+    <button igxRipple class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">
+      {{ inProgressMode ? 'Pause' : 'Play' | uppercase}}
+      <igx-icon>
+        {{ inProgressMode ? 'pause' : 'play'}}_arrow
+      </igx-icon>
+    </button>
     <span>Start</span>
     <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false"></igx-linear-bar>
     <span>End</span>
