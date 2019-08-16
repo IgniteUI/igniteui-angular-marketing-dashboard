@@ -60,18 +60,19 @@ $md-divider-theme_2: igx-divider-theme(
   @include igx-divider($md-divider-theme_2);
 }
 
-
-
-
-
 .global-wrapper {
-  max-width: 1240px;
+  max-width: 1300px;
   margin: 0 auto;
   box-shadow: 2px 2px 10px #111;
   &--nav {
+    width: 100%;
     box-shadow: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  @media only screen and (max-width: 1024px) {
+    max-width: 100%;
   }
 }

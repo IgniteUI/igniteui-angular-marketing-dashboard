@@ -7,7 +7,7 @@ import { IRange } from '../models/range'
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
+  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
 })
 export class NavbarComponent implements OnInit {
 
@@ -27,8 +27,8 @@ export class NavbarComponent implements OnInit {
     this.endRangeEnd = this.today;
   }
 
-  public text1 = 'select range';
-  public text2 = 'Compare range';
+  public text1 = 'SELECT';
+  public text2 = 'COMPARE';
 
   public ranges = [
     { text: '1 week', selected: false},

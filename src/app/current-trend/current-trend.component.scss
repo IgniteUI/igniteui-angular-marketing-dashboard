@@ -26,6 +26,12 @@
       line-height: 1;
     }
   }
+
+  .md-trend-container {
+    .igx-card {
+      margin: 0;
+    }
+  }
 }
 
 .md-trend-item,

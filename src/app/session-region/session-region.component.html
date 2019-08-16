@@ -18,23 +18,23 @@
     <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false"></igx-linear-bar>
     <span>End</span>
   </div>
+</div>
 
-  <igx-divider [middle]="true"></igx-divider>
+<igx-divider [middle]="true"></igx-divider>
 
-  <div class="status-container">
-    <div class="status-container__col users">
-      <div>{{'users' | uppercase}}</div>
-      <div>{{users}}</div>
-    </div>
-    <div class="status-container__col conversion-rate">
-        <div>{{'conversion rate' | uppercase}}</div>
-        <div style="font-size: 28pt">{{conversionRate}}%</div>
-    </div>
-    <div class="status-container__col top-pages">
-        <div>{{'Top Pages' | uppercase}}</div>
-        <ul>
-          <li *ngFor="let page of topPages">{{page}}</li>
-        </ul>
-    </div>
+<div class="status-container">
+  <div class="status-container__col users">
+    <div class="md-col-label">{{'users'}}</div>
+    <div class="md-col-val">{{users}}</div>
+  </div>
+  <div class="status-container__col conversion-rate">
+    <div class="md-col-label">{{'conversion rate'}}</div>
+    <div class="md-col-val">{{conversionRate}}%</div>
+  </div>
+  <div class="status-container__col top-pages">
+    <div class="md-col-label">{{'Top Pages'}}</div>
+    <ul class="md-col-list">
+      <li *ngFor="let page of topPages">{{page}}</li>
+    </ul>
   </div>
 </div>

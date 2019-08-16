@@ -24,6 +24,10 @@ igxButton + igxButton {
   background: white;
 }
 
+.button-icon {
+  margin-right: 4px;
+}
+
 .navigation-placeholder{
   width:100%;
   height: 70px;
@@ -68,6 +72,13 @@ igxButton + igxButton {
       height: 14px;
     }
   }
+
+  .md-navbar-actions {
+   igx-divider {
+     background: #333 !important;
+   }
+  }
+
 
   .igx-navbar__left {
     display: none;

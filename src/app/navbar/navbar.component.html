@@ -3,9 +3,9 @@
     <div class="global-wrapper global-wrapper--nav">
       <img class="logo-container" src="../../assets/logo.png" alt="marketing dashboard">
       <div class="md-navbar-actions">
-      <span class="md-navbar-label">
-        {{text1 | uppercase}}
-      </span>
+        <span class="md-navbar-label">
+          {{text1 | uppercase}}
+        </span>
 
         <igx-buttongroup [multiSelection]="false">
           <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
@@ -15,7 +15,7 @@
 
         <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
-        <span>{{text2}}</span>
+        <span class="md-navbar-label">{{text2}}</span>
         <div class="datePicker-container">
           <div class="start-ranges">
               <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
@@ -27,7 +27,13 @@
               <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
         </div>
-        <button igxRipple igxButton="raised" (click)="compareRanges($event)">Compare</button>
+
+        <button igxRipple igxButton="raised" (click)="compareRanges($event)">
+          <i class="material-icons button-icon">
+            compare
+          </i>
+          <span>Compare</span>
+        </button>
       </div>
     </div>
   </igx-navbar>
