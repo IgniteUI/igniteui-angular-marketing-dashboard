@@ -31,7 +31,7 @@ export function generateTrendItem(inditicatorName: string, data: IRangeData, inv
   }
 
   if (percent === 0) {
-    direction = '';
+    direction = 'flat';
     endRes = '';
   }
 
@@ -43,15 +43,19 @@ export function generateTrendItem(inditicatorName: string, data: IRangeData, inv
   let directionColor = 'success';
   if (direction === 'up') {
     directionColor = 'success';
-  } else {
+  } else if (direction === 'down') {
     directionColor = 'danger';
+  } else {
+    directionColor = '';
   }
 
   if (invertStyleRule) {
     if (direction === 'up') {
       directionColor = 'danger';
-    } else {
+    } else if (direction === 'down') {
       directionColor = 'success';
+    } else {
+      directionColor = '';
     }
   }
 

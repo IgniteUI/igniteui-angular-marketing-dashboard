@@ -2,13 +2,13 @@
   <h5>OVERALL HEALTH</h5>
 
   <igx-buttongroup>
-    <button igxButton (click)="setSeries(false)">All</button>
-    <button igxButton (click)="setSeries(true)">By medium</button>
+    <button igxRipple igxButton [selected]="true" (click)="setSeries(false)">All</button>
+    <button igxRipple igxButton (click)="setSeries(true)">By medium</button>
   </igx-buttongroup>
 </div>
 
-<div>
-  <igx-data-chart #chart width="100%" height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
+<div class="md-data-chart">
+  <igx-data-chart #chart height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">
@@ -50,5 +50,4 @@
   <div *ngIf="series.name === 'conversionPrev'" class="chart-tooltip">
     <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.conversion}}</div>
   </div>
-
 </ng-template>

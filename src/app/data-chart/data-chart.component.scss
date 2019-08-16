@@ -8,7 +8,41 @@
     }
   }
 
+  .legendInline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .md-data-chart {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .ig-data-chart {
+    margin-bottom: 8px;
+  }
+
   .igx-button-group {
     min-width: 250px;
+  }
+
+  .ig-chart-legend-item{
+    margin-right: 16px!important;
+  }
+
+  .ig-chart-legend-items-list {
+    margin-left: 16px!important;
+  }
+
+  .ig-chart-legend-item-badge,
+  .ig-chart-legend-item,
+  .ig-chart-legend-item-text {
+    display: flex !important;
+    align-items: center;
+  }
+  .ig-chart-legend-item-text {
+    color: #fff;
+    padding-left: 4px;
   }
 }

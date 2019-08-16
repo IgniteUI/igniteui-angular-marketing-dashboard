@@ -1,6 +1,7 @@
 .graphs-container {
   height: 170px;
   width: 100%;
+  padding: 0 8px;
   display: grid;
   grid-row-gap: 10px;
   grid-column-gap: 20px;
@@ -11,6 +12,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 32px;
+  padding: 0 16px;
 }
 
 .email,
@@ -31,10 +33,7 @@
   display: flex;
   color: #fff;
   font-size: 12px;
-
-  #conversions-label{
-    margin-left: 10px;
-  }
+  padding-left: 16px;
 
   #target-label{
     margin-left: 30px;

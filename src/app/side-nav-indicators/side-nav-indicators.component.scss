@@ -13,11 +13,21 @@
     max-width: 100%;
 
     .igx-list__item-content {
-      padding: 0 .5rem;
+      padding: .2rem .5rem;
     }
     .igx-list__item-lines {
       font-size: 10px !important;
       line-height: 1.4;
+    }
+
+    igx-list-item {
+      &:first-of-type {
+        &:hover {
+          .igx-list__item-content {
+            background: transparent;
+          }
+        }
+      }
     }
   }
 
