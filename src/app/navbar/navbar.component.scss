@@ -21,7 +21,6 @@ igxButton + igxButton {
 .igx-divider--vertical {
   width: 2px;
   height: 3rem;
-  background: white;
 }
 
 .button-icon {
@@ -66,10 +65,19 @@ igxButton + igxButton {
       }
     }
 
-    igx-icon {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
+    .datePicker-container {
+      igx-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    button {
+      igx-icon {
+        color: #000;
+        margin-left: 4px;
+      }
     }
   }
 
