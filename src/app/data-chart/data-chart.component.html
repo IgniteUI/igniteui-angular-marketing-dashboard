@@ -8,7 +8,7 @@
 </div>
 
 <div class="md-data-chart">
-  <igx-data-chart #chart height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
+  <igx-data-chart #chart height="200px" (seriesMouseLeftButtonDown)="check($event)" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">
@@ -36,18 +36,18 @@
 <ng-template let-series="series" let-item="item" #columnChartTooltipTemplate>
   <div *ngIf="series.name === 'sessions'" class="chart-tooltip">
     <div class="item bold">{{item.title}}</div>
-    <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.session}}</div>
+    <div><span class="caps-muted">{{series.title | uppercase}}:</span> {{item.session}}</div>
   </div>
 
   <div *ngIf="series.name === 'conversion'" class="chart-tooltip">
-    <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.conversion}}</div>
+    <div><span class="caps-muted">{{series.title | uppercase}}:</span> {{item.conversion}}</div>
   </div>
 
-  <div *ngIf="series.name === 'sessionsPrev'" class="chart-tooltip">
-    <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.session}}</div>
-  </div>
+  <span *ngIf="series.name === 'sessionsPrev'" class="chart-tooltip">
+    <span class="caps-muted">{{series.title | uppercase}} : {{item.session}}</span>
+  </span>
 
   <div *ngIf="series.name === 'conversionPrev'" class="chart-tooltip">
-    <div><span class="caps-muted">{{series.title | uppercase}}</span>: {{item.conversion}}</div>
+    <span class="caps-muted">{{series.title | uppercase}} : {{item.conversion}}</span>
   </div>
 </ng-template>
