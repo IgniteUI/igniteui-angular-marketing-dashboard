@@ -22,7 +22,6 @@ export class CampaignHealthComponent implements OnInit {
   public bulletGraphs: IBulletGraph[] = [];
   private formatter;
   public trendItem: ITrendItem;
-
   constructor(private service: DataService) {
 
     this.doughnutChartColors = {

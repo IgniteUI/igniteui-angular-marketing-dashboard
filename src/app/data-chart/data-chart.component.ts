@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts/ES5/igx-category-x-axis-component';
 import { IgxDataChartComponent } from 'igniteui-angular-charts/ES5/igx-data-chart-component';
@@ -38,6 +38,9 @@ export class DataChartComponent implements OnInit {
   @ViewChild('columnChartTooltipTemplate', {read: TemplateRef, static: false})
   public columnChartTooltipTemplate: TemplateRef<any>;
 
+  public columnSeriesData: IColumnSeriesData[] = [];
+
+  public areaSeriesData: IAreaSeriesData[] = [];
 
 
   public chartData: Array<IColumnChartDataRecord | IAreaChartDataRecord> = [];
@@ -45,18 +48,24 @@ export class DataChartComponent implements OnInit {
   public columnChartData: Array<IColumnChartDataRecord> = [];
   public areaChartData: Array<IAreaChartDataRecord> = [];
   public prevSeriesDataSource: Array<IColumnChartDataRecord> = [];
-
-  public columnSeries: Array<IgxColumnSeriesComponent> = [];
-  public areaSeries: Array<IgxAreaSeriesComponent> = [];
-
-  public chartInitialization = true;
+  public chartLabelFormatter;
   public mediumMode = false;
+  public chartInitialization = true;
+  constructor(private service: DataService) {
 
-  constructor(private service: DataService) { }
+    this.chartLabelFormatter = (value) => {
+      let label = value;
+      if (value >= 1000) { label = `${(value / 1000)}K`; }
+      return label;
+    };
+  }
 
 
   ngOnInit() {
+
     this.service.onDataFetch.subscribe((data: IRangeData) => {
+
+
       this.columnChartData = data.end.trafficStats;
 
       this.prevSeriesDataSource = data.start.trafficStats;
@@ -67,7 +76,6 @@ export class DataChartComponent implements OnInit {
 
       if (this.chartInitialization) {
         this.initChart();
-        this.setSeries(this.mediumMode);
         this.chartInitialization = false;
       } else if (this.mediumMode) {
           this.chartData = this.areaChartData;
@@ -89,16 +97,51 @@ export class DataChartComponent implements OnInit {
     if (this.mediumMode === false && this.chartData !== this.columnChartData) {
       this.chart.series.clear();
       this.chartData = this.columnChartData;
-      for (const series of this.columnSeries) {
+      for (const seriesData of this.columnSeriesData) {
+        const series = new IgxColumnSeriesComponent();
+        series.name = seriesData.name;
+        series.valueMemberPath = seriesData.valueMemberPath;
+        series.xAxis = seriesData.xAxis;
+        series.yAxis = this.yAxis;
+        series.title = seriesData.title;
+        series.brush = seriesData.brush;
+        series.outline = seriesData.outline;
+        series.isTransitionInEnabled = true;
+        series.transitionDuration = 800;
+        series.radiusX = 0;
+        series.radiusY = 0;
+        series.tooltipTemplate = this.columnChartTooltipTemplate;
+        if (seriesData.dataSource) {
+          series.dataSource = seriesData.dataSource;
+        } else {
+          series.dataSource = this.columnChartData;
+        }
         this.chart.series.add(series);
       }
       this.addToolTipLayer();
     } else if (this.mediumMode === true && this.chartData !== this.areaChartData) {
       this.chart.series.clear();
       this.chartData = this.areaChartData;
-      for (const series of this.areaSeries) {
+      let count = 0;
+      for (const seriesData of this.areaSeriesData) {
+        const series = new IgxAreaSeriesComponent();
+        series.name = seriesData.name;
+        series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = this.time;
+        series.yAxis = this.yAxis;
+        series.brush = seriesData.color;
+        series.title = (seriesData.title as string).toUpperCase();
+        series.outline = seriesData.color;
+        series.isTransitionInEnabled = true;
+        series.transitionDuration = 800;
+        series.areaFillOpacity = 0.5;
+        if (count > 0) {
+          series.tooltipTemplate = this.emptyreAChartTooltipTemplate;
+        }  else {
+          series.tooltipTemplate = this.areaChartTooltipTemplate;
+        }
         this.chart.series.add(series);
+        count++;
       }
       this.addToolTipLayer();
     }
@@ -111,47 +154,36 @@ export class DataChartComponent implements OnInit {
                              title: string,
                              brush: string,
                              outline: string,
-                             dataSource?: any): IgxColumnSeriesComponent {
-    const series = new IgxColumnSeriesComponent();
-    series.name = name;
-    series.valueMemberPath = valueMemberPath;
-    series.xAxis = xAxis;
-    series.yAxis = this.yAxis;
-    series.title = title;
-    series.brush = brush;
-    series.outline = outline;
-    series.isTransitionInEnabled = true;
-    series.transitionDuration = 800;
-    series.radiusX = 0;
-    series.radiusY = 0;
-    series.tooltipTemplate = this.columnChartTooltipTemplate;
+                             dataSource?: any): IColumnSeriesData {
     if (dataSource) {
-      series.dataSource = this.prevSeriesDataSource;
-      } else {
-      series.dataSource = this.columnChartData;
-      }
-    return series;
+      return {
+        name: name,
+        xAxis: xAxis,
+        valueMemberPath: valueMemberPath,
+        title: title,
+        brush: brush,
+        outline: outline,
+        dataSource: dataSource
+      };
+    }
+    return {
+      name: name,
+      xAxis: xAxis,
+      valueMemberPath: valueMemberPath,
+      title: title,
+      brush: brush,
+      outline: outline
+    };
   }
 
   public setAreaSeriesData(name: string,
-                           color: string,
-                           tooltip?: boolean): IgxAreaSeriesComponent {
-    const series = new IgxAreaSeriesComponent();
-    series.name = name;
-    series.valueMemberPath = name;
-    series.yAxis = this.yAxis;
-    series.brush = color;
-    series.title = (name as string).toUpperCase();
-    series.outline = color;
-    series.isTransitionInEnabled = true;
-    series.transitionDuration = 800;
-    series.areaFillOpacity = 0.5;
-    if (!tooltip) {
-      series.tooltipTemplate = this.emptyreAChartTooltipTemplate;
-    }  else {
-      series.tooltipTemplate = this.areaChartTooltipTemplate;
-    }
-    return series;
+                           color: string): IAreaSeriesData {
+    return {
+      name: name,
+      valueMemberPath: name,
+      title: name,
+      color: color
+    };
   }
 
   public addToolTipLayer() {
@@ -163,21 +195,21 @@ export class DataChartComponent implements OnInit {
   }
 
   public initChart() {
-    this.columnSeries.push(this.setColumnSeriesData('sessions', this.time, 'session', 'Session', '#ffff33', '#ffff33'));
+    this.columnSeriesData.push(this.setColumnSeriesData('sessions', this.time, 'session', 'Session', '#ffff33', '#ffff33'));
     // tslint:disable-next-line: max-line-length
-    this.columnSeries.push(this.setColumnSeriesData('sessionsPrev', this.time, 'session', 'Prev.Session', '#655F00', '#655F00', true));
-
-    this.columnSeries.push(this.setColumnSeriesData('conversion', this.timeConvers, 'conversion', 'Conversions', '#66cc00', '#66cc00'));
+    this.columnSeriesData.push(this.setColumnSeriesData('conversion', this.timeConvers, 'conversion', 'Conversions', '#66cc00', '#66cc00'));
 
     // tslint:disable-next-line: max-line-length
+    this.columnSeriesData.push(this.setColumnSeriesData('sessionsPrev', this.time, 'session', 'Prev.Session', '#655F00', '#655F00', this.prevSeriesDataSource));
     // tslint:disable-next-line: max-line-length
-    this.columnSeries.push(this.setColumnSeriesData('conversionPrev', this.timeConvers, 'conversion', 'Prev.Conversions', '#295001', '#295001', true));
+    this.columnSeriesData.push(this.setColumnSeriesData('conversionPrev', this.timeConvers, 'conversion', 'Prev.Conversions', '#295001', '#295001', this.prevSeriesDataSource));
 
-    this.areaSeries.push(this.setAreaSeriesData('organic', '#77B40D', true));
-    this.areaSeries.push(this.setAreaSeriesData('paid', '#A9D120'));
-    this.areaSeries.push(this.setAreaSeriesData('direct', '#CCE575'));
-    this.areaSeries.push(this.setAreaSeriesData('referral', '#E1EEB5'));
-    this.areaSeries.push(this.setAreaSeriesData('email', '#FFFFFF'));
+    this.areaSeriesData.push(this.setAreaSeriesData('organic', '#77B40D'));
+    this.areaSeriesData.push(this.setAreaSeriesData('paid', '#A9D120'));
+    this.areaSeriesData.push(this.setAreaSeriesData('direct', '#CCE575'));
+    this.areaSeriesData.push(this.setAreaSeriesData('referral', '#E1EEB5'));
+    this.areaSeriesData.push(this.setAreaSeriesData('email', '#FFFFFF'));
 
+    this.setSeries(false);
   }
 }
