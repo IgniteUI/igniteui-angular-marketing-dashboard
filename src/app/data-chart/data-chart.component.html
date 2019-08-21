@@ -8,7 +8,7 @@
 </div>
 
 <div class="md-data-chart">
-  <igx-data-chart #chart height="200px" (seriesMouseLeftButtonDown)="check($event)" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
+  <igx-data-chart #chart height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
 
     <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">

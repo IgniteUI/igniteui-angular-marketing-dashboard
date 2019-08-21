@@ -180,8 +180,4 @@ export class DataChartComponent implements OnInit {
     this.areaSeries.push(this.setAreaSeriesData('email', '#FFFFFF'));
 
   }
-
-  check(event){
-    debugger;
-  }
 }
