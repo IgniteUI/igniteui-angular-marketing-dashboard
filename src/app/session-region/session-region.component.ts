@@ -1,15 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { IgxGeographicMapComponent } from 'igniteui-angular-maps/ES5/igx-geographic-map-component';
 import { IgxGeographicProportionalSymbolSeriesComponent
 } from 'igniteui-angular-maps/ES5/igx-geographic-proportional-symbol-series-component';
 import { IgxGeographicShapeSeriesComponent
 } from 'igniteui-angular-maps/ES5/igx-geographic-shape-series-component';
-import { ShapeDataSource } from 'igniteui-angular-core/ES5/igx-shape-data-source';
 import { IGeographicShapeSeries, IMapData, IGeographicProportionalSymbolSeries } from '../models/map';
 import { IRangeData } from '../models/range';
 import { Visibility } from 'igniteui-angular-core/ES5/Visibility';
-import { SeriesCollection, Series } from 'igniteui-angular-charts/ES5/SeriesViewer_combined';
 import { MarkerType } from 'igniteui-angular-charts/ES5/MarkerType';
 import { IgxSizeScaleComponent } from 'igniteui-angular-charts/ES5/igx-size-scale-component';
 import { IgxLinearProgressBarComponent } from 'igniteui-angular';
@@ -19,7 +17,7 @@ import { IgxLinearProgressBarComponent } from 'igniteui-angular';
   templateUrl: './session-region.component.html',
   styleUrls: ['./session-region.component.scss']
 })
-export class SessionByRegionComponent implements OnInit{
+export class SessionByRegionComponent implements OnInit {
 
   constructor( private service: DataService) {
     this.shapeSeriesModel = {
