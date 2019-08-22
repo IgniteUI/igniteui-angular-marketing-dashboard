@@ -3,6 +3,7 @@ import { getDateRange } from '../../app/utils';
 import { DisplayDensityToken, DisplayDensity, IgxDialogComponent } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range'
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -19,8 +20,9 @@ export class NavbarComponent implements OnInit {
   public startRangeEnd: Date;
   public endRangeBegin: Date;
   public endRangeEnd: Date;
+  public version = '';
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private localeService: LocalizationService) {
     this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
     this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
     this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
@@ -85,17 +87,24 @@ export class NavbarComponent implements OnInit {
     };
     this.dataService.getSummaryData(range);
   }
-  ngOnInit() {
 
-    const range: IRange = {
+  public changeLocale(version) {
+    window.localStorage.setItem('locale', version);
+    this.localeService.setLocale(version);
+  }
+
+  ngOnInit() {
+      this.version = window.localStorage.getItem('locale');
+
+      const range: IRange = {
       startRangeBegin: this.startRangeBegin,
       startRangeEnd: this.startRangeEnd,
       endRangeBegin: this.endRangeBegin,
       endRangeEnd: this.endRangeEnd
     };
-    this.dataService.getSummaryData(range);
+      this.dataService.getSummaryData(range);
 
-    this.dataService.onError.subscribe(err => {
+      this.dataService.onError.subscribe(err => {
       this.dialog.message = err;
       this.dialog.open();
     });

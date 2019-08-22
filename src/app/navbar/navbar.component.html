@@ -34,6 +34,11 @@
             compare
           </igx-icon>
         </button>
+
+        <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
+          <igx-select-item value="en">EN</igx-select-item>
+          <igx-select-item value="ja">JA</igx-select-item>
+        </igx-select>
       </div>
     </div>
   </igx-navbar>

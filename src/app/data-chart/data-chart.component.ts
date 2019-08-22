@@ -7,9 +7,11 @@ import { IRangeData } from '../models/range';
 import { IgxColumnSeriesComponent } from 'igniteui-angular-charts/ES5/igx-column-series-component';
 import { IgxAreaSeriesComponent } from 'igniteui-angular-charts/ES5/igx-area-series-component';
 import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-component';
-
+import { RESOURCES} from '../i18n/locale-en.json';
+import { JA_RESOURCES} from '../i18n/locale-ja.json';
 import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
 import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts/ES5/CategoryTooltipLayerPosition';
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-data-chart',
   templateUrl: './data-chart.component.html',
@@ -51,11 +53,19 @@ export class DataChartComponent implements OnInit {
   public chartLabelFormatter;
   public mediumMode = false;
   public chartInitialization = true;
-  constructor(private service: DataService) {}
+
+  public resources: typeof RESOURCES | typeof JA_RESOURCES;
+
+  constructor(private service: DataService, private localeService: LocalizationService) {
+    this.resources = this.localeService.getLocale();
+  }
 
 
   ngOnInit() {
 
+    this.localeService.languageLocalizer.subscribe( (resources: typeof RESOURCES | typeof JA_RESOURCES )  => {
+      this.resources = resources;
+    });
     this.service.onDataFetch.subscribe((data: IRangeData) => {
 
 

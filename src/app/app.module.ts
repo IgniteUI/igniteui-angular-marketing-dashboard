@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ import {
   IgxDialogModule,
   IgxCardModule,
   IgxProgressBarModule,
-  IgxListModule, IgxRippleModule
+  IgxListModule, IgxRippleModule, IgxSelectModule
 } from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
@@ -39,6 +39,7 @@ import { IgxBulletGraphModule } from 'igniteui-angular-gauges/ES5/igx-bullet-gra
 import { IgxItemLegendModule } from 'igniteui-angular-charts/ES5/igx-item-legend-module';
 import { SideNavIndicatorsComponent } from './side-nav-indicators/side-nav-indicators.component';
 import { IgxLegendModule } from 'igniteui-angular-charts/ES5/igx-legend-module';
+import { LocalizationService } from './localization.service';
 
 @NgModule({
   declarations: [
@@ -80,9 +81,10 @@ import { IgxLegendModule } from 'igniteui-angular-charts/ES5/igx-legend-module';
     IgxItemLegendModule,
     IgxLegendModule,
     IgxListModule,
-    IgxRippleModule
+    IgxRippleModule,
+    IgxSelectModule
   ],
-  providers: [DataService],
+  providers: [DataService, LocalizationService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
