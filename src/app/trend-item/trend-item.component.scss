@@ -1,22 +1,30 @@
+app-trend-item {
+  display: block;
+}
+
 :host ::ng-deep{
   igx-icon{
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 2.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
   }
 }
 
-.igx-card {
-  min-height: 100%;
-  min-width: 200px;
-  margin: 10px;
-  text-align: center;
+.percent-container {
+  line-height: normal;
 }
 
-.igx-card-header {
-  padding-bottom: 0;
-  text-align: center;
-  justify-content: center;
+.igx-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.igx-card {
+  min-height: 150px;
+  min-width: 200px;
+  margin: 10px;
 }
 
 igx-icon {
@@ -27,7 +35,7 @@ igx-icon {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 900;
 }
 

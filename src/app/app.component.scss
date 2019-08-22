@@ -1,9 +1,12 @@
-.md-data-chart {
-  width: 100%;
-}
 
 .md-charts {
+  display: flex;
+  flex-direction: column;
   flex: 1 0 0%;
+}
+
+.nav-placeholder {
+  width:70px;
 }
 
 .md-content,
@@ -14,9 +17,56 @@
 .md-content__row {
   align-items: flex-start;
   justify-content: space-around;
-  padding: 8px 32px;
+
+  &--stretch {
+    flex: 1 0 0%;
+
+    .md-content__col{
+      height: 100%;
+    }
+  }
+}
+
+.md-content__col {
+  flex: 1 0 0%;
+  padding:8px 0;
+  border:1px solid #444;
+  border-top: none;
+  border-bottom: none;
+  overflow: hidden;
+
+  + .md-content__col {
+    border-left: none;
+  }
 }
 
 .md-sidebar {
-  padding: 30px 30px 0 0;
+  box-shadow: inset 8px 8px 8px rgba(0,0,0,.2);
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 230px;
+}
+
+.md-map {
+  height: 400px;
+  width: 100%;
+}
+
+:host ::ng-deep{
+  .md-data-filter {
+    padding: 8px 16px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  h5 {
+    margin-top: 0;
+    font-size: 16px;
+  }
 }

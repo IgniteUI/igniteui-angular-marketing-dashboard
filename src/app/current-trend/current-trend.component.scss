@@ -1,8 +1,8 @@
 .md-trend-container {
   display: flex;
-  background: #444;
+  background: #dcdcdc;
   justify-content: center;
-  padding: 16px;
+  padding: 0 16px;
 
   &__inner {
     display: flex;
@@ -10,6 +10,31 @@
   }
 }
 
+:host ::ng-deep{
+  .md-trend-item {
+    &:last-of-type {
+      igx-divider {
+        display: none !important;
+      }
+    }
+
+    .igx-card-content {
+      justify-content: center;
+    }
+
+    .percent-container {
+      line-height: 1;
+    }
+  }
+
+  .md-trend-container {
+    .igx-card {
+      margin: 0;
+    }
+  }
+}
+
+.md-trend-item,
 .trend-items{
   display: flex;
 }
@@ -20,7 +45,8 @@
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #222;
+  margin-right: 32px;
   img {
     margin-bottom: 16px;
   }
@@ -30,7 +56,13 @@
     }
   }
 
+  igx-icon {
+    font-size: 70px;
+    width: 70px;
+    height: 70px;
+  }
+
   span + span {
-    margin-left: 10px;
+    margin-left: 4px;
   }
 }

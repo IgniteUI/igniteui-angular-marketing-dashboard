@@ -8,21 +8,78 @@
     }
   }
 
+  .legendInline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .md-data-chart {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .ig-data-chart {
+    margin-bottom: 8px;
+  }
+
   .igx-button-group {
     min-width: 250px;
   }
+
+  .ig-chart-legend-item{
+    margin-right: 16px!important;
+  }
+
+  .ig-chart-legend-items-list {
+    margin-left: 16px!important;
+  }
+
+  .ig-chart-legend-item-badge,
+  .ig-chart-legend-item,
+  .ig-chart-legend-item-text {
+    display: flex !important;
+    align-items: center;
+  }
+  .ig-chart-legend-item-text {
+    color: #fff;
+    padding-left: 4px;
+  }
 }
 
-.md-data-filter {
-  padding: 32px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 16px;
-
-  h5 {
-    margin-top: 0;
+::ng-deep {
+  .ui-chart-pointer-tooltip-content-container{
+    .ig-tooltip-container{
+      .ig-tooltip-container-background{
+        background-color: #453f4e;
+        padding: 0;
+      }
+    }
   }
+
+  .ui-chart-tooltip.ui-widget-content.ui-corner-all,
+.ui-chart-pointer-tooltip-content-container {
+  border: 2px solid #fff;
+  white-space: nowrap;
+  padding: 3px 5px;
+  color: #fff;
+}
+
+
+.chart-tooltip .item {
+  border-bottom: 1px solid white;
+}
+
+.chart-tooltip {
+  padding: 2px;
+  .caps-muted{
+    text-transform: uppercase;
+    color: #aeaeae;
+    font-size: 11px;
+    font-weight: bold;
+  }
+}
+
+
+
 }

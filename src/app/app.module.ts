@@ -4,18 +4,20 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
-import {IgxNavbarModule,
-        IgxButtonGroupModule,
-        IgxDividerModule,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxInputGroupModule,
-        IgxIconModule,
-        IgxMaskModule,
-        IgxDialogModule,
-        IgxCardModule,
-        IgxProgressBarModule,
-        IgxListModule} from 'igniteui-angular';
+import {
+  IgxNavbarModule,
+  IgxButtonGroupModule,
+  IgxDividerModule,
+  IgxButtonModule,
+  IgxDatePickerModule,
+  IgxInputGroupModule,
+  IgxIconModule,
+  IgxMaskModule,
+  IgxDialogModule,
+  IgxCardModule,
+  IgxProgressBarModule,
+  IgxListModule, IgxRippleModule
+} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -77,7 +79,8 @@ import { IgxLegendModule } from 'igniteui-angular-charts/ES5/igx-legend-module';
     IgxBulletGraphModule,
     IgxItemLegendModule,
     IgxLegendModule,
-    IgxListModule
+    IgxListModule,
+    IgxRippleModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

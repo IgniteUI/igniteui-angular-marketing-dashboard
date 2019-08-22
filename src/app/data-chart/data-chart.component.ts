@@ -48,63 +48,45 @@ export class DataChartComponent implements OnInit {
   public columnChartData: Array<IColumnChartDataRecord> = [];
   public areaChartData: Array<IAreaChartDataRecord> = [];
   public prevSeriesDataSource: Array<IColumnChartDataRecord> = [];
-
+  public chartLabelFormatter;
   public mediumMode = false;
-
-  constructor(private service: DataService) { }
+  public chartInitialization = true;
+  constructor(private service: DataService) {}
 
 
   ngOnInit() {
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.chart.series.clear();
-      this.chartData = [];
-      this.prevSeriesDataSource = [];
-      this.areaChartData = [];
-      this.columnChartData = [];
-      this.columnSeriesData = [];
-      this.areaSeriesData = [];
-
-      data.end.trafficStats.forEach(stat => {
-
-        this.columnChartData.push({ session: stat.session, conversion: stat.conversion, title: stat.title });
-      });
-
-      data.start.trafficStats.forEach(stat => {
-        this.prevSeriesDataSource.push({ session: stat.session, conversion: stat.conversion, title: stat.title });
-      });
-
-      data.end.trafficPerMedium.forEach(medium => {
-        this.areaChartData.push({
-          conversion: medium.conversion,
-          session: medium.session,
-          direct: medium.direct,
-          email: medium.email,
-          organic: medium.organic,
-          paid: medium.paid,
-          referral: medium.referral,
-          title: medium.title
-        });
-      });
 
 
-      this.columnSeriesData.push(this.setColumnSeriesData('sessions', this.time, 'session', 'Session', '#ffff33', '#ffff33'));
-        // tslint:disable-next-line: max-line-length
-      this.columnSeriesData.push(this.setColumnSeriesData('conversion', this.timeConvers, 'conversion', 'Conversions', '#66cc00', '#66cc00'));
+      this.columnChartData = data.end.trafficStats;
 
-        // tslint:disable-next-line: max-line-length
-      this.columnSeriesData.push(this.setColumnSeriesData('sessionsPrev', this.time, 'session', 'Prev.Session', '#655F00', '#655F00', this.prevSeriesDataSource));
-        // tslint:disable-next-line: max-line-length
-      this.columnSeriesData.push(this.setColumnSeriesData('conversionPrev', this.timeConvers, 'conversion', 'Prev.Conversions', '#295001', '#295001', this.prevSeriesDataSource));
+      this.prevSeriesDataSource = data.start.trafficStats;
 
-      this.areaSeriesData.push(this.setAreaSeriesData('organic', '#77B40D'));
-      this.areaSeriesData.push(this.setAreaSeriesData('paid', '#A9D120'));
-      this.areaSeriesData.push(this.setAreaSeriesData('direct', '#CCE575'));
-      this.areaSeriesData.push(this.setAreaSeriesData('referral', '#E1EEB5'));
-      this.areaSeriesData.push(this.setAreaSeriesData('email', '#FFFFFF'));
+      this.areaChartData = data.end.trafficPerMedium;
 
-      this.setSeries(this.mediumMode);
 
+
+      if (this.chartInitialization) {
+        this.initChart();
+        this.yAxis.formatLabel = (value) => {
+          let label = value;
+          if (value >= 1000) { label = `${(value / 1000)}K`; }
+          return label;
+        };
+        this.chartInitialization = false;
+      } else if (this.mediumMode) {
+          this.chartData = this.areaChartData;
+        } else {
+          this.chartData = data.end.trafficStats;
+          this.chart.actualSeries.forEach(s => {
+            if (s.name === 'sessionsPrev' || s.name === 'conversionPrev') {
+             s.dataSource = data.start.trafficStats;
+            } else {
+             s.dataSource =  data.end.trafficStats;
+            }
+           });
+        }
     });
   }
 
@@ -118,6 +100,9 @@ export class DataChartComponent implements OnInit {
         series.name = seriesData.name;
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = seriesData.xAxis;
+        this.yAxis.isLogarithmic = true;
+        this.yAxis.title = 'LOG';
+        this.yAxis.titleAngle  = 270;
         series.yAxis = this.yAxis;
         series.title = seriesData.title;
         series.brush = seriesData.brush;
@@ -129,10 +114,12 @@ export class DataChartComponent implements OnInit {
         series.tooltipTemplate = this.columnChartTooltipTemplate;
         if (seriesData.dataSource) {
           series.dataSource = seriesData.dataSource;
+        } else {
+          series.dataSource = this.columnChartData;
         }
         this.chart.series.add(series);
-        this.addToolTipLayer();
       }
+      this.addToolTipLayer();
     } else if (this.mediumMode === true && this.chartData !== this.areaChartData) {
       this.chart.series.clear();
       this.chartData = this.areaChartData;
@@ -142,6 +129,8 @@ export class DataChartComponent implements OnInit {
         series.name = seriesData.name;
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = this.time;
+        this.yAxis.isLogarithmic = false;
+        this.yAxis.title = '';
         series.yAxis = this.yAxis;
         series.brush = seriesData.color;
         series.title = (seriesData.title as string).toUpperCase();
@@ -159,7 +148,6 @@ export class DataChartComponent implements OnInit {
       }
       this.addToolTipLayer();
     }
-
   }
 
   public setColumnSeriesData(name: string,
@@ -206,5 +194,24 @@ export class DataChartComponent implements OnInit {
     toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
     toolTipLayer.transitionDuration = 200;
     this.chart.series.add(toolTipLayer);
+  }
+
+  public initChart() {
+    this.columnSeriesData.push(this.setColumnSeriesData('sessions', this.time, 'session', 'Session', '#ffff33', '#ffff33'));
+    // tslint:disable-next-line: max-line-length
+    this.columnSeriesData.push(this.setColumnSeriesData('conversion', this.timeConvers, 'conversion', 'Conversions', '#66cc00', '#66cc00'));
+
+    // tslint:disable-next-line: max-line-length
+    this.columnSeriesData.push(this.setColumnSeriesData('sessionsPrev', this.time, 'session', 'Prev.Session', '#655F00', '#655F00', this.prevSeriesDataSource));
+    // tslint:disable-next-line: max-line-length
+    this.columnSeriesData.push(this.setColumnSeriesData('conversionPrev', this.timeConvers, 'conversion', 'Prev.Conversions', '#295001', '#295001', this.prevSeriesDataSource));
+
+    this.areaSeriesData.push(this.setAreaSeriesData('organic', '#77B40D'));
+    this.areaSeriesData.push(this.setAreaSeriesData('paid', '#A9D120'));
+    this.areaSeriesData.push(this.setAreaSeriesData('direct', '#CCE575'));
+    this.areaSeriesData.push(this.setAreaSeriesData('referral', '#E1EEB5'));
+    this.areaSeriesData.push(this.setAreaSeriesData('email', '#FFFFFF'));
+
+    this.setSeries(false);
   }
 }

@@ -1,4 +1,6 @@
-<h3>CAMPAIGN HEALTH</h3>
+<div class="md-data-filter">
+  <h5>CAMPAIGN HEALTH</h5>
+</div>
 
 <div class="doughnut-container">
   <igx-doughnut-chart #doughnut></igx-doughnut-chart>
@@ -11,10 +13,7 @@
       [start]="trendItem.start"
       [endRes]="trendItem.endRes">
     </app-trend-item>
-    <div class="legend">
-      <igx-item-legend #legend height="100px" width="100px">
-      </igx-item-legend>
-    </div>
+    <igx-item-legend class="legend" #legend></igx-item-legend>
   </div>
 </div>
 
