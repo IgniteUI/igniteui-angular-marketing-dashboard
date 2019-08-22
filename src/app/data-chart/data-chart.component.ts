@@ -51,14 +51,7 @@ export class DataChartComponent implements OnInit {
   public chartLabelFormatter;
   public mediumMode = false;
   public chartInitialization = true;
-  constructor(private service: DataService) {
-
-    this.chartLabelFormatter = (value) => {
-      let label = value;
-      if (value >= 1000) { label = `${(value / 1000)}K`; }
-      return label;
-    };
-  }
+  constructor(private service: DataService) {}
 
 
   ngOnInit() {
@@ -76,6 +69,11 @@ export class DataChartComponent implements OnInit {
 
       if (this.chartInitialization) {
         this.initChart();
+        this.yAxis.formatLabel = (value) => {
+          let label = value;
+          if (value >= 1000) { label = `${(value / 1000)}K`; }
+          return label;
+        };
         this.chartInitialization = false;
       } else if (this.mediumMode) {
           this.chartData = this.areaChartData;
@@ -102,6 +100,9 @@ export class DataChartComponent implements OnInit {
         series.name = seriesData.name;
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = seriesData.xAxis;
+        this.yAxis.isLogarithmic = true;
+        this.yAxis.title = 'LOG';
+        this.yAxis.titleAngle  = 270;
         series.yAxis = this.yAxis;
         series.title = seriesData.title;
         series.brush = seriesData.brush;
@@ -128,6 +129,8 @@ export class DataChartComponent implements OnInit {
         series.name = seriesData.name;
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = this.time;
+        this.yAxis.isLogarithmic = false;
+        this.yAxis.title = '';
         series.yAxis = this.yAxis;
         series.brush = seriesData.color;
         series.title = (seriesData.title as string).toUpperCase();
@@ -145,7 +148,6 @@ export class DataChartComponent implements OnInit {
       }
       this.addToolTipLayer();
     }
-
   }
 
   public setColumnSeriesData(name: string,
