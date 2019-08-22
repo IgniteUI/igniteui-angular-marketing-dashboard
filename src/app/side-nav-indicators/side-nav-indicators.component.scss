@@ -1,20 +1,23 @@
-.list-container{
+.list-container {
   display: flex;
-  .igx-card-header{
+
+  .igx-card-header {
     margin: 0 auto;
   }
-   ol{
+
+  ol {
     margin: 0 auto;
-   }
+  }
 }
 
-:host ::ng-deep{
-  .keywords-container{
+:host ::ng-deep {
+  .keywords-container {
     max-width: 100%;
 
     .igx-list__item-content {
       padding: .2rem .5rem;
     }
+
     .igx-list__item-lines {
       font-size: 10px !important;
       line-height: 1.4;
@@ -36,6 +39,18 @@
       display: none;
     }
   }
+
+  .dialog-icon {
+    width: 100%;
+    text-align: center;
+    margin: 1em auto;
+  }
+
+  .igx-icon {
+    color: #666
+  }
 }
 
-
+p{
+  width: 25%;
+}
