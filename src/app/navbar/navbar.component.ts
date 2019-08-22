@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { dateRangesValidator, getDateRange } from '../../app/utils';
+import { getDateRange } from '../../app/utils';
 import { DisplayDensityToken, DisplayDensity, IgxDialogComponent } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range'

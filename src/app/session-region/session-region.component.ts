@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, NgZone } from '@angular/core';
 import { DataService } from '../data.service';
 import { IgxGeographicMapComponent } from 'igniteui-angular-maps/ES5/igx-geographic-map-component';
 import { IgxGeographicProportionalSymbolSeriesComponent
@@ -47,6 +47,7 @@ export class SessionByRegionComponent implements OnInit{
   public inProgressMode = false;
   public range: number;
   public interval: any;
+  public initMap = true;
 
   public topPages: string[];
   public users: string;
@@ -63,10 +64,10 @@ export class SessionByRegionComponent implements OnInit{
 
   ngOnInit() {
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-
       this.users = data.end.users;
       this.conversionRate = data.end.conversionRate;
       this.topPages = data.end.topPages;
+
 
       this.inProgressMode = false;
       if (this.interval) {
@@ -81,8 +82,17 @@ export class SessionByRegionComponent implements OnInit{
       };
       this.mapData.mapCurrent['current'] = 0;
       this.range = data.end.trafficStats.length - 1;
-      this.generateMapData(this.map);
 
+      if (this.initMap) {
+        this.generateMapData(this.map);
+        this.initMap = false;
+      } else {
+        this.map.dataSource = this.mapData.mapCurrent.perLocation;
+        const newSeries = this.generateMapSeries(this.shapeSeriesModel, this.proportionalSymbolModel);
+        for (let index = 0; index < newSeries.length; index++) {
+          this.map.series.toArray()[index] = newSeries[index];
+        }
+       }
     });
   }
 
@@ -107,6 +117,7 @@ export class SessionByRegionComponent implements OnInit{
       proportionalSymbol.markerType = proportionalS.markerType;
       proportionalSymbol.radiusMemberPath = proportionalS.radiusMemberPath;
       proportionalSymbol.markerOutline = proportionalS.markerOutline;
+      proportionalSymbol.markerBrush = proportionalS.markerBrush;
       proportionalSymbol.tooltipTemplate = this.toolTipTemplate;
       return [shapeSeries, proportionalSymbol];
   }
