@@ -194,6 +194,33 @@
     },
     "Week": {
       "value": "Week {0}"
+    },
+    "Organic": {
+      "value": "organic"
+    },
+    "Paid": {
+      "value": "paid"
+    },
+    "Direct": {
+      "value": "direct"
+    },
+    "Referral": {
+      "value": "referral"
+    },
+    "Pause": {
+      "value": "pause"
+    },
+    "PrevSession": {
+      "value": "Prev. Session"
+    },
+    "PrevConversions": {
+      "value": "Prev.Conversions"
+    },
+    "Regional": {
+      "value": "en-US"
+    },
+    "Error": {
+      "value": "The beginning and end date ranges must have an equal number of days."
     }
   }
 }

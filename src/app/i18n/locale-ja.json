@@ -197,6 +197,36 @@
     },
     "Current_Trend": {
       "value": "<span class=\"bold center-block\">現在の<\/span>トレンド"
+    },
+    "Organic": {
+      "value": "オーガニック"
+    },
+    "Paid": {
+      "value": "アドリンク"
+    },
+    "Direct": {
+      "value": "ダイレクト"
+    },
+    "Referral": {
+      "value": "リファラ"
+    },
+    "Pause": {
+      "value": "一時停止"
+    },
+    "Session": {
+      "value": "セッション"
+    },
+    "PrevSession": {
+      "value": "前回のセッション"
+    },
+    "PrevConversions": {
+      "value": "前回のコンバージョン"
+    },
+    "Regional": {
+      "value": "ja"
+    },
+    "Error": {
+      "value": "日付の範囲 (日数) を同じにする必要があります。"
     }
   }
 }
