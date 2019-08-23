@@ -1,5 +1,5 @@
 <div class="md-data-filter">
-  <h5>SESSIONS BY REGION</h5>
+  <h5>{{resources.Sessions_by_Region.value}}</h5>
 </div>
 
 <div class="map-container">
@@ -14,14 +14,14 @@
 <div class="progress-container">
   <div class="md-progress-bar">
     <button igxRipple class="play-btn" (click)="toggleUpdate($event)" igxButton="raised">
-      {{ inProgressMode ? 'Pause' : 'Play' | uppercase}}
+      {{ inProgressMode ? resources.Pause.value : resources.Play.value }}
       <igx-icon>
         {{ inProgressMode ? 'pause' : 'play'}}_arrow
       </igx-icon>
     </button>
-    <span>Start</span>
+    <span>{{resources.Start.value}}</span>
     <igx-linear-bar type="default" [textVisibility]="false" [max]="range" [value]="0" [step]="1" [animate]="false"></igx-linear-bar>
-    <span>End</span>
+    <span>{{resources.End.value}}</span>
   </div>
 </div>
 
@@ -29,15 +29,15 @@
 
 <div class="status-container">
   <div class="status-container__col users">
-    <div class="md-col-label">{{'users'}}</div>
+    <div class="md-col-label">{{resources.Users.value}}</div>
     <div class="md-col-val">{{users}}</div>
   </div>
   <div class="status-container__col conversion-rate">
-    <div class="md-col-label">{{'conversion rate'}}</div>
+    <div class="md-col-label">{{resources.Conversion_Rate.value}}</div>
     <div class="md-col-val">{{conversionRate}}%</div>
   </div>
   <div class="status-container__col top-pages">
-    <div class="md-col-label">{{'Top Pages'}}</div>
+    <div class="md-col-label">{{resources.Top_Pages.value}}</div>
     <ul class="md-col-list">
       <li *ngFor="let page of topPages">{{page}}</li>
     </ul>
