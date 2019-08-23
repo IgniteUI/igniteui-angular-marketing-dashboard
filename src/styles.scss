@@ -18,6 +18,7 @@ $dark-color: #666;
 body {
   background: $dark-bg;
   color: $light-color;
+  overflow-x: hidden;
 }
 
 $md-navbar-theme: igx-navbar-theme(
@@ -73,6 +74,10 @@ $md-divider-theme_2: igx-divider-theme(
   }
 
   @media only screen and (max-width: 1024px) {
-    max-width: 100%;
+    max-width: 960px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    max-width: 430px;
   }
 }

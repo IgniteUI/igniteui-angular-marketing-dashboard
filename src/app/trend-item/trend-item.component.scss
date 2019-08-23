@@ -19,12 +19,38 @@ app-trend-item {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+
+  @media only screen and (max-width: 960px) {
+    font-size: 12px;
+  }
+
+  @media only screen and (max-width: 769px) {
+    font-size: 9px;
+    strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 }
 
 .igx-card {
   min-height: 150px;
   min-width: 200px;
   margin: 10px;
+
+  @media only screen and (max-width: 1024px) {
+    min-width: 190px;
+  }
+
+  @media only screen and (max-width: 960px) {
+    min-width: 130px;
+  }
+
+  @media only screen and (max-width: 769px) {
+    min-width: 100px;
+    min-height: 100px;
+  }
 }
 
 igx-icon {
