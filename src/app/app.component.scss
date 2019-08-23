@@ -12,6 +12,10 @@
 .md-content,
 .md-content__row {
   display: flex;
+
+  @media only screen and (max-width: 1024px) {
+    flex-wrap: wrap;
+  }
 }
 
 .md-content__row {
@@ -20,6 +24,9 @@
 
   &--stretch {
     flex: 1 0 0%;
+    @media only screen and (max-width: 1024px) {
+      flex: auto;
+    }
 
     .md-content__col{
       height: 100%;
@@ -34,6 +41,9 @@
   border-top: none;
   border-bottom: none;
   overflow: hidden;
+  @media only screen and (max-width: 1024px) {
+    min-width: 100%;
+  }
 
   + .md-content__col {
     border-left: none;
@@ -47,6 +57,9 @@
   flex-direction: column;
   align-items: center;
   width: 230px;
+  @media only screen and (max-width: 769px) {
+    min-width: 100%;
+  }
 }
 
 .md-map {
@@ -68,5 +81,9 @@
   h5 {
     margin-top: 0;
     font-size: 16px;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 14px;
+    }
   }
 }

@@ -29,9 +29,17 @@
 
   .ig-chart-legend-item{
     margin-right: 16px!important;
+
+    @media only screen and (max-width: 768px) {
+      margin-bottom: 8px !important;
+    }
   }
 
   .ig-chart-legend-items-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     margin-left: 16px!important;
   }
 
