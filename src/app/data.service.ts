@@ -42,7 +42,8 @@ export class DataService {
       set('startRangeBegin', range.startRangeBegin.toISOString()).
       set('startRangeEnd', range.startRangeEnd.toISOString()).
       set('endRangeBegin', range.endRangeBegin.toISOString()).
-      set('endRangeEnd', range.endRangeEnd.toISOString());
+      set('endRangeEnd', range.endRangeEnd.toISOString()).
+      set('locale', window.localStorage.getItem('locale'));
 
     this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
   }

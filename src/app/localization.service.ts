@@ -15,7 +15,6 @@ export class LocalizationService {
   }
 
   public languageLocalizer: Subject<any> = new Subject();
-
   public setLocale(version: string) {
     if (version === 'en') {
      this.languageLocalizer.next(RESOURCES);
