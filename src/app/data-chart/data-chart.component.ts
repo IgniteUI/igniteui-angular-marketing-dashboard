@@ -76,7 +76,6 @@ export class DataChartComponent implements OnInit {
       this.areaChartData = data.end.trafficPerMedium;
 
 
-
       if (this.chartInitialization) {
         this.initChart();
         this.yAxis.formatLabel = (value) => {
@@ -86,8 +85,13 @@ export class DataChartComponent implements OnInit {
         };
         this.chartInitialization = false;
       } else if (this.mediumMode) {
+          this.yAxis.isLogarithmic = false;
+          this.yAxis.title = '';
           this.chartData = this.areaChartData;
         } else {
+          this.yAxis.title = 'LOG';
+          this.yAxis.titleAngle = 270;
+          this.yAxis.isLogarithmic = true;
           this.chartData = data.end.trafficStats;
           this.chart.actualSeries.forEach(s => {
             if (s.name === 'PrevSession' || s.name === 'PrevConversions') {
@@ -111,6 +115,8 @@ export class DataChartComponent implements OnInit {
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = seriesData.xAxis;
         this.time.label = 'title';
+        this.yAxis.title = 'LOG';
+        this.yAxis.titleAngle = 270;
         this.yAxis.isLogarithmic = true;
         series.yAxis = this.yAxis;
         series.title = this.resources[seriesData.name].value;
