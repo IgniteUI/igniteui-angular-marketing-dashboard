@@ -35,7 +35,7 @@ export class SessionByRegionComponent implements OnInit {
                     longitudeMemberPath: 'longitude',
                     markerType: MarkerType.Circle,
                     radiusMemberPath: 'scaledSessions',
-                    markerOutline: '#ffff33',
+                    markerOutline: '#000',
                     markerBrush: '#ffff33'
     };
 
