@@ -129,9 +129,6 @@
     "Top_Unbranded_Keywords": {
       "value": "Top Unbranded Keywords"
     },
-    "Current_Trend": {
-      "value": "<span class=\"bold center-block\"> Current<\/span> Trend"
-    },
     "Users": {
       "value": "Users"
     },
@@ -143,6 +140,9 @@
     },
     "Top_Unbranded_Keywords_List": {
       "value": "press releases, media coverage, marketing ROI, SEO checklist, online marketing , office management, online payment solutions , online stores, semiconductors, shopping cart solutions, software , startup, technology, transportation, virtual server hosting, web design, web development , web hosting, industrial goods, government and trade, food and beverage, office supplies, biotechnology"
+    },
+    "Trend": {
+      "value": "Trend"
     },
     "Australia": {
       "value": "Australia"
@@ -221,6 +221,9 @@
     },
     "Error": {
       "value": "The beginning and end date ranges must have an equal number of days."
+    },
+    "Chart_PNG": {
+      "value": "../../assets/chart.png"
     }
   }
 }

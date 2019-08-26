@@ -8,7 +8,7 @@
         </span>
 
         <igx-buttongroup [multiSelection]="false">
-          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
+          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(resources[range.period].value)">
             {{resources[range.period].value}}
           </button>
         </igx-buttongroup>

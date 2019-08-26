@@ -1,5 +1,5 @@
 <div class="md-data-filter">
-  <h5>CAMPAIGN HEALTH</h5>
+  <h5>{{resources['Campaign_Health'].value}}</h5>
 </div>
 
 <div class="doughnut-container">
@@ -18,8 +18,8 @@
 </div>
 
 <div class="labels">
-  <div id="conversions-label">CONVERSIONS</div>
-  <div id="target-label">TARGET</div>
+  <div id="conversions-label">{{resources['Conversions'].value | uppercase}}</div>
+  <div id="target-label">{{resources['Target'].value}}</div>
 </div>
 
 <div class="graphs-container">

@@ -3,6 +3,7 @@ import { DataService } from '../data.service';
 import { IRangeData } from '../models/range';
 import { convertToInt } from '../utils';
 import { generateTrendItem, ITrendItem } from '../models/trend-item';
+import { LocalizationService } from '../localization.service';
 
 class TrendIndicator {
   sessions: any;
@@ -26,7 +27,16 @@ export class CurrentTrendComponent implements OnInit {
 
   status: string;
   public trendItems: ITrendItem[] = [];
-  constructor(private service: DataService) {
+  public trendItemData = [];
+  public resources;
+  constructor(private service: DataService, private localeService: LocalizationService) {
+    this.resources = this.localeService.getLocale();
+
+    this.trendItemData = [
+        {valueP: 'sessions', labelP: 'Sessions'},
+        {valueP: 'conversions', labelP: 'Conversions'},
+        {valueP: 'spend',  labelP: 'Spend'},
+        {valueP:  'conversionCosts',  labelP: 'Conversion_Costs'}];
 
   }
   public trendIndicators = [
@@ -34,14 +44,18 @@ export class CurrentTrendComponent implements OnInit {
     { period: 'end', indicator: new TrendIndicator() }];
 
   ngOnInit() {
+    this.localeService.languageLocalizer.subscribe(resources => {
+      this.resources = resources;
+    });
+
     this.service.onDataFetch.subscribe((data: IRangeData) => {
       this.trendItems = [];
       this.initTrendIndicators(data);
-      ['sessions', 'conversions', 'spend', 'conversionCosts'].forEach(item => {
-        if (item === 'spend' || item === 'conversionCosts') {
-          this.trendItems.push(generateTrendItem(item, data, true));
+      this.trendItemData.forEach(item => {
+        if (item.valueP === 'spend' || item.valueP === 'conversionCosts') {
+          this.trendItems.push(generateTrendItem(item.valueP, data, item.labelP, true));
         } else {
-          this.trendItems.push(generateTrendItem(item, data));
+          this.trendItems.push(generateTrendItem(item.valueP, data, item.labelP));
         }
       });
       this.setStatus();

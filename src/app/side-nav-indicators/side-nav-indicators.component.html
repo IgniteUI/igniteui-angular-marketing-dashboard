@@ -4,15 +4,17 @@
                         [direction]="item.direction"
                         [directionColor]="item.directionColor"
                         [percent]="item.percent"
-                        [name]="item.name"
+                        [name]="resources[item.labelP].value"
                         [end]="item.end"
                         [start]="item.start"
-                        [endRes]="item.endRes">
+                        [endRes]="item.endRes"
+                        [prevString]="resources['Start'].value"
+                        [currentString]="resources['End'].value">
       </app-trend-item>
   </div>
   <div class="keywords-container">
     <igx-list>
-      <igx-list-item isHeader>TOP UNBRANDED KEYWORDS</igx-list-item>
+      <igx-list-item isHeader>{{resources['Top_Unbranded_Keywords'].value}}</igx-list-item>
       <igx-list-item *ngFor="let word of endKeywords; let i = index" [ngClass]="{'last': i === endKeywords.length - 1}">
         <div igxListLine class=".end" style="font-weight: bold">{{i + 1}}. {{word | uppercase}}</div>
         <div igxListLine class=".start" style="font-weight: bold; color: #969595">{{i + 1}}. {{startKeywords[i]  | uppercase}}</div>
@@ -30,29 +32,25 @@
             <igx-card>
                 <igx-card-header>
                   <h3 igxCardHeaderTitle>
-                      Welcome to the Marketing Dashboard!
+                      {{resources['Welcome_message'].value}}
                   </h3>
                   <igx-divider></igx-divider>
                   <h5 igxCardHeaderSubtitle>
-                      As you use this dashboard please keep in mind a few things...
+                      {{resources['Alert_info'].value}}
                   </h5>
                 </igx-card-header>
                 <igx-card-content>
-                  <h5>ABOUT THE DATA</h5>
+                  <h5>{{resources['Alert_Text_Title_Data'].value}}</h5>
                     <span>
-  In order to make this sample easy to download and install, all the data for this application is random for each date range.
-  Therefore, as you navigate around the site you will encounter different values even as you select identical date ranges.
+                      {{resources['Alert_Paragraph_Data'].value}}
                     </span>
-                    <h5>ABOUT THE BAR CHART</h5>
-                    <span style="width:250px"><img src="../../assets/chart.png"  style="float: right; margin:15px;">
-  The bar chart uses a logarithmic scale on the Y axis in order to show two sets of data that vary in amounts.
-  Notice how conversions (relatively small numbers in green) are plotted on the chart at the bottom where the scale starts at 1 and increases to 100.
-  The sessions (relatively large numbers in yellow) are plotted at the top of the chart where the scale goes quickly from 1,000 to 10,000.
-  This approach allows two data sets of varying scale to exist in a stacked layout on the chart.
+                    <h5>{{resources['Alert_Text_Title_BarChart'].value}}</h5>
+                    <span style="width:250px"><img src="{{resources['Chart_PNG'].value}}"  style="float: right; margin:15px;">
+                    {{resources['Alert_Paragraph_BarChart'].value}}
                     </span>
                 </igx-card-content>
                 <igx-card-actions>
-                  <button igxButton="raised" (click)="dialog.close()">got it!</button>
+                  <button igxButton="raised" (click)="dialog.close()">{{resources['Confirm_button'].value}}</button>
                 </igx-card-actions>
             </igx-card>
         </article>

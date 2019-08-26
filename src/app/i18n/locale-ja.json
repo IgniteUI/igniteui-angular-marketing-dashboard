@@ -195,9 +195,6 @@
     "Week": {
       "value": "{0} 週目"
     },
-    "Current_Trend": {
-      "value": "<span class=\"bold center-block\">現在の<\/span>トレンド"
-    },
     "Organic": {
       "value": "オーガニック"
     },
@@ -227,6 +224,9 @@
     },
     "Error": {
       "value": "日付の範囲 (日数) を同じにする必要があります。"
+    },
+    "Chart_PNG": {
+      "value":"../../assets/chart-ja.png"
     }
   }
 }

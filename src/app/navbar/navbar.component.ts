@@ -79,6 +79,14 @@ export class NavbarComponent implements OnInit {
     this.endRangeBegin = ranges.endRangeBegin;
     this.startRangeEnd = ranges.startRangeEnd;
     this.startRangeBegin = ranges.startRangeBegin;
+
+    const range: IRange = {
+      startRangeBegin: this.startRangeBegin,
+      startRangeEnd: this.startRangeEnd,
+      endRangeBegin: this.endRangeBegin,
+      endRangeEnd: this.endRangeEnd
+    };
+    this.currentRange = range;
   }
 
   public compareRanges(event) {
@@ -95,16 +103,6 @@ export class NavbarComponent implements OnInit {
   public changeLocale(version) {
     window.localStorage.setItem('locale', version);
     this.localeService.setLocale(version);
-    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
-    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
-    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
-    this.endRangeEnd = this.today;
-    this.currentRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
-    };
     this.dataService.getSummaryData(this.currentRange);
   }
 

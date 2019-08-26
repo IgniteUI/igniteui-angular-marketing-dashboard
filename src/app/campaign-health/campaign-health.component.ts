@@ -99,10 +99,10 @@ export class CampaignHealthComponent implements OnInit {
       this.trendItem = generateTrendItem('conversions', data);
       this.chart.series.clear();
       this.doughnutData = [
-        { label: 'PPC', value: data.end.ppc , prev: data.start.ppc},
-        { label: 'Banners', value: data.end.banners, prev: data.start.banners },
-        { label: 'Email', value: data.end.email, prev: data.start.email },
-        { label: '3rd Party', value: data.end.thirdParty, prev: data.start.thirdParty }
+        { label: this.resources['PPC'].value, value: data.end.ppc , prev: data.start.ppc},
+        { label: this.resources['Banners'].value, value: data.end.banners, prev: data.start.banners },
+        { label: this.resources['Email'].value, value: data.end.email, prev: data.start.email },
+        { label: this.resources['Third_Party'].value, value: data.end.thirdParty, prev: data.start.thirdParty }
       ];
 
       this.renderDoughnutChart(this.chart, this.doughnutChartColors);

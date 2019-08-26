@@ -112,8 +112,6 @@ export class DataChartComponent implements OnInit {
         series.xAxis = seriesData.xAxis;
         this.time.label = 'title';
         this.yAxis.isLogarithmic = true;
-        this.yAxis.title = 'LOG';
-        this.yAxis.titleAngle  = 270;
         series.yAxis = this.yAxis;
         series.title = this.resources[seriesData.name].value;
         series.brush = seriesData.brush;
