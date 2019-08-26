@@ -24,6 +24,7 @@ export class CampaignHealthComponent implements OnInit {
   private formatter;
   public trendItem: ITrendItem;
   public resources;
+
   constructor(private service: DataService, private localeService: LocalizationService) {
 
     this.doughnutChartColors = {
@@ -44,6 +45,9 @@ export class CampaignHealthComponent implements OnInit {
         start: { value: '#7f7f7f', bkg: '#3e334f', label: '#ccc' }
       }
     };
+
+    this.resources = this.localeService.getLocale();
+
     this.trendItem = {
       name: undefined,
       end: undefined,
@@ -52,7 +56,7 @@ export class CampaignHealthComponent implements OnInit {
       direction: undefined,
       directionColor: undefined,
       endRes: undefined,
-      labelP: undefined
+      labelP: 'Conversions'
     };
     for (let index = 0; index < 8; index++) {
         this.bulletGraphs.push(
@@ -72,7 +76,6 @@ export class CampaignHealthComponent implements OnInit {
       if (!context.item.showLabel) { return ''; }
       return Math.round(context.percentValue) + '%';
     };
-    this.resources = this.localeService.getLocale();
   }
 
   @ViewChild(IgxDoughnutChartComponent, {static: true})

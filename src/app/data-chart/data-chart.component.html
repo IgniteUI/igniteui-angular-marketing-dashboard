@@ -40,14 +40,14 @@
   </div>
 
   <div *ngIf="series.name === 'Conversions'" class="chart-tooltip">
-    <div><span class="caps-muted">{{series.title | uppercase}}:</span> {{item.conversion}}</div>
+    <span class="caps-muted">{{series.title | uppercase}}: </span>{{item.conversion}}
+    </div>
+
+  <div *ngIf="series.name === 'PrevSession'" class="chart-tooltip item">
+    <div class="caps-muted">{{series.title | uppercase}}: {{item.session}}</div>
   </div>
 
-  <span *ngIf="series.name === 'PrevSession'" class="chart-tooltip">
-    <span class="caps-muted">{{series.title | uppercase}} : {{item.session}}</span>
-  </span>
-
   <div *ngIf="series.name === 'PrevConversions'" class="chart-tooltip">
-    <span class="caps-muted">{{series.title | uppercase}} : {{item.conversion}}</span>
+    <span class="caps-muted">{{series.title | uppercase}}: {{item.conversion}}</span>
   </div>
 </ng-template>

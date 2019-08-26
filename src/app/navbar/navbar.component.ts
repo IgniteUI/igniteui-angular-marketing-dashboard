@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
     const current = new Date();
     let days = 0;
     const dayMiliseconds = 1000 * 60 * 60 * 24;
-    console.log(ranges)
+
     switch (ranges) {
       case this.resources.One_week.value:
         dateRange = getDateRange(7);
