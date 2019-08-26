@@ -8,10 +8,12 @@
     <app-trend-item [direction]="trendItem.direction"
       [directionColor]="trendItem.directionColor"
       [percent]="trendItem.percent"
-      [name]="trendItem.name"
+      [name]="resources[trendItem.labelP].value"
       [end]="trendItem.end"
       [start]="trendItem.start"
-      [endRes]="trendItem.endRes">
+      [endRes]="trendItem.endRes"
+      [prevString]="resources['Previous'].value"
+      [currentString]="resources['Current'].value">
     </app-trend-item>
     <igx-item-legend class="legend" #legend></igx-item-legend>
   </div>

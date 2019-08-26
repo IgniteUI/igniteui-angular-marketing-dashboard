@@ -51,7 +51,8 @@ export class CampaignHealthComponent implements OnInit {
       percent: undefined,
       direction: undefined,
       directionColor: undefined,
-      endRes: undefined
+      endRes: undefined,
+      labelP: undefined
     };
     for (let index = 0; index < 8; index++) {
         this.bulletGraphs.push(
@@ -96,7 +97,7 @@ export class CampaignHealthComponent implements OnInit {
     });
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.trendItem = generateTrendItem('conversions', data);
+      this.trendItem = generateTrendItem('conversions', data, 'Conversions');
       this.chart.series.clear();
       this.doughnutData = [
         { label: this.resources['PPC'].value, value: data.end.ppc , prev: data.start.ppc},
