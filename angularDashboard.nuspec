@@ -10,7 +10,7 @@
     <description>This is a package that can be used with Octopus deployer</description>
     </metadata>
     <files>
-        <file src="dist\**\*.*" target="\" />
+        <file src="dist\marketing-dashboard\**\*.*" target="\" />
         <file src="web.config" target="\" />
     </files>
 </package>
