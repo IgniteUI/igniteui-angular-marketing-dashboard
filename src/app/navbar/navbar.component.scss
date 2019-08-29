@@ -1,3 +1,5 @@
+@import "../../var";
+
 igxButton + igxButton {
   margin-left: 10px;
 }
@@ -5,16 +7,52 @@ igxButton + igxButton {
 .md-navbar-label {
   font-size: 12px;
   letter-spacing: 1px;
+  @media only screen and (max-width: $mobile) {
+    display: none;
+  }
 }
 
-.md-navbar-actions {
+.md-navbar-element {
+  span {
+    margin-right: 8px;
+  }
+
+  igx-buttongroup {
+    margin-right: 32px;
+    @media only screen and (max-width: $tablet) {
+      margin-right: 8px;
+    }
+    @media only screen and (max-width: $mobile) {
+      margin-right: 0;
+      max-width: 190px;
+    }
+  }
+}
+
+.md-navbar-element,
+.md-navbar-actions{
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.md-compare {
+  @media only screen and (max-width: $tablet) {
+    display: none;
+  }
+}
+
+.md-navbar-actions {
   max-height: 100%;
+
+  @media only screen and (max-width: $mobile) {
+  }
 
   >* {
     margin-left: 30px !important;
+    @media only screen and (max-width: $mobile) {
+      margin-left: 0 !important;
+    }
   }
 }
 
@@ -34,7 +72,7 @@ igxButton + igxButton {
   igx-navbar {
     position: fixed;
     width: 100%;
-    z-index: 99999;
+    z-index: 1;
   }
 }
 
@@ -87,7 +125,6 @@ igxButton + igxButton {
    }
   }
 
-
   .igx-navbar__left {
     display: none;
   }
@@ -115,6 +152,12 @@ igxButton + igxButton {
   igx-input-group {
     width: 100px;
   }
+
+  igx-divider {
+    @media only screen and (max-width: $tablet) {
+      display: none!important;
+    }
+  }
 }
 
 .logo-container{
@@ -122,4 +165,14 @@ igxButton + igxButton {
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+
+  @media only screen and (max-width: $mobile) {
+    max-width: 80px;
+    margin-right: 0;
+  }
+
+  @media only screen and (min-width: $mobile-portrait) {
+    max-width: 100px;
+    margin-right: 0;
+  }
 }

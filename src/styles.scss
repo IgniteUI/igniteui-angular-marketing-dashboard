@@ -11,6 +11,8 @@
 @include igx-core();
 @include igx-dark-theme($green-palette);
 
+@import "var";
+
 $dark-bg: #333;
 $light-color: #fff;
 $dark-color: #666;
@@ -59,6 +61,7 @@ $md-divider-theme_2: igx-divider-theme(
 .md-trend-container {
   @include igx-card($md-card-theme);
   @include igx-divider($md-divider-theme_2);
+
 }
 
 .global-wrapper {
@@ -71,6 +74,9 @@ $md-divider-theme_2: igx-divider-theme(
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @media only screen and (max-width: $mobile) {
+      min-width: auto!important;
+    }
   }
 
   @media only screen and (max-width: 1024px) {
@@ -78,6 +84,8 @@ $md-divider-theme_2: igx-divider-theme(
   }
 
   @media only screen and (max-width: 768px) {
-    max-width: 430px;
+    max-width: 100%;
+    min-width: 320px;
+    box-shadow: none;
   }
 }

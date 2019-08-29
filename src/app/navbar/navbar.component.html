@@ -3,37 +3,44 @@
     <div class="global-wrapper global-wrapper--nav">
       <img class="logo-container" src="../../assets/logo.png" alt="marketing dashboard">
       <div class="md-navbar-actions">
-        <span class="md-navbar-label">
+        <div class="md-navbar-element md-range">
+          <span class="md-navbar-label">
           {{text1 | uppercase}}
         </span>
 
-        <igx-buttongroup [multiSelection]="false">
-          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
-            {{range.text}}
-          </button>
-        </igx-buttongroup>
+          <igx-buttongroup [multiSelection]="false">
+            <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
+              {{range.text}}
+            </button>
+          </igx-buttongroup>
 
-        <igx-divider [middle]="true" [vertical]="true"></igx-divider>
-
-        <span class="md-navbar-label">{{text2}}</span>
-        <div class="datePicker-container">
-          <div class="start-ranges">
-              <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
-          </div>
-          <span class="md-date-separator">TO</span>
-          <div class="end-ranges">
-              <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
-          </div>
+          <igx-divider [middle]="true" [vertical]="true"></igx-divider>
         </div>
 
-        <button igxRipple igxButton="raised" (click)="compareRanges($event)">
-          Compare
-          <igx-icon>
-            compare
-          </igx-icon>
-        </button>
+        <div class="md-navbar-element md-compare">
+          <span class="md-navbar-label">{{text2}}</span>
+          <div class="datePicker-container">
+            <div class="start-ranges">
+              <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
+              <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
+            </div>
+            <span class="md-date-separator">TO</span>
+            <div class="end-ranges">
+              <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
+              <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
+            </div>
+          </div>
+
+
+          <button igxRipple igxButton="raised" (click)="compareRanges($event)">
+            Compare
+            <igx-icon>
+              compare
+            </igx-icon>
+          </button>
+        </div>
+
+
       </div>
     </div>
   </igx-navbar>

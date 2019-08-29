@@ -31,10 +31,10 @@ export class NavbarComponent implements OnInit {
   public text2 = 'COMPARE';
 
   public ranges = [
-    { text: '1 week', selected: false},
-    { text: '1 month', selected: false },
-    { text: '3 months', selected: false},
-    { text: '1 year', selected: true }];
+    { text: '1W', selected: false},
+    { text: '1M', selected: false },
+    { text: '3M', selected: false},
+    { text: '1Y', selected: true }];
 
 
   public updateDates(ranges: string) {

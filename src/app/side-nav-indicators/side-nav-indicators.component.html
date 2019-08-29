@@ -24,39 +24,36 @@
         <button igxButton="icon" (click)="dialog.open()"><igx-icon>help</igx-icon></button>
       </div>
   </div>
-  <igx-dialog #dialog >
-    <div style="width: 500px; padding: 5px">
-        <article >
-            <igx-card>
-                <igx-card-header>
-                  <h3 igxCardHeaderTitle>
-                      Welcome to the Marketing Dashboard!
-                  </h3>
-                  <igx-divider></igx-divider>
-                  <h5 igxCardHeaderSubtitle>
-                      As you use this dashboard please keep in mind a few things...
-                  </h5>
-                </igx-card-header>
-                <igx-card-content>
-                  <h5>ABOUT THE DATA</h5>
-                    <span>
-  In order to make this sample easy to download and install, all the data for this application is random for each date range.
-  Therefore, as you navigate around the site you will encounter different values even as you select identical date ranges.
-                    </span>
-                    <h5>ABOUT THE BAR CHART</h5>
-                    <span style="width:250px"><img src="../../assets/chart.png"  style="float: right; margin:15px;">
-  The bar chart uses a logarithmic scale on the Y axis in order to show two sets of data that vary in amounts.
-  Notice how conversions (relatively small numbers in green) are plotted on the chart at the bottom where the scale starts at 1 and increases to 100.
-  The sessions (relatively large numbers in yellow) are plotted at the top of the chart where the scale goes quickly from 1,000 to 10,000.
-  This approach allows two data sets of varying scale to exist in a stacked layout on the chart.
-                    </span>
-                </igx-card-content>
-                <igx-card-actions>
-                  <button igxButton="raised" (click)="dialog.close()">got it!</button>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-    </div>
+  <igx-dialog #dialog>
+    <igx-card class="md-dialog">
+        <igx-card-header>
+          <h1 igxCardHeaderTitle>
+            Welcome to the Marketing Dashboard!
+          </h1>
+          <h2 igxCardHeaderSubtitle>
+            As you use this dashboard please keep in mind a few things...
+          </h2>
+        </igx-card-header>
+
+        <igx-card-content>
+          <span>ABOUT THE DATA</span>
+          <p>
+            In order to make this sample easy to download and install, all the data for this application is random for each date range.
+            Therefore, as you navigate around the site you will encounter different values even as you select identical date ranges.
+          </p>
+          <span>ABOUT THE BAR CHART</span>
+          <p>
+            <img src="../../assets/chart.png">
+            The bar chart uses a logarithmic scale on the Y axis in order to show two sets of data that vary in amounts.
+            Notice how conversions (relatively small numbers in green) are plotted on the chart at the bottom where the scale starts at 1 and increases to 100.
+            The sessions (relatively large numbers in yellow) are plotted at the top of the chart where the scale goes quickly from 1,000 to 10,000.
+            This approach allows two data sets of varying scale to exist in a stacked layout on the chart.
+          </p>
+        </igx-card-content>
+        <igx-card-actions [reverse]="true">
+          <button igxButton="raised" (click)="dialog.close()">got it!</button>
+        </igx-card-actions>
+    </igx-card>
 </igx-dialog>
 </div>
 
