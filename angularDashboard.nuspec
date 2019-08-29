@@ -11,5 +11,6 @@
     </metadata>
     <files>
         <file src="dist\**\*.*" target="\" />
+        <file src="web.config" target="\" />
     </files>
 </package>
