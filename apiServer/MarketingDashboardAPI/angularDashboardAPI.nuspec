@@ -11,7 +11,7 @@
     </metadata>
     <files>
         <file src="bin\Release\netcoreapp2.2\*.*" target="\" />
-      <file src="bin\Release\netcoreapp2.2\ja" target="ja\" />
+      <file src="bin\Release\netcoreapp2.2\ja\*.*" target="ja\" />
         <file src="web.config" target="\" />
         <file src="appsettings.json" target="\" />
     </files>
