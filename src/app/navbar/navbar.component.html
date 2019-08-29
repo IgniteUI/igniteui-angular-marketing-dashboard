@@ -39,15 +39,23 @@
       </div>
 
 
-
+<!--
       <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
-        <igx-select-item value="en">EN</igx-select-item>
-        <igx-select-item value="ja">JA</igx-select-item>
-      </igx-select>
+        <igx-drop-down-item value="en">EN</igx-drop-down-item>
+        <igx-drop-down-item value="ja">JA</igx-drop-down-item>
+      </igx-select> -->
+      <div class="language-btn">
+        <button igxButton="icon" [igxToggleAction]="langMenu" [igxToggleOutlet]="outlet" [overlaySettings]="overlaySettings" [igxDropDownItemNavigation]="langMenu"><igx-icon>language</igx-icon></button>
+      </div>
     </div>
+    <igx-drop-down #langMenu (onSelection)="changeLocale($event.newSelection.value)">
+      <igx-drop-down-item value="en">EN<img style="width: 1.5rem; margin-left: 0.5rem;" src="../../assets/united-states.png" alt="US"></igx-drop-down-item>
+      <igx-drop-down-item value="ja">JA<img style="width: 1.5rem; margin-left: 0.8rem;" src="../../assets/japan.png" alt="JA"></igx-drop-down-item>
+  </igx-drop-down>
   </igx-navbar>
   <igx-dialog #dialog [title]="resources.Error_Message.value"
               [rightButtonLabel]="resources.Confirm_button.value"
               (onRightButtonSelect)="dialog.close()">
   </igx-dialog>
 </div>
+<div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>
