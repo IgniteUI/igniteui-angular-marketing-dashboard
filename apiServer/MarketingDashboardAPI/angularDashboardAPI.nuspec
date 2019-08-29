@@ -10,9 +10,6 @@
     <description>This is a package that can be used with Octopus deployer</description>
     </metadata>
     <files>
-        <file src="bin\Release\netcoreapp2.2\*.*" target="\" />
-      <file src="bin\Release\netcoreapp2.2\ja\*.*" target="ja\" />
-        <file src="web.config" target="\" />
-        <file src="appsettings.json" target="\" />
+        <file src="publish\**\*.*" target="\" />
     </files>
 </package>
