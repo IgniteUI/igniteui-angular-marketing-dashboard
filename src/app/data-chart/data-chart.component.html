@@ -1,16 +1,16 @@
 <div class="md-data-filter">
-  <h5>OVERALL HEALTH</h5>
+  <h5>{{resources.Overall_Health.value | uppercase}}</h5>
 
   <igx-buttongroup>
-    <button igxRipple igxButton [selected]="true" (click)="setSeries(false)">All</button>
-    <button igxRipple igxButton (click)="setSeries(true)">By medium</button>
+    <button igxRipple igxButton [selected]="true" (click)="setSeries(false)">{{resources.All.value}}</button>
+    <button igxRipple igxButton (click)="setSeries(true)">{{resources.By_Medium.value}}</button>
   </igx-buttongroup>
 </div>
 
 <div class="md-data-chart">
   <igx-data-chart #chart height="200px" [dataSource]="chartData" [animateSeriesWhenAxisRangeChanges]="true" [legend]="legend">
 
-    <igx-category-x-axis #time name="time" label="title" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
+    <igx-category-x-axis #time name="time" [gap]="0.5" [overlap]="-0.3"></igx-category-x-axis>
     <igx-category-x-axis #timeConvers name="timeConvers" [gap]="0.5" [overlap]="-0.3" [labelVisibility]="'collapsed'">
     </igx-category-x-axis>
 
@@ -26,28 +26,28 @@
 <ng-template let-item="item" #areaChartTooltipTemplate>
   <div class="chart-tooltip">
     <div class="item bold">{{item.title}}</div>
-    <div><span class="caps-muted">{{'session' | uppercase}}</span>: {{item.session}}</div>
-    <div><span class="caps-muted">{{'conversions' | uppercase}}</span>: {{item.conversion}}</div>
+    <div><span class="caps-muted">{{resources.Sessions.value | uppercase}}</span>: {{item.session}}</div>
+    <div><span class="caps-muted">{{resources.Conversions.value | uppercase}}</span>: {{item.conversion}}</div>
   </div>
 </ng-template>
 
 <ng-template #emptyAreaChartTooltipTemplate></ng-template>
 
 <ng-template let-series="series" let-item="item" #columnChartTooltipTemplate>
-  <div *ngIf="series.name === 'sessions'" class="chart-tooltip">
+  <div *ngIf="series.name === 'Sessions'" class="chart-tooltip">
     <div class="item bold">{{item.title}}</div>
     <div><span class="caps-muted">{{series.title | uppercase}}:</span> {{item.session}}</div>
   </div>
 
-  <div *ngIf="series.name === 'conversion'" class="chart-tooltip">
-    <div><span class="caps-muted">{{series.title | uppercase}}:</span> {{item.conversion}}</div>
+  <div *ngIf="series.name === 'Conversions'" class="chart-tooltip">
+    <span class="caps-muted">{{series.title | uppercase}}: </span>{{item.conversion}}
+    </div>
+
+  <div *ngIf="series.name === 'PrevSession'" class="chart-tooltip item">
+    <div class="caps-muted">{{series.title | uppercase}}: {{item.session}}</div>
   </div>
 
-  <span *ngIf="series.name === 'sessionsPrev'" class="chart-tooltip">
-    <span class="caps-muted">{{series.title | uppercase}} : {{item.session}}</span>
-  </span>
-
-  <div *ngIf="series.name === 'conversionPrev'" class="chart-tooltip">
-    <span class="caps-muted">{{series.title | uppercase}} : {{item.conversion}}</span>
+  <div *ngIf="series.name === 'PrevConversions'" class="chart-tooltip">
+    <span class="caps-muted">{{series.title | uppercase}}: {{item.conversion}}</span>
   </div>
 </ng-template>

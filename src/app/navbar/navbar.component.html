@@ -4,24 +4,24 @@
       <img class="logo-container" src="../../assets/logo.png" alt="marketing dashboard">
       <div class="md-navbar-actions">
         <span class="md-navbar-label">
-          {{text1 | uppercase}}
+          {{resources.Select_Range.value}}
         </span>
 
         <igx-buttongroup [multiSelection]="false">
-          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(range.text)">
-            {{range.text}}
+          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(resources[range.period].value)">
+            {{resources[range.period].value}}
           </button>
         </igx-buttongroup>
 
         <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
-        <span class="md-navbar-label">{{text2}}</span>
+        <span class="md-navbar-label"> {{resources.Compare.value}}</span>
         <div class="datePicker-container">
           <div class="start-ranges">
               <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
               <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
-          <span class="md-date-separator">TO</span>
+          <span class="md-date-separator">{{resources.To.value}}</span>
           <div class="end-ranges">
               <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
               <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
@@ -29,16 +29,21 @@
         </div>
 
         <button igxRipple igxButton="raised" (click)="compareRanges($event)">
-          Compare
+          {{resources.Compare.value}}
           <igx-icon>
             compare
           </igx-icon>
         </button>
+
+        <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
+          <igx-select-item value="en">EN</igx-select-item>
+          <igx-select-item value="ja">JA</igx-select-item>
+        </igx-select>
       </div>
     </div>
   </igx-navbar>
-  <igx-dialog #dialog title="Ooops.."
-              rightButtonLabel="OK"
+  <igx-dialog #dialog [title]="resources.Error_Message.value"
+              [rightButtonLabel]="resources.Confirm_button.value"
               (onRightButtonSelect)="dialog.close()">
   </igx-dialog>
 </div>

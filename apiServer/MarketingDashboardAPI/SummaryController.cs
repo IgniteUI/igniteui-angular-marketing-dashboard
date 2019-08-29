@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -20,8 +20,9 @@ namespace MarketingDashboardAPI
         // GET: api/<controller>
         [EnableCors("AllowOrigin")]
         [HttpGet]
-        public IList<SummaryModel> Get(string startRangeBegin, string startRangeEnd, string endRangeBegin, string endRangeEnd)
+        public IList<SummaryModel> Get(string startRangeBegin, string startRangeEnd, string endRangeBegin, string endRangeEnd, string locale)
         {
+            Resources.Main.Culture = System.Globalization.CultureInfo.CreateSpecificCulture(locale);
             DateTime startRangeBeginDate;
             DateTime startRangeEndDate;
             DateTime endRangeBeginDate;
@@ -50,7 +51,7 @@ namespace MarketingDashboardAPI
             }
             else
             {
-                throw new WrongDateException("Wrong Date");
+                throw new WrongDateException(Resources.Main.Error);
             }
 
             return models;

@@ -5,7 +5,6 @@ export interface IColumnSeriesData {
   name: string;
   xAxis: IgxCategoryXAxisComponent;
   valueMemberPath: string;
-  title: string;
   brush: string;
   outline: string;
   dataSource?: any;
@@ -14,7 +13,6 @@ export interface IColumnSeriesData {
 export interface IAreaSeriesData {
   name: string;
   valueMemberPath: string;
-  title: string;
   color: string;
 }
 

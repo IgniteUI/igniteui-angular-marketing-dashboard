@@ -36,7 +36,9 @@ igxButton + igxButton {
     width: 100%;
     z-index: 99999;
   }
+
 }
+
 
 .datePicker-container {
   display: flex;
@@ -122,4 +124,10 @@ igxButton + igxButton {
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+}
+
+::ng-deep body{
+  .igx-overlay__wrapper{
+    z-index: 2147483647;
+  }
 }

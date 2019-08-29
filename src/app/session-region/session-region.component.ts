@@ -11,6 +11,7 @@ import { Visibility } from 'igniteui-angular-core/ES5/Visibility';
 import { MarkerType } from 'igniteui-angular-charts/ES5/MarkerType';
 import { IgxSizeScaleComponent } from 'igniteui-angular-charts/ES5/igx-size-scale-component';
 import { IgxLinearProgressBarComponent } from 'igniteui-angular';
+import { LocalizationService } from '../localization.service';
 
 @Component({
   selector: 'app-session-region',
@@ -19,7 +20,7 @@ import { IgxLinearProgressBarComponent } from 'igniteui-angular';
 })
 export class SessionByRegionComponent implements OnInit {
 
-  constructor( private service: DataService) {
+  constructor( private service: DataService, private localeService: LocalizationService) {
     this.shapeSeriesModel = {
                     name: 'world',
                     shapeDataSource: '../../assets/world.shp',
@@ -34,9 +35,11 @@ export class SessionByRegionComponent implements OnInit {
                     longitudeMemberPath: 'longitude',
                     markerType: MarkerType.Circle,
                     radiusMemberPath: 'scaledSessions',
-                    markerOutline: '#ffff33',
+                    markerOutline: '#000',
                     markerBrush: '#ffff33'
     };
+
+    this.resources =  this.localeService.getLocale();
 
    }
   public mapData: IMapData;
@@ -46,6 +49,7 @@ export class SessionByRegionComponent implements OnInit {
   public range: number;
   public interval: any;
   public initMap = true;
+  public resources;
 
   public topPages: string[];
   public users: string;
@@ -61,6 +65,11 @@ export class SessionByRegionComponent implements OnInit {
     public linearBar: IgxLinearProgressBarComponent;
 
   ngOnInit() {
+
+    this.localeService.languageLocalizer.subscribe(resources => {
+      this.resources = resources;
+    });
+
     this.service.onDataFetch.subscribe((data: IRangeData) => {
       this.users = data.end.users;
       this.conversionRate = data.end.conversionRate;
@@ -157,5 +166,4 @@ export class SessionByRegionComponent implements OnInit {
       this.map.notifySetItem(currentMapData, i, currentMapData[i], newMapData[i]);
     }
   }
-
 }

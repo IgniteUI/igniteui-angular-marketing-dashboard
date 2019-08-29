@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { setTitle } from '../utils';
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-trend-item',
   templateUrl: './trend-item.component.html',
   styleUrls: ['./trend-item.component.scss']
 })
-export class TrendItemComponent implements OnInit {
+export class TrendItemComponent {
 
   constructor() { }
   @Input()
@@ -29,20 +30,10 @@ export class TrendItemComponent implements OnInit {
   @Input()
   public endRes: string;
 
-  ngOnInit() {
-    if (this.shouldSetTitle(this.name)) {
-      this.name = setTitle(this.name);
-    }
-  }
+  @Input()
+  public prevString: string;
 
-  private shouldSetTitle(name: string): boolean {
-    if (name) {
-      const temp = name.match(/[A-Z]{1,}/g);
-      if (temp) {
-        return true;
-      }
-    }
-    return false;
-  }
+  @Input()
+  public currentString: string;
 
 }

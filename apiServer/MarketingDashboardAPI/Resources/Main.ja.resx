@@ -315,4 +315,7 @@
   <data name="Current_Trend" xml:space="preserve">
     <value>&lt;span class="bold center-block"&gt;現在の&lt;/span&gt;トレンド</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>日付の範囲 (日数) を同じにする必要があります。</value>
+  </data>
 </root>

@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { getDateRange } from '../../app/utils';
 import { DisplayDensityToken, DisplayDensity, IgxDialogComponent } from 'igniteui-angular';
 import { DataService } from '../data.service';
-import { IRange } from '../models/range'
+import { IRange } from '../models/range';
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -19,22 +20,25 @@ export class NavbarComponent implements OnInit {
   public startRangeEnd: Date;
   public endRangeBegin: Date;
   public endRangeEnd: Date;
+  public version = '';
+  public currentRange: IRange;
+  public resources;
+  public ranges;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private localeService: LocalizationService) {
     this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
     this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
     this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
     this.endRangeEnd = this.today;
+    this.resources = this.localeService.getLocale();
+
+    this.ranges  = [
+      { text: this.resources.One_week.value, selected: false, period: 'One_week'},
+      { text: this.resources.One_month.value, selected: false, period: 'One_month' },
+      { text: this.resources.Three_months.value, selected: false, period: 'Three_months'},
+      { text: this.resources.One_year.value, selected: true, period: 'One_year' }];
+
   }
-
-  public text1 = 'SELECT';
-  public text2 = 'COMPARE';
-
-  public ranges = [
-    { text: '1 week', selected: false},
-    { text: '1 month', selected: false },
-    { text: '3 months', selected: false},
-    { text: '1 year', selected: true }];
 
 
   public updateDates(ranges: string) {
@@ -44,28 +48,29 @@ export class NavbarComponent implements OnInit {
     const dayMiliseconds = 1000 * 60 * 60 * 24;
 
     switch (ranges) {
-      case '1 week':
+      case this.resources.One_week.value:
         dateRange = getDateRange(7);
         this.applyRanges(dateRange);
         break;
-      case '1 month':
+      case this.resources.One_month.value:
         current.setMonth(current.getMonth() - 1);
         days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
         break;
-      case '3 months':
+      case this.resources.Three_months.value:
         current.setMonth(current.getMonth() - 3);
         days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
         break;
-      case '1 year':
+      case this.resources.One_year.value:
       default:
         dateRange = getDateRange(365);
         this.applyRanges(dateRange);
         break;
     }
+    this.currentRange = dateRange;
     this.dataService.getSummaryData(dateRange);
   }
 
@@ -74,6 +79,14 @@ export class NavbarComponent implements OnInit {
     this.endRangeBegin = ranges.endRangeBegin;
     this.startRangeEnd = ranges.startRangeEnd;
     this.startRangeBegin = ranges.startRangeBegin;
+
+    const range: IRange = {
+      startRangeBegin: this.startRangeBegin,
+      startRangeEnd: this.startRangeEnd,
+      endRangeBegin: this.endRangeBegin,
+      endRangeEnd: this.endRangeEnd
+    };
+    this.currentRange = range;
   }
 
   public compareRanges(event) {
@@ -83,19 +96,32 @@ export class NavbarComponent implements OnInit {
       endRangeBegin: this.endRangeBegin,
       endRangeEnd: this.endRangeEnd
     };
+    this.currentRange = range;
     this.dataService.getSummaryData(range);
   }
-  ngOnInit() {
 
-    const range: IRange = {
+  public changeLocale(version) {
+    window.localStorage.setItem('locale', version);
+    this.localeService.setLocale(version);
+    this.dataService.getSummaryData(this.currentRange);
+  }
+
+  ngOnInit() {
+      this.localeService.languageLocalizer.subscribe( resources => {
+        this.resources = resources;
+      });
+      this.version = window.localStorage.getItem('locale');
+
+      const range: IRange = {
       startRangeBegin: this.startRangeBegin,
       startRangeEnd: this.startRangeEnd,
       endRangeBegin: this.endRangeBegin,
       endRangeEnd: this.endRangeEnd
     };
-    this.dataService.getSummaryData(range);
+      this.currentRange = range;
+      this.dataService.getSummaryData(range);
 
-    this.dataService.onError.subscribe(err => {
+      this.dataService.onError.subscribe(err => {
       this.dialog.message = err;
       this.dialog.open();
     });

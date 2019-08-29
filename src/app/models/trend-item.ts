@@ -9,9 +9,10 @@ export interface ITrendItem {
   direction: string;
   directionColor: string;
   endRes: string;
+  labelP: string;
 }
 
-export function generateTrendItem(inditicatorName: string, data: IRangeData, invertStyleRule?: boolean): ITrendItem {
+export function generateTrendItem(inditicatorName: string, data: IRangeData, labelP: string, invertStyleRule?: boolean): ITrendItem {
   const endString = data.end[inditicatorName];
   const end = convertToInt(endString);
   const startString = data.start[inditicatorName];
@@ -66,6 +67,7 @@ export function generateTrendItem(inditicatorName: string, data: IRangeData, inv
     percent: percent,
     direction: direction,
     directionColor: directionColor,
-    endRes: endRes
+    endRes: endRes,
+    labelP: labelP
   };
 }
