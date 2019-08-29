@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { getDateRange } from '../../app/utils';
-import { DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, NoOpScrollStrategy } from 'igniteui-angular';
+import { DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
+   NoOpScrollStrategy } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
 import { LocalizationService } from '../localization.service';
