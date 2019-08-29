@@ -1,5 +1,4 @@
 @import "../../var";
-
 :host ::ng-deep{
   .md-button-group {
     transform: scale(.8);
@@ -8,6 +7,7 @@
     div {
       padding: 2px;
     }
+
     .item {
       border-bottom: 1px solid #453f4e;
     }
@@ -32,8 +32,8 @@
     min-width: 250px;
   }
 
-  .ig-chart-legend-item{
-    margin-right: 16px!important;
+  .ig-chart-legend-item {
+    margin-right: 16px !important;
 
     @media only screen and (max-width: $mobile) {
       margin-bottom: 8px !important;
@@ -45,7 +45,7 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-left: 16px!important;
+    margin-left: 16px !important;
   }
 
   .ig-chart-legend-item-badge,
@@ -54,45 +54,55 @@
     display: flex !important;
     align-items: center;
   }
+
   .ig-chart-legend-item-text {
     color: #fff;
     padding-left: 4px;
   }
 }
+::ng-deep{
+  .ui-chart-pointer-tooltip-content-container {
 
-::ng-deep {
-  .ui-chart-pointer-tooltip-content-container{
-    .ig-tooltip-container{
-      .ig-tooltip-container-background{
+    .ig-tooltip-container {
+      .ig-tooltip-container-background {
         background-color: #453f4e;
         padding: 0;
       }
     }
   }
-
   .ui-chart-tooltip.ui-widget-content.ui-corner-all,
-.ui-chart-pointer-tooltip-content-container {
-  border: 2px solid #fff;
-  white-space: nowrap;
-  padding: 3px 5px;
-  color: #fff;
-}
-
-
-.chart-tooltip .item {
-  border-bottom: 1px solid white;
-}
-
-.chart-tooltip {
-  padding: 2px;
-  .caps-muted{
-    text-transform: uppercase;
-    color: #aeaeae;
-    font-size: 11px;
-    font-weight: bold;
+  .ui-chart-pointer-tooltip-content-container {
+    border: 2px solid #fff;
+    white-space: nowrap;
+    padding: 1px 3px;
+    color: #fff;
   }
-}
-
-
 
 }
+
+
+
+
+  .chart-tooltip {
+    padding: 2px;
+    font-size: 1rem;
+    > div {
+      padding: 0px;
+    }
+
+    div + div{
+      margin: 0
+    }
+
+   .item, &.item{
+      border-bottom: 1px solid white;
+    }
+
+
+    .caps-muted {
+      text-transform: uppercase;
+      color: #aeaeae;
+      font-size: 0.7em;
+      font-weight: bold;
+    }
+  }

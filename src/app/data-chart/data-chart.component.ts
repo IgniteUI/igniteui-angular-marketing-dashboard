@@ -7,9 +7,11 @@ import { IRangeData } from '../models/range';
 import { IgxColumnSeriesComponent } from 'igniteui-angular-charts/ES5/igx-column-series-component';
 import { IgxAreaSeriesComponent } from 'igniteui-angular-charts/ES5/igx-area-series-component';
 import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-component';
-
+import { RESOURCES} from '../i18n/locale-en.json';
+import { JA_RESOURCES} from '../i18n/locale-ja.json';
 import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
 import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts/ES5/CategoryTooltipLayerPosition';
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-data-chart',
   templateUrl: './data-chart.component.html',
@@ -51,20 +53,27 @@ export class DataChartComponent implements OnInit {
   public chartLabelFormatter;
   public mediumMode = false;
   public chartInitialization = true;
-  constructor(private service: DataService) {}
+
+  public resources: typeof RESOURCES | typeof JA_RESOURCES;
+
+  constructor(private service: DataService, private localeService: LocalizationService) {
+    this.resources = this.localeService.getLocale();
+  }
 
 
   ngOnInit() {
 
+    this.localeService.languageLocalizer.subscribe( (resources: typeof RESOURCES | typeof JA_RESOURCES )  => {
+      this.resources = resources;
+      this.changeChartSeriesTitle();
+    });
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-
 
       this.columnChartData = data.end.trafficStats;
 
       this.prevSeriesDataSource = data.start.trafficStats;
 
       this.areaChartData = data.end.trafficPerMedium;
-
 
 
       if (this.chartInitialization) {
@@ -76,11 +85,16 @@ export class DataChartComponent implements OnInit {
         };
         this.chartInitialization = false;
       } else if (this.mediumMode) {
+          this.yAxis.isLogarithmic = false;
+          this.yAxis.title = '';
           this.chartData = this.areaChartData;
         } else {
+          this.yAxis.title = 'LOG';
+          this.yAxis.titleAngle = 270;
+          this.yAxis.isLogarithmic = true;
           this.chartData = data.end.trafficStats;
           this.chart.actualSeries.forEach(s => {
-            if (s.name === 'sessionsPrev' || s.name === 'conversionPrev') {
+            if (s.name === 'PrevSession' || s.name === 'PrevConversions') {
              s.dataSource = data.start.trafficStats;
             } else {
              s.dataSource =  data.end.trafficStats;
@@ -100,11 +114,12 @@ export class DataChartComponent implements OnInit {
         series.name = seriesData.name;
         series.valueMemberPath = seriesData.valueMemberPath;
         series.xAxis = seriesData.xAxis;
-        this.yAxis.isLogarithmic = true;
+        this.time.label = 'title';
         this.yAxis.title = 'LOG';
-        this.yAxis.titleAngle  = 270;
+        this.yAxis.titleAngle = 270;
+        this.yAxis.isLogarithmic = true;
         series.yAxis = this.yAxis;
-        series.title = seriesData.title;
+        series.title = this.resources[seriesData.name].value;
         series.brush = seriesData.brush;
         series.outline = seriesData.outline;
         series.isTransitionInEnabled = true;
@@ -133,7 +148,7 @@ export class DataChartComponent implements OnInit {
         this.yAxis.title = '';
         series.yAxis = this.yAxis;
         series.brush = seriesData.color;
-        series.title = (seriesData.title as string).toUpperCase();
+        series.title = (this.resources[seriesData.name].value as string).toUpperCase();
         series.outline = seriesData.color;
         series.isTransitionInEnabled = true;
         series.transitionDuration = 800;
@@ -153,7 +168,6 @@ export class DataChartComponent implements OnInit {
   public setColumnSeriesData(name: string,
                              xAxis: IgxCategoryXAxisComponent,
                              valueMemberPath: string,
-                             title: string,
                              brush: string,
                              outline: string,
                              dataSource?: any): IColumnSeriesData {
@@ -162,7 +176,6 @@ export class DataChartComponent implements OnInit {
         name: name,
         xAxis: xAxis,
         valueMemberPath: valueMemberPath,
-        title: title,
         brush: brush,
         outline: outline,
         dataSource: dataSource
@@ -172,18 +185,17 @@ export class DataChartComponent implements OnInit {
       name: name,
       xAxis: xAxis,
       valueMemberPath: valueMemberPath,
-      title: title,
       brush: brush,
       outline: outline
     };
   }
 
   public setAreaSeriesData(name: string,
+                           valueMemberPath: string,
                            color: string): IAreaSeriesData {
     return {
       name: name,
-      valueMemberPath: name,
-      title: name,
+      valueMemberPath: valueMemberPath,
       color: color
     };
   }
@@ -197,21 +209,27 @@ export class DataChartComponent implements OnInit {
   }
 
   public initChart() {
-    this.columnSeriesData.push(this.setColumnSeriesData('sessions', this.time, 'session', 'Session', '#ffff33', '#ffff33'));
-    // tslint:disable-next-line: max-line-length
-    this.columnSeriesData.push(this.setColumnSeriesData('conversion', this.timeConvers, 'conversion', 'Conversions', '#66cc00', '#66cc00'));
+    // tslint:disable: max-line-length
+    this.columnSeriesData.push(this.setColumnSeriesData('Sessions', this.time, 'session', '#ffff33', '#ffff33'));
+    this.columnSeriesData.push(this.setColumnSeriesData('Conversions', this.timeConvers, 'conversion', '#66cc00', '#66cc00'));
 
-    // tslint:disable-next-line: max-line-length
-    this.columnSeriesData.push(this.setColumnSeriesData('sessionsPrev', this.time, 'session', 'Prev.Session', '#655F00', '#655F00', this.prevSeriesDataSource));
-    // tslint:disable-next-line: max-line-length
-    this.columnSeriesData.push(this.setColumnSeriesData('conversionPrev', this.timeConvers, 'conversion', 'Prev.Conversions', '#295001', '#295001', this.prevSeriesDataSource));
+    this.columnSeriesData.push(this.setColumnSeriesData('PrevSession', this.time, 'session',  '#655F00', '#655F00', this.prevSeriesDataSource));
+    this.columnSeriesData.push(this.setColumnSeriesData('PrevConversions', this.timeConvers, 'conversion', '#295001', '#295001', this.prevSeriesDataSource));
 
-    this.areaSeriesData.push(this.setAreaSeriesData('organic', '#77B40D'));
-    this.areaSeriesData.push(this.setAreaSeriesData('paid', '#A9D120'));
-    this.areaSeriesData.push(this.setAreaSeriesData('direct', '#CCE575'));
-    this.areaSeriesData.push(this.setAreaSeriesData('referral', '#E1EEB5'));
-    this.areaSeriesData.push(this.setAreaSeriesData('email', '#FFFFFF'));
+    this.areaSeriesData.push(this.setAreaSeriesData('Organic', 'organic', '#77B40D'));
+    this.areaSeriesData.push(this.setAreaSeriesData('Paid', 'paid', '#A9D120'));
+    this.areaSeriesData.push(this.setAreaSeriesData('Direct', 'direct', '#CCE575'));
+    this.areaSeriesData.push(this.setAreaSeriesData('Referral', 'referral', '#E1EEB5'));
+    this.areaSeriesData.push(this.setAreaSeriesData('Email', 'email', '#FFFFFF'));
 
     this.setSeries(false);
+  }
+
+  public changeChartSeriesTitle() {
+      this.chart.actualSeries.forEach( s => {
+        if ( s instanceof IgxColumnSeriesComponent || s instanceof IgxAreaSeriesComponent) {
+          s.title = this.resources[s.name].value.toUpperCase();
+        }
+      });
   }
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LocalizationService } from './localization.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'marketing-dashboard';
+
+  constructor(private localeService: LocalizationService) {
+    if (!window.localStorage.getItem('locale')) {
+      window.localStorage.setItem('locale', 'en');
+      this.localeService.setLocale('en');
+    } else {
+      this.localeService.setLocale(window.localStorage.getItem('locale'));
+    }
+  }
 }

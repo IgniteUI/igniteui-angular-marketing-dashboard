@@ -5,8 +5,8 @@
         sentiment_{{status==='neutral' ? 'neutral' : status==='negative' ? 'very_dissatisfied' : 'very_satisfied'}}
       </igx-icon>
       <div>
-        <span>{{'current'| uppercase}}</span>
-        <span>{{'trend'| uppercase}}</span>
+        <span>{{ resources['Current'].value | uppercase}}</span>
+        <span>{{ resources['Trend'].value | uppercase}}</span>
       </div>
     </div>
     <div class="trend-items">
@@ -14,10 +14,12 @@
         [direction]="item.direction"
         [directionColor]="item.directionColor"
         [percent]="item.percent"
-        [name]="item.name"
+        [name]="resources[item.labelP].value"
         [end]="item.end"
         [start]="item.start"
-        [endRes]="item.endRes">
+        [endRes]="item.endRes"
+        [prevString]="resources['Previous'].value"
+        [currentString]="resources['Current'].value">
       </app-trend-item>
     </div>
   </div>

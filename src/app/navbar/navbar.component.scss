@@ -74,7 +74,9 @@ igxButton + igxButton {
     width: 100%;
     z-index: 1;
   }
+
 }
+
 
 .datePicker-container {
   display: flex;
@@ -174,5 +176,11 @@ igxButton + igxButton {
   @media only screen and (min-width: $mobile-portrait) {
     max-width: 100px;
     margin-right: 0;
+  }
+}
+
+::ng-deep body{
+  .igx-overlay__wrapper{
+    z-index: 2147483647;
   }
 }

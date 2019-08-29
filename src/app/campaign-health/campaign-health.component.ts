@@ -10,6 +10,7 @@ import {convertToInt} from '../utils';
 import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/FormatLinearGraphLabelEventArgs';
 import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/AlignLinearGraphLabelEventArgs';
 import { ITrendItem, generateTrendItem } from '../models/trend-item';
+import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-campaign-health',
   templateUrl: './campaign-health.component.html',
@@ -22,7 +23,9 @@ export class CampaignHealthComponent implements OnInit {
   public bulletGraphs: IBulletGraph[] = [];
   private formatter;
   public trendItem: ITrendItem;
-  constructor(private service: DataService) {
+  public resources;
+
+  constructor(private service: DataService, private localeService: LocalizationService) {
 
     this.doughnutChartColors = {
       ppc: {
@@ -42,6 +45,9 @@ export class CampaignHealthComponent implements OnInit {
         start: { value: '#7f7f7f', bkg: '#3e334f', label: '#ccc' }
       }
     };
+
+    this.resources = this.localeService.getLocale();
+
     this.trendItem = {
       name: undefined,
       end: undefined,
@@ -49,7 +55,8 @@ export class CampaignHealthComponent implements OnInit {
       percent: undefined,
       direction: undefined,
       directionColor: undefined,
-      endRes: undefined
+      endRes: undefined,
+      labelP: 'Conversions'
     };
     for (let index = 0; index < 8; index++) {
         this.bulletGraphs.push(
@@ -80,6 +87,11 @@ export class CampaignHealthComponent implements OnInit {
   public adModels = ['ppc', 'email', 'banners', 'thirdParty'];
 
   ngOnInit() {
+
+    this.localeService.languageLocalizer.subscribe( resources => {
+      this.resources = resources;
+    });
+
     this.chart.sliceClick.subscribe( event => {
       event.args.i.dataContext.showLabel = event.args.i.slice.isSelected;
       this.chart.series.toArray().forEach(s => {
@@ -88,13 +100,13 @@ export class CampaignHealthComponent implements OnInit {
     });
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.trendItem = generateTrendItem('conversions', data);
+      this.trendItem = generateTrendItem('conversions', data, 'Conversions');
       this.chart.series.clear();
       this.doughnutData = [
-        { label: 'PPC', value: data.end.ppc , prev: data.start.ppc},
-        { label: 'Banners', value: data.end.banners, prev: data.start.banners },
-        { label: 'Email', value: data.end.email, prev: data.start.email },
-        { label: '3rd Party', value: data.end.thirdParty, prev: data.start.thirdParty }
+        { label: this.resources['PPC'].value, value: data.end.ppc , prev: data.start.ppc},
+        { label: this.resources['Banners'].value, value: data.end.banners, prev: data.start.banners },
+        { label: this.resources['Email'].value, value: data.end.email, prev: data.start.email },
+        { label: this.resources['Third_Party'].value, value: data.end.thirdParty, prev: data.start.thirdParty }
       ];
 
       this.renderDoughnutChart(this.chart, this.doughnutChartColors);
