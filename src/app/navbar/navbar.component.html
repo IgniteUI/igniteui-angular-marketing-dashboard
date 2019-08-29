@@ -13,30 +13,21 @@
           </button>
         </igx-buttongroup>
         <igx-divider [middle]="true" [vertical]="true"></igx-divider>
-        </div>
+      </div>
 
 
-        <div class="md-navbar-element md-compare">
-          <span class="md-navbar-label">{{resources.Compare.value}}</span>
-          <div class="datePicker-container">
-            <div class="start-ranges">
-              <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
-            </div>
-            <span class="md-date-separator">{{resources.To.value}}</span>
-            <div class="end-ranges">
-              <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
-            </div>
+      <div class="md-navbar-element md-compare">
+        <span class="md-navbar-label">{{resources.Compare.value}}</span>
+        <div class="datePicker-container">
+          <div class="start-ranges">
+            <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
-
-
-          <button igxRipple igxButton="raised" (click)="compareRanges($event)">
-            Compare
-            <igx-icon>
-              compare
-            </igx-icon>
-          </button>
+          <span class="md-date-separator">{{resources.To.value}}</span>
+          <div class="end-ranges">
+            <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
+          </div>
         </div>
 
         <button igxRipple igxButton="raised" (click)="compareRanges($event)">
@@ -45,12 +36,14 @@
             compare
           </igx-icon>
         </button>
-
-        <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
-          <igx-select-item value="en">EN</igx-select-item>
-          <igx-select-item value="ja">JA</igx-select-item>
-        </igx-select>
       </div>
+
+
+
+      <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
+        <igx-select-item value="en">EN</igx-select-item>
+        <igx-select-item value="ja">JA</igx-select-item>
+      </igx-select>
     </div>
   </igx-navbar>
   <igx-dialog #dialog [title]="resources.Error_Message.value"
