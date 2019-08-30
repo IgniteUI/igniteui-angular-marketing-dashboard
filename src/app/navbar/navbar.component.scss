@@ -186,8 +186,7 @@ igxButton + igxButton {
   margin-right: 10px;
 
   @media only screen and (max-width: $mobile) {
-    max-width: 80px;
-    margin-right: 0;
+    max-width: 50px;
   }
 
   @media only screen and (min-width: $mobile-portrait) {

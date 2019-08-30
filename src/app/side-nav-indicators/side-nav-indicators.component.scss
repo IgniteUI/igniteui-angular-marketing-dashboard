@@ -73,6 +73,10 @@
   }
 }
 
+.md-dialog-overflow {
+  overflow-x: auto;
+  max-height: 100vh;
+}
 
 .trends-container {
   @media only screen and (max-width: $mobile) {
