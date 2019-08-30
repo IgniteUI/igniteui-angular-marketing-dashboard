@@ -5,25 +5,22 @@ igxButton + igxButton {
 }
 
 .md-navbar-label {
+  margin-left: 32px;
   font-size: 12px;
   letter-spacing: 1px;
-  @media only screen and (max-width: $mobile) {
+  @media only screen and (max-width: $desktop) {
     display: none;
   }
 }
 
 .md-navbar-element {
-  span {
-    margin-right: 8px;
-  }
 
   igx-buttongroup {
-    margin-right: 32px;
-    @media only screen and (max-width: $tablet) {
-      margin-right: 8px;
+    margin-right: 16px;
+    @media only screen and (max-width: $desktop) {
+      margin-right: 0;
     }
     @media only screen and (max-width: $mobile) {
-      margin-right: 0;
       max-width: 190px;
     }
   }
@@ -38,7 +35,7 @@ igxButton + igxButton {
 
 .md-compare {
   @media only screen and (max-width: $tablet) {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -49,7 +46,7 @@ igxButton + igxButton {
   }
 
   >* {
-    margin-left: 30px !important;
+    margin-left: 16px !important;
     @media only screen and (max-width: $mobile) {
       margin-left: 0 !important;
     }
@@ -119,6 +116,8 @@ igxButton + igxButton {
     }
 
     .datePicker-container {
+        margin-left: 16px;
+
       igx-icon {
         font-size: 14px;
         width: 14px;
@@ -175,6 +174,11 @@ igxButton + igxButton {
   }
 }
 
+.language-btn {
+  margin-left: 8px;
+}
+
+
 .logo-container{
   display: flex;
   align-items: center;
@@ -192,6 +196,14 @@ igxButton + igxButton {
   }
 }
 
+::ng-deep {
+  .igx-drop-down__list {
+    img {
+      max-width: 18px;
+      margin-right: 8px;
+    }
+  }
+}
 ::ng-deep body{
   .igx-overlay__wrapper{
     z-index: 2147483647;
