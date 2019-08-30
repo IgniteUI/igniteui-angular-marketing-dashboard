@@ -223,7 +223,7 @@
       "value": "The beginning and end date ranges must have an equal number of days."
     },
     "Chart_PNG": {
-      "value": "../../assets/chart.png"
+      "value": "./assets/chart.png"
     }
   }
 }
