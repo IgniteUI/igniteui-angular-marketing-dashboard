@@ -1,3 +1,5 @@
+@import "../../var";
+
 app-trend-item {
   display: block;
 }
@@ -20,12 +22,13 @@ app-trend-item {
   justify-content: flex-start;
   flex-direction: column;
 
-  @media only screen and (max-width: 960px) {
+
+  @media only screen and (max-width: $tablet) {
     font-size: 12px;
   }
 
-  @media only screen and (max-width: 769px) {
-    font-size: 9px;
+  @media only screen and (max-width: $mobile) {
+    padding-bottom: 0;
     strong {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -39,22 +42,27 @@ app-trend-item {
   min-width: 200px;
   margin: 10px;
 
-  @media only screen and (max-width: 1024px) {
+  @media only screen and (max-width: $desktop) {
     min-width: 190px;
   }
 
-  @media only screen and (max-width: 960px) {
+  @media only screen and (max-width: $tablet) {
     min-width: 130px;
   }
 
-  @media only screen and (max-width: 769px) {
+  @media only screen and (max-width: $mobile) {
     min-width: 100px;
     min-height: 100px;
+    margin: 5px;
   }
 }
 
 igx-icon {
   margin-right: 0.5rem;
+
+  @media only screen and (max-width: $mobile) {
+    margin-right: 0.2rem;
+  }
 }
 
 .md-trend-value {
@@ -63,6 +71,10 @@ igx-icon {
   align-items: center;
   font-size: 30px;
   font-weight: 900;
+
+  @media only screen and (max-width: $mobile) {
+    font-size: 20px;
+  }
 }
 
 .success{

@@ -1,4 +1,8 @@
-:host ::ng-deep {
+@import "../../var";
+:host ::ng-deep{
+  .md-button-group {
+    transform: scale(.8);
+  }
   .chart-tooltip {
     div {
       padding: 2px;
@@ -31,7 +35,7 @@
   .ig-chart-legend-item {
     margin-right: 16px !important;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: $mobile) {
       margin-bottom: 8px !important;
     }
   }

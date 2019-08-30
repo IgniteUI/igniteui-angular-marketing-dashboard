@@ -1,3 +1,5 @@
+@import "../../var";
+
 .list-container {
   display: flex;
 
@@ -7,6 +9,26 @@
 
   ol {
     margin: 0 auto;
+  }
+}
+
+.md-dialog {
+  max-width: 500px;
+  padding: 16px;
+  span  {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #fff;
+    &:last-of-type {
+      margin-top: 16px;
+    }
+  }
+
+  img {
+    float: right;
+    margin-left: 16px;
   }
 }
 
@@ -51,6 +73,20 @@
   }
 }
 
-p{
-  width: 25%;
+.md-dialog-overflow {
+  overflow-x: auto;
+  max-height: 100vh;
+}
+
+.trends-container {
+  @media only screen and (max-width: $mobile) {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    >* {
+      min-width: 50%;
+    }
+  }
 }

@@ -1,20 +1,55 @@
+@import "../../var";
+
 igxButton + igxButton {
   margin-left: 10px;
 }
 
 .md-navbar-label {
+  margin-left: 32px;
   font-size: 12px;
   letter-spacing: 1px;
+  @media only screen and (max-width: $desktop) {
+    display: none;
+  }
 }
 
-.md-navbar-actions {
+.md-navbar-element {
+
+  igx-buttongroup {
+    margin-right: 16px;
+    @media only screen and (max-width: $desktop) {
+      margin-right: 0;
+    }
+    @media only screen and (max-width: $mobile) {
+      max-width: 190px;
+    }
+  }
+}
+
+.md-navbar-element,
+.md-navbar-actions{
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.md-compare {
+  @media only screen and (max-width: $tablet) {
+    display: none !important;
+  }
+}
+
+.md-navbar-actions {
   max-height: 100%;
 
+  @media only screen and (max-width: $mobile) {
+  }
+
   >* {
-    margin-left: 30px !important;
+    margin-left: 16px !important;
+    @media only screen and (max-width: $mobile) {
+      margin-left: 0 !important;
+    }
   }
 }
 
@@ -34,7 +69,7 @@ igxButton + igxButton {
   igx-navbar {
     position: fixed;
     width: 100%;
-    z-index: 99999;
+    z-index: 1;
   }
 
 }
@@ -52,6 +87,19 @@ igxButton + igxButton {
 }
 
 :host ::ng-deep {
+
+
+.igx-drop-down__list {
+    border-radius: 4px;
+}
+
+
+  .language-btn{
+    .igx-icon{
+      color: #fff;
+      margin: 0;
+    }
+  }
   .igx-navbar__right {
     width: 100%;
     max-height: 100%;
@@ -68,6 +116,8 @@ igxButton + igxButton {
     }
 
     .datePicker-container {
+        margin-left: 16px;
+
       igx-icon {
         font-size: 14px;
         width: 14px;
@@ -88,7 +138,6 @@ igxButton + igxButton {
      background: #333 !important;
    }
   }
-
 
   .igx-navbar__left {
     display: none;
@@ -117,15 +166,43 @@ igxButton + igxButton {
   igx-input-group {
     width: 100px;
   }
+
+  igx-divider {
+    @media only screen and (max-width: $tablet) {
+      display: none!important;
+    }
+  }
 }
+
+.language-btn {
+  margin-left: 8px;
+}
+
 
 .logo-container{
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+
+  @media only screen and (max-width: $mobile) {
+    max-width: 50px;
+  }
+
+  @media only screen and (min-width: $mobile-portrait) {
+    max-width: 100px;
+    margin-right: 0;
+  }
 }
 
+::ng-deep {
+  .igx-drop-down__list {
+    img {
+      max-width: 18px;
+      margin-right: 8px;
+    }
+  }
+}
 ::ng-deep body{
   .igx-overlay__wrapper{
     z-index: 2147483647;

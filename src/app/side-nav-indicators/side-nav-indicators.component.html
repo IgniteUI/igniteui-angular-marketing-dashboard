@@ -26,36 +26,36 @@
         <button igxButton="icon" (click)="dialog.open()"><igx-icon>help</igx-icon></button>
       </div>
   </div>
-  <igx-dialog #dialog >
-    <div style="width: 500px; padding: 5px">
-        <article >
-            <igx-card>
-                <igx-card-header>
-                  <h3 igxCardHeaderTitle>
-                      {{resources['Welcome_message'].value}}
-                  </h3>
-                  <igx-divider></igx-divider>
-                  <h5 igxCardHeaderSubtitle>
-                      {{resources['Alert_info'].value}}
-                  </h5>
-                </igx-card-header>
-                <igx-card-content>
-                  <h5>{{resources['Alert_Text_Title_Data'].value}}</h5>
-                    <span>
-                      {{resources['Alert_Paragraph_Data'].value}}
-                    </span>
-                    <h5>{{resources['Alert_Text_Title_BarChart'].value}}</h5>
-                    <span style="width:250px"><img src="{{resources['Chart_PNG'].value}}"  style="float: right; margin:15px;">
-                    {{resources['Alert_Paragraph_BarChart'].value}}
-                    </span>
-                </igx-card-content>
-                <igx-card-actions>
-                  <button igxButton="raised" (click)="dialog.close()">{{resources['Confirm_button'].value}}</button>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-    </div>
-</igx-dialog>
+
+  <igx-dialog #dialog>
+      <div class="md-dialog-overflow">
+        <igx-card class="md-dialog">
+          <igx-card-header>
+            <h1 igxCardHeaderTitle>
+              {{resources['Welcome_message'].value}}
+            </h1>
+            <h2 igxCardHeaderSubtitle>
+              {{resources['Alert_info'].value}}
+            </h2>
+          </igx-card-header>
+
+          <igx-card-content>
+            <span>{{resources['Alert_Text_Title_Data'].value}}</span>
+            <p>
+              {{resources['Alert_Paragraph_Data'].value}}
+            </p>
+            <span>{{resources['Alert_Text_Title_BarChart'].value}}</span>
+            <p>
+              <img src="{{resources['Chart_PNG'].value}}">
+              {{resources['Alert_Paragraph_BarChart'].value}}
+            </p>
+          </igx-card-content>
+          <igx-card-actions [reverse]="true">
+            <button igxButton="raised" (click)="dialog.close()">got it!</button>
+          </igx-card-actions>
+        </igx-card>
+      </div>
+  </igx-dialog>
 </div>
 
 

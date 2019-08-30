@@ -61,13 +61,13 @@
       "value": "OK"
     },
     "One_month": {
-      "value": "1 month"
+      "value": "1M"
     },
     "One_week": {
-      "value": "1 week"
+      "value": "1W"
     },
     "One_year": {
-      "value": "1 year"
+      "value": "1Y"
     },
     "Online_Sales": {
       "value": "Online Sales"
@@ -118,7 +118,7 @@
       "value": "3rd Party"
     },
     "Three_months": {
-      "value": "3 months"
+      "value": "3M"
     },
     "To": {
       "value": "TO"

@@ -1,7 +1,6 @@
 <div class="md-data-filter">
   <h5>{{resources.Overall_Health.value | uppercase}}</h5>
-
-  <igx-buttongroup>
+  <igx-buttongroup class="md-button-group">
     <button igxRipple igxButton [selected]="true" (click)="setSeries(false)">{{resources.All.value}}</button>
     <button igxRipple igxButton (click)="setSeries(true)">{{resources.By_Medium.value}}</button>
   </igx-buttongroup>

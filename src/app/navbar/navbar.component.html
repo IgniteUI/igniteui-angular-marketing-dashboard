@@ -2,48 +2,62 @@
   <igx-navbar>
     <div class="global-wrapper global-wrapper--nav">
       <img class="logo-container" src="./assets/logo.png" alt="marketing dashboard">
-      <div class="md-navbar-actions">
+
+      <div class="md-navbar-element">
+
+        <div class="md-navbar-actions">
         <span class="md-navbar-label">
           {{resources.Select_Range.value}}
         </span>
 
-        <igx-buttongroup [multiSelection]="false">
-          <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(resources[range.period].value)">
-            {{resources[range.period].value}}
-          </button>
-        </igx-buttongroup>
+          <igx-buttongroup [multiSelection]="false">
+            <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(resources[range.period].value)">
+              {{resources[range.period].value}}
+            </button>
+          </igx-buttongroup>
+          <igx-divider [middle]="true" [vertical]="true"></igx-divider>
+        </div>
 
-        <igx-divider [middle]="true" [vertical]="true"></igx-divider>
-
-        <span class="md-navbar-label"> {{resources.Compare.value}}</span>
-        <div class="datePicker-container">
+        <span class="md-navbar-label">{{resources.Compare.value}}</span>
+        <div class="datePicker-container md-compare">
           <div class="start-ranges">
-              <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
           <span class="md-date-separator">{{resources.To.value}}</span>
           <div class="end-ranges">
-              <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
-              <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
+            <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
           </div>
         </div>
 
-        <button igxRipple igxButton="raised" (click)="compareRanges($event)">
+        <button class="md-compare" igxRipple igxButton="raised" (click)="compareRanges($event)">
           {{resources.Compare.value}}
           <igx-icon>
             compare
           </igx-icon>
         </button>
 
-        <igx-select class="locale-select" (onSelection)="changeLocale($event.newSelection.value)" [value]="version">
-          <igx-select-item value="en">EN</igx-select-item>
-          <igx-select-item value="ja">JA</igx-select-item>
-        </igx-select>
+        <div class="language-btn">
+          <button igxButton="icon" [igxToggleAction]="langMenu" [igxToggleOutlet]="outlet" [overlaySettings]="overlaySettings" [igxDropDownItemNavigation]="langMenu"><igx-icon>language</igx-icon></button>
+        </div>
       </div>
     </div>
+
+    <igx-drop-down #langMenu (onSelection)="changeLocale($event.newSelection.value)">
+      <igx-drop-down-item value="en">
+        <img src="../../assets/united-states.png" alt="US">
+        EN
+      </igx-drop-down-item>
+      <igx-drop-down-item value="ja">
+        <img src="../../assets/japan.png" alt="JA">
+        JA
+      </igx-drop-down-item>
+    </igx-drop-down>
   </igx-navbar>
   <igx-dialog #dialog [title]="resources.Error_Message.value"
               [rightButtonLabel]="resources.Confirm_button.value"
               (onRightButtonSelect)="dialog.close()">
   </igx-dialog>
 </div>
+<div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>

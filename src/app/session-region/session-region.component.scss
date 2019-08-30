@@ -1,3 +1,5 @@
+@import "../../var";
+
 .map-container{
   margin: 10px 0;
   border: none;
@@ -38,6 +40,7 @@
 .md-col-list {
   li {
     font-weight: 600;
+    font-size: 14px;
   }
 }
 
@@ -48,7 +51,7 @@
   color: #fff;
   height: 100%;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: $mobile) {
     flex-wrap: wrap;
   }
 
