@@ -38,14 +38,14 @@ export class DataService {
 
 
   public getSummaryData(range: IRange) {
-    const params = new HttpParams().
-      set('startRangeBegin', range.startRangeBegin.toISOString()).
-      set('startRangeEnd', range.startRangeEnd.toISOString()).
-      set('endRangeBegin', range.endRangeBegin.toISOString()).
-      set('endRangeEnd', range.endRangeEnd.toISOString()).
+      const params = new HttpParams().
+      set('startRangeBegin', range.startRangeBegin.toUTCString().replace('UTC', 'GMT')).
+      set('startRangeEnd', range.startRangeEnd.toUTCString().replace('UTC', 'GMT')).
+      set('endRangeBegin', range.endRangeBegin.toUTCString().replace('UTC', 'GMT')).
+      set('endRangeEnd', range.endRangeEnd.toUTCString().replace('UTC', 'GMT')).
       set('locale', window.localStorage.getItem('locale'));
 
-    this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
+      this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
   }
 
   handleError(error) {

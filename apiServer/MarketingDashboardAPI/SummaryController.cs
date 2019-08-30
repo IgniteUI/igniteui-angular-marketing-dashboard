@@ -37,11 +37,19 @@ namespace MarketingDashboardAPI
 
             IList<SummaryModel> models = new List<SummaryModel>();
 
-            _continue = SummaryDataRepository.RangesAreEqualSize(startRangeBeginDate, startRangeEndDate, endRangeBeginDate, endRangeEndDate);
+            try
+            {
+              SummaryDataRepository.ValidateRanges(startRangeBeginDate, startRangeEndDate, endRangeBeginDate, endRangeEndDate);
+            }
+            catch (Exception e)
+            {
+              throw new WrongDateException(e.Message);
+            }
+
+             _continue = SummaryDataRepository.RangesAreEqualSize(startRangeBeginDate, startRangeEndDate, endRangeBeginDate, endRangeEndDate);
 
             if (_continue)
             {
-
                 SummaryDataRepository repository = new SummaryDataRepository();
                 repository.CalculateNumberOfDays(startRangeBeginDate, startRangeEndDate);
 
