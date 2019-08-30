@@ -23,8 +23,8 @@ export class SessionByRegionComponent implements OnInit {
   constructor( private service: DataService, private localeService: LocalizationService) {
     this.shapeSeriesModel = {
                     name: 'world',
-                    shapeDataSource: '../../assets/world.shp',
-                    databaseSource: '../../assets/world.dbf',
+                    shapeDataSource: './assets/world.shp',
+                    databaseSource: './assets/world.dbf',
                     brush: '#6F6B75',
                     outline: '#67626E'
     };

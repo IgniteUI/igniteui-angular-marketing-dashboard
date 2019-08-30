@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>AngularDashboard$lang$</id>
-    <title>Infragistics AngularDashboard$lang$</title>
+    <id>AngularDashboard$env$</id>
+    <title>Infragistics AngularDashboard$env$</title>
     <version>1.0.0</version>
     <authors>Infragistics</authors>
     <owners>Infragistics, Inc.</owners>
@@ -10,6 +10,7 @@
     <description>This is a package that can be used with Octopus deployer</description>
     </metadata>
     <files>
-        <file src="dist\**\*.*" target="\" />
+        <file src="dist\marketing-dashboard\**\*.*" target="\" />
+        <file src="web.config" target="\" />
     </files>
 </package>

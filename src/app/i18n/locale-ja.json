@@ -226,7 +226,7 @@
       "value": "日付の範囲 (日数) を同じにする必要があります。"
     },
     "Chart_PNG": {
-      "value":"../../assets/chart-ja.png"
+      "value":"./assets/chart-ja.png"
     }
   }
 }
