@@ -34,14 +34,14 @@ namespace MarketingDashboardAPI.Models
     {
       if(startRangeEnd.Subtract(startRangeBegin).Days <= 0 || endRangeEnd.Subtract(endRangeBegin).Days <= 0)
       {
-        throw new Exception("The start date of the Date range must be before the end date");
+        throw new Exception("The start date of the date range must be before the end date");
 
       } else if ( endRangeBegin.Subtract(startRangeBegin).Days <= 0 ||
                   endRangeBegin.Subtract(startRangeEnd).Days < 0   ||
                   endRangeEnd.Subtract(startRangeBegin).Days <= 0   ||
                   endRangeEnd.Subtract(startRangeEnd).Days <= 0)
       {
-        throw new Exception("The Start range must be before the End range");
+        throw new Exception("The start range must be before the end range");
       }
     }
 
