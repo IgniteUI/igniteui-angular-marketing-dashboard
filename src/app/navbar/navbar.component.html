@@ -11,7 +11,7 @@
         </span>
 
           <igx-buttongroup [multiSelection]="false">
-            <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="true" (click)="updateDates(resources[range.period].value)">
+            <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="range.selected" (click)="updateDates(resources[range.period].value)">
               {{resources[range.period].value}}
             </button>
           </igx-buttongroup>
@@ -45,11 +45,11 @@
     </div>
 
     <igx-drop-down #langMenu (onSelection)="changeLocale($event.newSelection.value)">
-      <igx-drop-down-item value="en">
-        <img src="../../assets/united-states.png" alt="US">
+      <igx-drop-down-item value="en" [selected]= "version === 'en'">
+        <img src="../../assets/united-states.png" alt="US" >
         EN
       </igx-drop-down-item>
-      <igx-drop-down-item value="ja">
+      <igx-drop-down-item value="ja" [selected]= "version === 'ja'">
         <img src="../../assets/japan.png" alt="JA">
         JA
       </igx-drop-down-item>
