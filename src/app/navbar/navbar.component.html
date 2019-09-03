@@ -20,16 +20,28 @@
 
         <span class="md-navbar-label">{{resources.Compare.value}}</span>
         <div class="datePicker-container md-compare">
-          <div class="start-ranges">
-            <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
-            <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
+          <div class="ranges">
+            <button igxButton="outlined" displayDensity="compact" (click)="toggleStartDialog($event.target)">Start Range</button>
+            <div class="range-text"><span>{{startRangeBegin | date:'shortDate'}} - {{startRangeEnd | date:'shortDate'}}</span></div>
           </div>
           <span class="md-date-separator">{{resources.To.value}}</span>
-          <div class="end-ranges">
-            <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
-            <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
+          <div class="ranges">
+              <button igxButton="outlined" displayDensity="compact" (click)="toggleEndDialog($event.target)">End Range</button>
+              <div class="range-text"><span>{{endRangeBegin | date:'shortDate'}} - {{endRangeEnd | date:'shortDate'}}</span></div>
           </div>
         </div>
+
+        <igx-dialog #startDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="startDialog.close()">
+            <div >
+                <igx-calendar #start [hasHeader]="false" [locale]="version"></igx-calendar>
+            </div>
+        </igx-dialog>
+
+        <igx-dialog #endDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="endDialog.close()">
+            <div >
+                <igx-calendar #end [hasHeader]="false" [locale]="version"></igx-calendar>
+            </div>
+        </igx-dialog>
 
         <button class="md-compare" igxRipple igxButton="raised" (click)="compareRanges($event)">
           {{resources.Compare.value}}

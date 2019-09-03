@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, QueryList, ViewChildren, AfterViewInit, NgZone } from '@angular/core';
 import { getDateRange } from '../../app/utils';
 import {
   DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
-  NoOpScrollStrategy
+  NoOpScrollStrategy,
+  IgxDatePickerComponent,
+  IgxCalendarComponent,
+  Size,
+  OverlaySettings
 } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
@@ -13,22 +17,45 @@ import { LocalizationService } from '../localization.service';
   styleUrls: ['./navbar.component.scss'],
   providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, AfterViewInit {
 
   @ViewChild(IgxDialogComponent, { static: true })
   public dialog: IgxDialogComponent;
+
+  @ViewChild('startRange', {static: false})
+  public startDatePicker: IgxDatePickerComponent;
+
+  @ViewChild('endRange', { static: false})
+  public endDatePicker: IgxDatePickerComponent;
+
+  @ViewChild('startDialog', { static: false})
+  public startCalendarDialog: IgxDialogComponent;
+
+  @ViewChild('endDialog', { static: false})
+  public endCalendarDialog: IgxDialogComponent;
+
+  @ViewChild('start', {static: true})
+  public startCalendar: IgxCalendarComponent;
+
+  @ViewChild('end', {static: true})
+  public endCalendar: IgxCalendarComponent;
 
   public today = new Date();
   public startRangeBegin: Date;
   public startRangeEnd: Date;
   public endRangeBegin: Date;
   public endRangeEnd: Date;
+
   public version = '';
   public currentRange: IRange;
   public resources;
   public ranges;
   public period;
-  public overlaySettings = {
+
+  public startRange: Date[];
+  public endRange: Date[];
+
+  public overlaySettings: OverlaySettings = {
     positionStrategy: new ConnectedPositioningStrategy({
       horizontalDirection: HorizontalAlignment.Left,
       horizontalStartPoint: HorizontalAlignment.Right,
@@ -36,7 +63,30 @@ export class NavbarComponent implements OnInit {
     }),
     scrollStrategy: new NoOpScrollStrategy()
   };
-  constructor(private dataService: DataService, private localeService: LocalizationService) {
+
+  public startDialogOverlaySettings: OverlaySettings = {
+    positionStrategy: new ConnectedPositioningStrategy({
+      horizontalDirection: HorizontalAlignment.Left,
+      horizontalStartPoint: HorizontalAlignment.Right,
+      verticalStartPoint: VerticalAlignment.Bottom
+    }),
+    modal: false,
+    scrollStrategy: new NoOpScrollStrategy()
+  };
+
+  public endDialogOverlaySettings: OverlaySettings = {
+    positionStrategy: new ConnectedPositioningStrategy({
+      horizontalDirection: HorizontalAlignment.Right,
+      horizontalStartPoint: HorizontalAlignment.Left,
+      verticalStartPoint: VerticalAlignment.Bottom
+    }),
+    modal: false,
+        closeOnOutsideClick: true,
+
+    scrollStrategy: new NoOpScrollStrategy()
+  };
+
+  constructor(private dataService: DataService, private localeService: LocalizationService, private zone: NgZone) {
     // tslint:disable: max-line-length
     this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
     this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
@@ -126,11 +176,13 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.localeService.languageLocalizer.subscribe(resources => {
       this.resources = resources;
       this.version = window.localStorage.getItem('locale');
-
     });
+
+
 
     const range: IRange = {
       startRangeBegin: this.startRangeBegin,
@@ -144,6 +196,54 @@ export class NavbarComponent implements OnInit {
     this.dataService.onError.subscribe(err => {
       this.dialog.message = err;
       this.dialog.open();
+    });
+
+    this.startCalendar.onSelection.subscribe((dates: Date[]) => {
+      if (dates.length !== 0) {
+        this.startRangeBegin = dates[0];
+        this.startRangeEnd = dates[dates.length - 1];
+      }
+    });
+
+    this.endCalendar.onSelection.subscribe((dates: Date[] ) => {
+      if (dates.length !== 0) {
+        this.endRangeBegin = dates[0];
+        this.endRangeEnd = dates[dates.length - 1];
+      }
+    });
+
+  }
+
+  public toggleStartDialog(target: HTMLElement) {
+    if (this.startCalendarDialog.isOpen) {
+      this.startCalendarDialog.close();
+    } else {
+      this.startDialogOverlaySettings.positionStrategy.settings.target = target;
+      this.startCalendarDialog.open(this.startDialogOverlaySettings);
+
+    }
+  }
+
+  public toggleEndDialog(target: HTMLElement) {
+    if (this.endCalendarDialog.isOpen) {
+      this.startCalendarDialog.close();
+    } else {
+      this.endDialogOverlaySettings.positionStrategy.settings.target = target;
+      this.endCalendarDialog.open(this.endDialogOverlaySettings);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.startCalendarDialog.onOpen.subscribe( evt => {
+      this.startCalendar.selection = 'range';
+      this.startCalendar.value = this.startRangeBegin;
+      this.startCalendar.viewDate = this.startRangeBegin;
+    });
+
+    this.endCalendarDialog.onOpen.subscribe( evt => {
+      this.endCalendar.selection = 'range';
+      this.endCalendar.value = this.endRangeEnd;
+      this.endCalendar.viewDate = this.endRangeEnd;
     });
   }
 }
