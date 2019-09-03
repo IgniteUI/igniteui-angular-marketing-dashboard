@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { getDateRange } from '../../app/utils';
-import { DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
-   NoOpScrollStrategy } from 'igniteui-angular';
+import {
+  DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
+  NoOpScrollStrategy
+} from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
 import { LocalizationService } from '../localization.service';
@@ -25,57 +27,62 @@ export class NavbarComponent implements OnInit {
   public currentRange: IRange;
   public resources;
   public ranges;
-
+  public period;
   public overlaySettings = {
     positionStrategy: new ConnectedPositioningStrategy({
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalStartPoint: VerticalAlignment.Bottom
+      horizontalDirection: HorizontalAlignment.Left,
+      horizontalStartPoint: HorizontalAlignment.Right,
+      verticalStartPoint: VerticalAlignment.Bottom
     }),
     scrollStrategy: new NoOpScrollStrategy()
-};
+  };
   constructor(private dataService: DataService, private localeService: LocalizationService) {
-    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate());
-    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
-    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate());
+    // tslint:disable: max-line-length
+    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
+    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
+    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
     this.endRangeEnd = this.today;
     this.resources = this.localeService.getLocale();
     this.version = window.localStorage.getItem('locale');
-
-    this.ranges  = [
-      { text: this.resources.One_week.value, selected: false, period: 'One_week'},
+    this.period = 'One_year';
+    this.ranges = [
+      { text: this.resources.One_week.value, selected: false, period: 'One_week' },
       { text: this.resources.One_month.value, selected: false, period: 'One_month' },
-      { text: this.resources.Three_months.value, selected: false, period: 'Three_months'},
+      { text: this.resources.Three_months.value, selected: false, period: 'Three_months' },
       { text: this.resources.One_year.value, selected: true, period: 'One_year' }];
   }
 
-  public updateDates(ranges: string) {
+  public updateDates(rangePeriod: string) {
     let dateRange: IRange;
     const current = new Date();
     let days = 0;
     const dayMiliseconds = 1000 * 60 * 60 * 24;
 
-    switch (ranges) {
+    switch (rangePeriod) {
       case this.resources.One_week.value:
         dateRange = getDateRange(7);
         this.applyRanges(dateRange);
+        this.period = 'One_week';
         break;
       case this.resources.One_month.value:
         current.setMonth(current.getMonth() - 1);
         days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
+        this.period = 'One_month';
         break;
       case this.resources.Three_months.value:
         current.setMonth(current.getMonth() - 3);
         days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
+        this.period = 'Three_months';
         break;
       case this.resources.One_year.value:
       default:
         dateRange = getDateRange(365);
         this.applyRanges(dateRange);
+        this.period = 'One_year';
         break;
     }
     this.currentRange = dateRange;
@@ -112,27 +119,29 @@ export class NavbarComponent implements OnInit {
     if (version !== this.version) {
       window.localStorage.setItem('locale', version);
       this.localeService.setLocale(version);
+      this.updateDates(this.resources[this.period].value);
+      this.version = version;
       this.dataService.getSummaryData(this.currentRange);
     }
   }
 
   ngOnInit() {
-      this.localeService.languageLocalizer.subscribe( resources => {
-        this.resources = resources;
-        this.version = window.localStorage.getItem('locale');
+    this.localeService.languageLocalizer.subscribe(resources => {
+      this.resources = resources;
+      this.version = window.localStorage.getItem('locale');
 
-      });
+    });
 
-      const range: IRange = {
+    const range: IRange = {
       startRangeBegin: this.startRangeBegin,
       startRangeEnd: this.startRangeEnd,
       endRangeBegin: this.endRangeBegin,
       endRangeEnd: this.endRangeEnd
     };
-      this.currentRange = range;
-      this.dataService.getSummaryData(range);
+    this.currentRange = range;
+    this.dataService.getSummaryData(range);
 
-      this.dataService.onError.subscribe(err => {
+    this.dataService.onError.subscribe(err => {
       this.dialog.message = err;
       this.dialog.open();
     });

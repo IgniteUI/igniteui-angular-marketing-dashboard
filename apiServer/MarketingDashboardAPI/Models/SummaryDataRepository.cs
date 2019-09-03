@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace MarketingDashboardAPI.Models
 {
     /// <summary>
-    /// This class is responsible for generating random 
+    /// This class is responsible for generating random
     /// data for the dashboard. Numbers are adjusted for
     /// the date ranges passed into the system.
     /// </summary>
@@ -20,7 +20,7 @@ namespace MarketingDashboardAPI.Models
 
             beginSpan = startRangeEnd.Subtract(startRangeBegin);
             endSpan = endRangeEnd.Subtract(endRangeBegin);
-            
+
             int val = beginSpan.Days - endSpan.Days;
             if ((DateTime.IsLeapYear(startRangeBegin.Year) && val == 1 && beginSpan.Days == 366)
                 || (DateTime.IsLeapYear(endRangeBegin.Year) && val == 1 && endSpan.Days == 366))
@@ -30,7 +30,22 @@ namespace MarketingDashboardAPI.Models
             return val == 0;
         }
 
-        public void CalculateNumberOfDays(DateTime? start, DateTime? end)
+    public static void ValidateRanges(DateTime startRangeBegin, DateTime startRangeEnd, DateTime endRangeBegin, DateTime endRangeEnd)
+    {
+      if(startRangeEnd.Subtract(startRangeBegin).Days <= 0 || endRangeEnd.Subtract(endRangeBegin).Days <= 0)
+      {
+        throw new Exception("The start date of the date range must be before the end date");
+
+      } else if ( endRangeBegin.Subtract(startRangeBegin).Days <= 0 ||
+                  endRangeBegin.Subtract(startRangeEnd).Days < 0   ||
+                  endRangeEnd.Subtract(startRangeBegin).Days <= 0   ||
+                  endRangeEnd.Subtract(startRangeEnd).Days <= 0)
+      {
+        throw new Exception("The start range must be before the end range");
+      }
+    }
+
+    public void CalculateNumberOfDays(DateTime? start, DateTime? end)
         {
             if (start.HasValue && end.HasValue)
             {
@@ -46,7 +61,7 @@ namespace MarketingDashboardAPI.Models
 
         private decimal GetDecimal(decimal min, decimal max)
         {
-            // values are adjusted as they come in 
+            // values are adjusted as they come in
             // in order to randomly generate decimal
             // values
             decimal adjuster = 1000M;
@@ -148,7 +163,7 @@ namespace MarketingDashboardAPI.Models
         {
             string[] pages = Resources.Main.Top_Pages_List.Split(',');
             return GetUniqueList(pages, 4);
-            
+
         }
 
         public CampaignData GetCampaignData(decimal conversions)
@@ -215,9 +230,9 @@ namespace MarketingDashboardAPI.Models
                 divisor = this._numberOfDays / 30;
                 mapScale = 200;
             }
-            
+
             DistributeSessions(sessions, conversions, divisor, stats);
-                        
+
             for (int i = 0; i < stats.Count; i++)
             {
                 // label items in order after shuffle
@@ -251,18 +266,18 @@ namespace MarketingDashboardAPI.Models
             /*
              * In an attempt to keep the random data generated
              * make sense based off the number of sessions and
-             * conversions passed in to the method, this logic 
-             * splits the number of sessions/conversions evenly 
-             * among  each period and then creates random variation 
+             * conversions passed in to the method, this logic
+             * splits the number of sessions/conversions evenly
+             * among  each period and then creates random variation
              * in values.
-             * 
+             *
              * The first pass randomly generates a "change value"
              * which is added to the current data. The second pass
-             * subtracts the "change value" (by adding a negative number) 
-             * to the value in order to make sure the total for 
-             * the group doesn't exceed what was passed in as the 
+             * subtracts the "change value" (by adding a negative number)
+             * to the value in order to make sure the total for
+             * the group doesn't exceed what was passed in as the
              * total to the method.
-             * 
+             *
              * After all this is complete then the list is shuffled
              * in order to make the data appear random even though
              * there is a pattern to the way the data is generated.
