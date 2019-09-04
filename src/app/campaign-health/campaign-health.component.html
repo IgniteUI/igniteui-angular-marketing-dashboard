@@ -40,8 +40,8 @@
         font = "bold 14px Helvetica, Arial, sans-serif"
         [fontBrush]="graph.labelBrush"
         [targetValue]="graph.target"
-        (alignLabel)="alignLabel($event)"
-        (formatLabel)="formatLabel($event, graph)">
+        (formatLabel)="formatLabel($event.args, graph)"
+        (alignLabel)="alignLabel($event.args)">
         <igx-linear-graph-range name="value" [startValue]="0" [endValue]="graph.value" [brush]="graph.valueBrush"></igx-linear-graph-range>
         <igx-linear-graph-range name="remaining" [startValue]="graph.value" [endValue]="getMaxValue(graph.maximumValue)" [brush]="graph.bkgBrush"></igx-linear-graph-range>
       </igx-bullet-graph>

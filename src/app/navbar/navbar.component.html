@@ -67,9 +67,9 @@
       </igx-drop-down-item>
     </igx-drop-down>
   </igx-navbar>
-  <igx-dialog #dialog [title]="resources.Error_Message.value"
+  <igx-dialog #errorDialog [title]="resources.Error_Message.value"
               [rightButtonLabel]="resources.Confirm_button.value"
-              (onRightButtonSelect)="dialog.close()">
+              (onRightButtonSelect)="errorDialog.close()">
   </igx-dialog>
 </div>
 <div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>

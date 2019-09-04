@@ -85,7 +85,7 @@ export class CampaignHealthComponent implements OnInit {
   legend: TemplateRef<any>;
 
   public adModels = ['ppc', 'email', 'banners', 'thirdParty'];
-
+  public init = true;
   ngOnInit() {
 
     this.localeService.languageLocalizer.subscribe( resources => {
@@ -101,16 +101,20 @@ export class CampaignHealthComponent implements OnInit {
 
     this.service.onDataFetch.subscribe((data: IRangeData) => {
       this.trendItem = generateTrendItem('conversions', data, 'Conversions');
-      this.chart.series.clear();
       this.doughnutData = [
         { label: this.resources['PPC'].value, value: data.end.ppc , prev: data.start.ppc},
         { label: this.resources['Banners'].value, value: data.end.banners, prev: data.start.banners },
         { label: this.resources['Email'].value, value: data.end.email, prev: data.start.email },
         { label: this.resources['Third_Party'].value, value: data.end.thirdParty, prev: data.start.thirdParty }
       ];
+      if (this.init) {
+          this.renderDoughnutChart(this.chart, this.doughnutChartColors);
+          this.renderBulletGraphs(data, this.doughnutChartColors);
+          this.init = false;
+        } else {
+          this.setData(data);
+        }
 
-      this.renderDoughnutChart(this.chart, this.doughnutChartColors);
-      this.renderBulletGraphs(data, this.doughnutChartColors);
     });
   }
 
@@ -190,29 +194,46 @@ export class CampaignHealthComponent implements OnInit {
     }
   }
 
-  public getMaxValue(value): number {
-    return convertToInt(value);
-  }
+  public setData(data) {
+      const periods = ['start', 'end'];
 
-  public formatLabel(eventArgs: {sender: any; args: FormatLinearGraphLabelEventArgs}, graphModel: IBulletGraph) {
-    eventArgs.args.label = ` ${eventArgs.args.label}`;
-    if (eventArgs.args.value === 0) {
-        if (graphModel.value >= 1000) {
-          eventArgs.args.label = `${(graphModel.value / 1000).toFixed(1)}K`;
-        } else {
-          eventArgs.args.label = `${(graphModel.value / 1000)}`;
+      let graphIndex = 0;
+      for (let index = 0; index < this.adModels.length; index++) {
+        for (let i = 0; i < periods.length; i++) {
+           this.bulletGraphs[graphIndex].value = data[periods[i]][this.adModels[index]];
+           this.bulletGraphs[graphIndex].maximumValue = data[periods[i]].conversions;
+           this.bulletGraphs[graphIndex].target = data[periods[i]][`${this.adModels[index]}Target`];
+           graphIndex++;
         }
-    } else {
-      eventArgs.args.label = `${Math.round((graphModel.value / eventArgs.args.value * 2) * 100)}%`;
     }
   }
 
-  public alignLabel(eventArgs: {sender: any; args: AlignLinearGraphLabelEventArgs}) {
-    eventArgs.args.height = 0;
-    if (eventArgs.args.value === 0) {
-      eventArgs.args.offsetX += 25;
+  public getMaxValue(value): number {
+    if (value) {
+      return convertToInt(value);
+    }
+    return 0;
+  }
+
+  public formatLabel( args: FormatLinearGraphLabelEventArgs, graphModel: IBulletGraph) {
+    args.label = ` ${args.label}`;
+    if (args.value === 0) {
+        if (graphModel.value >= 1000) {
+          args.label = `${(graphModel.value / 1000).toFixed(1)}K`;
+        } else {
+          args.label = `${(graphModel.value / 1000)}`;
+        }
     } else {
-      eventArgs.args.offsetX -= 25;
+      args.label = `${Math.round((graphModel.value / args.value * 2) * 100)}%`;
+    }
+  }
+
+  public alignLabel( args: AlignLinearGraphLabelEventArgs) {
+    args.height = 0;
+    if (args.value === 0) {
+      args.offsetX += 25;
+    } else {
+      args.offsetX -= 25;
     }
   }
 }

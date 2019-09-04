@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, QueryList, ViewChildren, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, NgZone } from '@angular/core';
 import { getDateRange } from '../../app/utils';
 import {
   DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
   NoOpScrollStrategy,
   IgxDatePickerComponent,
   IgxCalendarComponent,
-  Size,
   OverlaySettings
 } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
 import { LocalizationService } from '../localization.service';
+import * as moment from 'moment';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -19,8 +19,8 @@ import { LocalizationService } from '../localization.service';
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(IgxDialogComponent, { static: true })
-  public dialog: IgxDialogComponent;
+  @ViewChild('errorDialog', { static: true })
+  public errorDialog: IgxDialogComponent;
 
   @ViewChild('startRange', {static: false})
   public startDatePicker: IgxDatePickerComponent;
@@ -45,6 +45,8 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   public startRangeEnd: Date;
   public endRangeBegin: Date;
   public endRangeEnd: Date;
+
+  public rangeLength: number;
 
   public version = '';
   public currentRange: IRange;
@@ -194,21 +196,36 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.dataService.getSummaryData(range);
 
     this.dataService.onError.subscribe(err => {
-      this.dialog.message = err;
-      this.dialog.open();
+      this.errorDialog.message = err;
+      this.errorDialog.open();
     });
 
     this.startCalendar.onSelection.subscribe((dates: Date[]) => {
-      if (dates.length !== 0) {
+      if (dates.length > 1) {
+
+        if (dates.length >= 7) {
+          const temp = new Date();
+          this.startRangeBegin = dates[0];
+          this.startRangeEnd = new Date(dates[dates.length - 1].getFullYear(), dates[dates.length - 1].getMonth(), dates[dates.length - 1].getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
+          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
+            this.endRangeBegin = new Date(this.startRangeEnd.getTime());
+          }
+          this.endRangeEnd = moment(this.endRangeBegin).add(dates.length - 1, 'days').toDate();
+        } else {
+          this.startCalendarDialog.close();
+          this.errorDialog.message = 'The date range must be at least 7 days';
+          this.errorDialog.open();
+        }
+
+      } else {
         this.startRangeBegin = dates[0];
-        this.startRangeEnd = dates[dates.length - 1];
       }
     });
 
     this.endCalendar.onSelection.subscribe((dates: Date[] ) => {
       if (dates.length !== 0) {
         this.endRangeBegin = dates[0];
-        this.endRangeEnd = dates[dates.length - 1];
+        this.endRangeEnd = moment(this.endRangeBegin).add(this.rangeLength, 'days').toDate();
       }
     });
 
