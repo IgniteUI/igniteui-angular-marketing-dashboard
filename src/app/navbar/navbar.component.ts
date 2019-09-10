@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, NgZone, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { getDateRange } from '../../app/utils';
 import {
   DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
   NoOpScrollStrategy,
   IgxDatePickerComponent,
   IgxCalendarComponent,
-  OverlaySettings
+  OverlaySettings,
+  IgxButtonGroupComponent
 } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
@@ -15,7 +16,8 @@ import * as moment from 'moment';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
+  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
 
@@ -39,6 +41,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   @ViewChild('end', {static: true})
   public endCalendar: IgxCalendarComponent;
+
+  @ViewChild(IgxButtonGroupComponent, {static: true})
+  public buttonGroup: IgxButtonGroupComponent;
 
   public today = new Date();
   public startRangeBegin: Date;
@@ -88,7 +93,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     scrollStrategy: new NoOpScrollStrategy()
   };
 
-  constructor(private dataService: DataService, private localeService: LocalizationService, private zone: NgZone) {
+  constructor(private dataService: DataService, private localeService: LocalizationService, private cdr: ChangeDetectorRef) {
     // tslint:disable: max-line-length
     this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
     this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
@@ -217,18 +222,40 @@ export class NavbarComponent implements OnInit, AfterViewInit {
           this.errorDialog.open();
         }
 
+        const btn = this.buttonGroup.buttons.find(b => b.selected);
+        if (btn) {
+          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
+        }
+
       } else {
         this.startRangeBegin = dates[0];
       }
     });
 
-    this.endCalendar.onSelection.subscribe((dates: Date[] ) => {
-      if (dates.length !== 0) {
+    this.endCalendar.onSelection.subscribe((dates: Date[]) => {
+      if (dates.length > 1) {
+        if (dates.length >= 7) {
+          const temp = new Date();
+          this.endRangeBegin = dates[0];
+          this.endRangeEnd = new Date(dates[dates.length - 1].getFullYear(), dates[dates.length - 1].getMonth(), dates[dates.length - 1].getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
+          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
+            this.startRangeEnd = new Date(this.endRangeBegin.getTime());
+          }
+          this.startRangeBegin = moment(this.startRangeEnd).subtract(dates.length - 1, 'days').toDate();
+        } else {
+          this.endCalendarDialog.close();
+          this.errorDialog.message = 'The date range must be at least 7 days';
+          this.errorDialog.open();
+        }
+
+        const btn = this.buttonGroup.buttons.find(b => b.selected);
+        if (btn) {
+          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
+        }
+      } else {
         this.endRangeBegin = dates[0];
-        this.endRangeEnd = moment(this.endRangeBegin).add(this.rangeLength, 'days').toDate();
       }
     });
-
   }
 
   public toggleStartDialog(target: HTMLElement) {
@@ -261,6 +288,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.endCalendar.selection = 'range';
       this.endCalendar.value = this.endRangeEnd;
       this.endCalendar.viewDate = this.endRangeEnd;
+    });
+
+    this.startCalendarDialog.onClose.subscribe(evt => {
+      this.startCalendar.value = this.startRangeBegin;
+      this.startCalendar.viewDate = this.startRangeBegin;
+    });
+
+    this.endCalendarDialog.onClose.subscribe(evt => {
+      this.endCalendar.value = this.endRangeBegin;
+      this.endCalendar.viewDate = this.endRangeBegin;
     });
   }
 }

@@ -86,7 +86,6 @@ import { LocalizationService } from './localization.service';
     IgxDropDownModule,
     IgxToggleModule,
     IgxCalendarModule
-
   ],
   providers: [DataService, LocalizationService],
   bootstrap: [AppComponent]
