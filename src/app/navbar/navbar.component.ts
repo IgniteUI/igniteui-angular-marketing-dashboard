@@ -176,10 +176,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     if (version !== this.version) {
       window.localStorage.setItem('locale', version);
       this.localeService.setLocale(version);
-      this.updateDates(this.resources[this.period].value);
+      this.updateDates(this.resources['One_year'].value);
+      this.buttonGroup.selectButton(3);
       this.version = version;
-      this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
-      this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
+      if (this.startCalendar.selectedDates.length > 0) {
+        this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
+      }
+
+      if (this.endCalendar.selectedDates.length > 0 ) {
+        this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
+      }
       this.dataService.getSummaryData(this.currentRange);
     }
   }
