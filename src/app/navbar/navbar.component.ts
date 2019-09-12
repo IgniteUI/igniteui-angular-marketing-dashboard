@@ -178,6 +178,8 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.localeService.setLocale(version);
       this.updateDates(this.resources[this.period].value);
       this.version = version;
+      this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
+      this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
       this.dataService.getSummaryData(this.currentRange);
     }
   }
