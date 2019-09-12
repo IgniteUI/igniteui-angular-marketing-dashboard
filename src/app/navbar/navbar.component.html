@@ -21,24 +21,26 @@
         <span class="md-navbar-label">{{resources.Compare.value}}</span>
         <div class="datePicker-container md-compare">
           <div class="ranges">
-            <button igxButton="outlined" displayDensity="compact" (click)="toggleStartDialog($event.target)">Start Range</button>
-            <div class="range-text"><span>{{startRangeBegin | date:'shortDate'}} - {{startRangeEnd | date:'shortDate'}}</span></div>
+            <button igxButton="flat" displayDensity="compact" (click)="toggleStartDialog($event.target)">
+              {{startRangeBegin | date:'shortDate'}} - {{startRangeEnd | date:'shortDate'}}
+            </button>
           </div>
           <span class="md-date-separator">{{resources.To.value}}</span>
           <div class="ranges">
-              <button igxButton="outlined" displayDensity="compact" (click)="toggleEndDialog($event.target)">End Range</button>
-              <div class="range-text"><span>{{endRangeBegin | date:'shortDate'}} - {{endRangeEnd | date:'shortDate'}}</span></div>
+              <button igxButton="flat" displayDensity="compact" (click)="toggleEndDialog($event.target)">
+                {{endRangeBegin | date:'shortDate'}} - {{endRangeEnd | date:'shortDate'}}
+              </button>
           </div>
         </div>
 
         <igx-dialog #startDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="startDialog.close()">
-            <div >
+            <div>
                 <igx-calendar #start [hasHeader]="false" [locale]="version"></igx-calendar>
             </div>
         </igx-dialog>
 
         <igx-dialog #endDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="endDialog.close()">
-            <div >
+            <div>
                 <igx-calendar #end [hasHeader]="false" [locale]="version"></igx-calendar>
             </div>
         </igx-dialog>
