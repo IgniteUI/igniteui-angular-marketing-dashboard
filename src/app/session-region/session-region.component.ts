@@ -92,13 +92,10 @@ export class SessionByRegionComponent implements OnInit {
 
       if (this.initMap) {
         this.generateMapData(this.map);
+        this.generateMapSeries(this.shapeSeriesModel, this.proportionalSymbolModel);
         this.initMap = false;
       } else {
         this.map.dataSource = this.mapData.mapCurrent.perLocation;
-        const newSeries = this.generateMapSeries(this.shapeSeriesModel, this.proportionalSymbolModel);
-        for (let index = 0; index < newSeries.length; index++) {
-          this.map.series.toArray()[index] = newSeries[index];
-        }
        }
     });
   }

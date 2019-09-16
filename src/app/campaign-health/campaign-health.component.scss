@@ -8,6 +8,13 @@
   grid-row-gap: 10px;
   grid-column-gap: 20px;
   grid-template-columns: auto auto;
+
+  .email,
+  .banners,
+  .ppc,
+  .thirdParty {
+    margin-bottom: -10px;
+  }
 }
 
 .doughnut-container {
@@ -15,13 +22,6 @@
   align-items: center;
   margin-bottom: 32px;
   padding: 0 16px;
-}
-
-.email,
-.banners,
-.ppc,
-.thirdParty {
-  margin-bottom: -10px;
 }
 
 .trend-container {

@@ -16,7 +16,7 @@ import {
   IgxDialogModule,
   IgxCardModule,
   IgxProgressBarModule,
-  IgxListModule, IgxRippleModule, IgxSelectModule, IgxDropDownModule, IgxToggleModule
+  IgxListModule, IgxRippleModule, IgxSelectModule, IgxDropDownModule, IgxToggleModule, IgxCalendarModule
 } from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
@@ -84,8 +84,8 @@ import { LocalizationService } from './localization.service';
     IgxRippleModule,
     IgxSelectModule,
     IgxDropDownModule,
-    IgxToggleModule
-
+    IgxToggleModule,
+    IgxCalendarModule
   ],
   providers: [DataService, LocalizationService],
   bootstrap: [AppComponent]

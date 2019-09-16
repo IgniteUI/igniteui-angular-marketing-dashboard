@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError, Observer, BehaviorSubject, AsyncSubject } from 'rxjs';
+import { throwError, Observer, BehaviorSubject, AsyncSubject, Subject } from 'rxjs';
 import { IRange, IRangeData } from './models/range';
 
 
@@ -14,7 +14,7 @@ export class DataService {
 
   public summaryData: IRangeData;
   public headers: HttpHeaders;
-  public onDataFetch: EventEmitter<any> = new EventEmitter();
+  public onDataFetch: Subject<any> = new Subject();
   public onError: EventEmitter<string> = new EventEmitter();
   private dataObserver: Observer<any>;
 
@@ -28,7 +28,7 @@ export class DataService {
       next: (data) => {
         if (data) {
           this.summaryData = {start: data[0], end: data[1]};
-          this.onDataFetch.emit(this.summaryData);
+          this.onDataFetch.next(this.summaryData);
         }
       },
       error: (err) => this.onError.emit(err),

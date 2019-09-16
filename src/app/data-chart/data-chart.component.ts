@@ -127,11 +127,11 @@ export class DataChartComponent implements OnInit {
         series.radiusX = 0;
         series.radiusY = 0;
         series.tooltipTemplate = this.columnChartTooltipTemplate;
-        if (seriesData.dataSource) {
-          series.dataSource = seriesData.dataSource;
-        } else {
-          series.dataSource = this.columnChartData;
-        }
+        if (seriesData.name === 'PrevSession' || seriesData.name === 'PrevConversions') {
+          series.dataSource = this.prevSeriesDataSource;
+         } else {
+          series.dataSource =  this.columnChartData;
+         }
         this.chart.series.add(series);
       }
       this.addToolTipLayer();

@@ -20,16 +20,30 @@
 
         <span class="md-navbar-label">{{resources.Compare.value}}</span>
         <div class="datePicker-container md-compare">
-          <div class="start-ranges">
-            <igx-date-picker [(ngModel)]="startRangeBegin" mode="dropdown"></igx-date-picker>
-            <igx-date-picker [(ngModel)]="startRangeEnd" mode="dropdown"></igx-date-picker>
+          <div class="ranges">
+            <button igxButton="flat" displayDensity="compact" (click)="toggleStartDialog($event.target)">
+              {{startRangeBegin | date:'shortDate'}} - {{startRangeEnd | date:'shortDate'}}
+            </button>
           </div>
-          <span class="md-date-separator">{{resources.To.value}}</span>
-          <div class="end-ranges">
-            <igx-date-picker [(ngModel)]="endRangeBegin" mode="dropdown"></igx-date-picker>
-            <igx-date-picker [(ngModel)]="endRangeEnd" mode="dropdown"></igx-date-picker>
+          <span class="md-date-separator md-navbar-label">{{resources.And.value}}</span>
+          <div class="ranges">
+              <button igxButton="flat" displayDensity="compact" (click)="toggleEndDialog($event.target)">
+                {{endRangeBegin | date:'shortDate'}} - {{endRangeEnd | date:'shortDate'}}
+              </button>
           </div>
         </div>
+
+        <igx-dialog #startDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="startDialog.close()">
+            <div>
+                <igx-calendar #start selection="range" [hasHeader]="false" [locale]="version"></igx-calendar>
+            </div>
+        </igx-dialog>
+
+        <igx-dialog #endDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="endDialog.close()">
+            <div>
+                <igx-calendar #end selection="range" [hasHeader]="false" [locale]="version"></igx-calendar>
+            </div>
+        </igx-dialog>
 
         <button class="md-compare" igxRipple igxButton="raised" (click)="compareRanges($event)">
           {{resources.Compare.value}}
@@ -55,9 +69,9 @@
       </igx-drop-down-item>
     </igx-drop-down>
   </igx-navbar>
-  <igx-dialog #dialog [title]="resources.Error_Message.value"
+  <igx-dialog #errorDialog [title]="resources.Error_Message.value"
               [rightButtonLabel]="resources.Confirm_button.value"
-              (onRightButtonSelect)="dialog.close()">
+              (onRightButtonSelect)="errorDialog.close()">
   </igx-dialog>
 </div>
 <div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>

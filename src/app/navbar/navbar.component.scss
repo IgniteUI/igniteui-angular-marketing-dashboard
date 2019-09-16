@@ -39,6 +39,14 @@ igxButton + igxButton {
   }
 }
 
+.ranges{
+   display: block;
+
+  .range-text{
+    font-size: 0.8rem;
+    text-align: center;
+  }
+}
 .md-navbar-actions {
   max-height: 100%;
 
