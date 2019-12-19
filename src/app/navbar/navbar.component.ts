@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, NgZone, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { getDateRange } from '../../app/utils';
 import {
   DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
@@ -83,8 +83,8 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   public endDialogOverlaySettings: OverlaySettings = {
     positionStrategy: new ConnectedPositioningStrategy({
-      horizontalDirection: HorizontalAlignment.Right,
-      horizontalStartPoint: HorizontalAlignment.Left,
+      horizontalDirection: HorizontalAlignment.Left,
+      horizontalStartPoint: HorizontalAlignment.Right,
       verticalStartPoint: VerticalAlignment.Bottom
     }),
     modal: false,
@@ -283,6 +283,13 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.endDialogOverlaySettings.positionStrategy.settings.target = target;
       this.endCalendarDialog.open(this.endDialogOverlaySettings);
     }
+  }
+
+  public changeMonthsNumber(calendar: IgxCalendarComponent, change: number) {
+    if (calendar.monthsViewNumber === 3 && change === 1) {
+      return;
+    }
+    calendar.monthsViewNumber += change;
   }
 
   ngAfterViewInit() {

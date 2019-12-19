@@ -33,15 +33,45 @@
           </div>
         </div>
 
-        <igx-dialog #startDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="startDialog.close()">
+        <igx-dialog #startDialog>
             <div>
-                <igx-calendar #start selection="range" [hasHeader]="false" [locale]="version"></igx-calendar>
+                <igx-calendar #start selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
             </div>
+          <div igxDialogActions class="dialog-container dialog-actions">
+              <div class="add-month-button">
+                  <button igxButton="icon" (click)="changeMonthsNumber(start, 1)">
+                      <igx-icon color="#72da67">
+                        add
+                      </igx-icon>
+                    </button>
+                    <button igxButton="icon" (click)="changeMonthsNumber(start, -1)">
+                      <igx-icon color="#72da67">
+                        remove
+                      </igx-icon>
+                    </button>
+              </div>
+              <button igxButton (click)="startDialog.close()">Close</button>
+          </div>
         </igx-dialog>
 
-        <igx-dialog #endDialog [leftButtonLabel]="'Close'" (onLeftButtonSelect)="endDialog.close()">
+        <igx-dialog #endDialog>
             <div>
-                <igx-calendar #end selection="range" [hasHeader]="false" [locale]="version"></igx-calendar>
+                <igx-calendar #end selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
+            </div>
+            <div igxDialogActions class="dialog-container dialog-actions">
+                <div class="add-month-button">
+                    <button igxButton="icon" (click)="changeMonthsNumber(end, 1)">
+                        <igx-icon color="#72da67">
+                          add
+                        </igx-icon>
+                      </button>
+                      <button igxButton="icon" (click)="changeMonthsNumber(end, -1)">
+                        <igx-icon color="#72da67">
+                          remove
+                        </igx-icon>
+                      </button>
+                </div>
+                <button igxButton (click)="endDialog.close()">Close</button>
             </div>
         </igx-dialog>
 

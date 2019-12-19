@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { IRangeData } from '../models/range';
-import { convertToInt } from '../utils';
 import { generateTrendItem, ITrendItem } from '../models/trend-item';
 import { LocalizationService } from '../localization.service';
 

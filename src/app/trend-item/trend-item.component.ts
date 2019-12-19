@@ -1,6 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { setTitle } from '../utils';
-import { LocalizationService } from '../localization.service';
+import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-trend-item',
   templateUrl: './trend-item.component.html',

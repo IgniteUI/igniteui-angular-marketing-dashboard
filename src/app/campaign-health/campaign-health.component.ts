@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { IDoughnutColors, IDoughnutDataRecord } from '../models/doughnut-charts';
 import { IRangeData } from '../models/range';
-import { IgxDoughnutChartComponent} from 'igniteui-angular-charts/ES5/igx-doughnut-chart-component';
-import { IgxRingSeriesComponent} from 'igniteui-angular-charts/ES5/igx-ring-series-component';
-import { LabelsPosition } from 'igniteui-angular-charts/ES5/LabelsPosition';
+import { IgxDoughnutChartComponent} from 'igniteui-angular-charts';
+import { IgxRingSeriesComponent} from 'igniteui-angular-charts';
+import { LabelsPosition } from 'igniteui-angular-charts';
 import { IBulletGraph } from '../models/bullet-graph';
 import {convertToInt} from '../utils';
-import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/FormatLinearGraphLabelEventArgs';
-import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges/ES5/AlignLinearGraphLabelEventArgs';
+import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges';
+import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges';
 import { ITrendItem, generateTrendItem } from '../models/trend-item';
 import { LocalizationService } from '../localization.service';
 @Component({

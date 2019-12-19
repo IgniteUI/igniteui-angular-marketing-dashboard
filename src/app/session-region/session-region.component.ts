@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
-import { IgxGeographicMapComponent } from 'igniteui-angular-maps/ES5/igx-geographic-map-component';
+import { IgxGeographicMapComponent } from 'igniteui-angular-maps';
 import { IgxGeographicProportionalSymbolSeriesComponent
-} from 'igniteui-angular-maps/ES5/igx-geographic-proportional-symbol-series-component';
+} from 'igniteui-angular-maps';
 import { IgxGeographicShapeSeriesComponent
-} from 'igniteui-angular-maps/ES5/igx-geographic-shape-series-component';
+} from 'igniteui-angular-maps';
 import { IGeographicShapeSeries, IMapData, IGeographicProportionalSymbolSeries } from '../models/map';
 import { IRangeData } from '../models/range';
-import { Visibility } from 'igniteui-angular-core/ES5/Visibility';
-import { MarkerType } from 'igniteui-angular-charts/ES5/MarkerType';
-import { IgxSizeScaleComponent } from 'igniteui-angular-charts/ES5/igx-size-scale-component';
+import { Visibility } from 'igniteui-angular-core';
+import { MarkerType } from 'igniteui-angular-charts';
+import { IgxSizeScaleComponent } from 'igniteui-angular-charts';
 import { IgxLinearProgressBarComponent } from 'igniteui-angular';
 import { LocalizationService } from '../localization.service';
 

@@ -1,4 +1,4 @@
-import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts/ES5/igx-category-x-axis-component';
+import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts';
 
 // Series data struct
 export interface IColumnSeriesData {

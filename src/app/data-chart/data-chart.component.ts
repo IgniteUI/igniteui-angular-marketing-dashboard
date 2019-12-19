@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataService } from '../data.service';
-import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts/ES5/igx-category-x-axis-component';
-import { IgxDataChartComponent } from 'igniteui-angular-charts/ES5/igx-data-chart-component';
-import { IgxNumericYAxisComponent } from 'igniteui-angular-charts/ES5/igx-numeric-y-axis-component';
+import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts';
+import { IgxDataChartComponent } from 'igniteui-angular-charts';
+import { IgxNumericYAxisComponent } from 'igniteui-angular-charts';
 import { IRangeData } from '../models/range';
-import { IgxColumnSeriesComponent } from 'igniteui-angular-charts/ES5/igx-column-series-component';
-import { IgxAreaSeriesComponent } from 'igniteui-angular-charts/ES5/igx-area-series-component';
-import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts/ES5/igx-category-tool-tip-layer-component';
+import { IgxColumnSeriesComponent } from 'igniteui-angular-charts';
+import { IgxAreaSeriesComponent } from 'igniteui-angular-charts';
+import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts';
 import { RESOURCES} from '../i18n/locale-en.json';
 import { JA_RESOURCES} from '../i18n/locale-ja.json';
 import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
-import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts/ES5/CategoryTooltipLayerPosition';
+import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts';
 import { LocalizationService } from '../localization.service';
 @Component({
   selector: 'app-data-chart',
@@ -203,7 +203,7 @@ export class DataChartComponent implements OnInit {
   public addToolTipLayer() {
     const toolTipLayer = new IgxCategoryToolTipLayerComponent();
     toolTipLayer.name = 'categorySeries';
-    toolTipLayer.i.m4  = CategoryTooltipLayerPosition.InsideEnd;
+    toolTipLayer.i.m5  = CategoryTooltipLayerPosition.InsideEnd;
     toolTipLayer.transitionDuration = 200;
     this.chart.series.add(toolTipLayer);
   }

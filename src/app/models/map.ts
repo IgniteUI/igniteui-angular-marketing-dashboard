@@ -1,5 +1,5 @@
 import { IRangeData } from './range';
-import { MarkerType } from 'igniteui-angular-charts/ES5/MarkerType';
+import { MarkerType } from 'igniteui-angular-charts';
 
 export interface IGeographicShapeSeries {
   name: string;
