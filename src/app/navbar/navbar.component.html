@@ -38,19 +38,22 @@
                 <igx-calendar #start selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
             </div>
           <div igxDialogActions class="dialog-container dialog-actions">
-              <div class="add-month-button">
-                  <button igxButton="icon" (click)="changeMonthsNumber(start, 1)">
-                      <igx-icon color="#72da67">
-                        add
-                      </igx-icon>
-                    </button>
-                    <button igxButton="icon" (click)="changeMonthsNumber(start, -1)">
-                      <igx-icon color="#72da67">
-                        remove
-                      </igx-icon>
-                    </button>
+              <span class="range-label" *ngIf="start.selectedDates.length > 0 && start.isDefaultView">{{ start.selectedDates.length }} days selected </span>
+              <div class="igx-dialog__window-actions">
+                  <ng-container *ngIf="start.isDefaultView">
+                      <button igxButton="icon" (click)="changeMonthsNumber(start, 1)">
+                          <igx-icon color="#72da67">
+                            add
+                          </igx-icon>
+                        </button>
+                        <button igxButton="icon" (click)="changeMonthsNumber(start, -1)">
+                          <igx-icon color="#72da67">
+                            remove
+                          </igx-icon>
+                        </button>
+                        <button igxButton (click)="startDialog.close()">Close</button>
+                    </ng-container>
               </div>
-              <button igxButton (click)="startDialog.close()">Close</button>
           </div>
         </igx-dialog>
 
@@ -59,19 +62,22 @@
                 <igx-calendar #end selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
             </div>
             <div igxDialogActions class="dialog-container dialog-actions">
-                <div class="add-month-button">
-                    <button igxButton="icon" (click)="changeMonthsNumber(end, 1)">
-                        <igx-icon color="#72da67">
-                          add
-                        </igx-icon>
-                      </button>
-                      <button igxButton="icon" (click)="changeMonthsNumber(end, -1)">
-                        <igx-icon color="#72da67">
-                          remove
-                        </igx-icon>
-                      </button>
+                <span class="range-label" *ngIf="end.selectedDates.length > 0 && start.isDefaultView">{{ end.selectedDates.length }} days selected </span>
+                <div class="igx-dialog__window-actions">
+                    <ng-container *ngIf="end.isDefaultView">
+                        <button igxButton="icon" (click)="changeMonthsNumber(end, 1)">
+                            <igx-icon color="#72da67">
+                              add
+                            </igx-icon>
+                          </button>
+                          <button igxButton="icon" (click)="changeMonthsNumber(end, -1)">
+                            <igx-icon color="#72da67">
+                              remove
+                            </igx-icon>
+                          </button>
+                          <button igxButton (click)="endDialog.close()">Close</button>
+                      </ng-container>
                 </div>
-                <button igxButton (click)="endDialog.close()">Close</button>
             </div>
         </igx-dialog>
 

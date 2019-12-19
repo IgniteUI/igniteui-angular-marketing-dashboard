@@ -94,6 +94,16 @@ igxButton + igxButton {
   margin: 0 16px;
 }
 
+.range-label {
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.046875rem;
+  text-transform: uppercase;
+  padding: 0.625rem 0.675rem;
+  min-height: 1.875rem;
+}
+
 :host ::ng-deep {
   .igx-drop-down__list {
     border-radius: 4px;

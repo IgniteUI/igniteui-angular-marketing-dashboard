@@ -39,10 +39,10 @@ export class DataService {
 
   public getSummaryData(range: IRange) {
       const params = new HttpParams().
-      set('startRangeBegin', range.startRangeBegin.toUTCString().replace('UTC', 'GMT')).
-      set('startRangeEnd', range.startRangeEnd.toUTCString().replace('UTC', 'GMT')).
-      set('endRangeBegin', range.endRangeBegin.toUTCString().replace('UTC', 'GMT')).
-      set('endRangeEnd', range.endRangeEnd.toUTCString().replace('UTC', 'GMT')).
+      set('startRangeBegin', range.startRangeBegin.toLocaleString()).
+      set('startRangeEnd', range.startRangeEnd.toLocaleString()).
+      set('endRangeBegin', range.endRangeBegin.toLocaleString()).
+      set('endRangeEnd', range.endRangeEnd.toLocaleString()).
       set('locale', window.localStorage.getItem('locale'));
 
       this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
