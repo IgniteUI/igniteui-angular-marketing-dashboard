@@ -27,9 +27,9 @@ body {
   width: 100%;
 }
 
-// .igx-dialog__window-actions {
-//   justify-content: space-between;
-// }
+.igx-dialog__window-actions {
+  justify-content: space-between;
+}
 
 $md-navbar-theme: igx-navbar-theme(
   $schema: $dark-schema,
