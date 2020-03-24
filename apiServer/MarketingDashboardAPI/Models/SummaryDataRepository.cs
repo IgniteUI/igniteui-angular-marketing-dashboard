@@ -22,11 +22,7 @@ namespace MarketingDashboardAPI.Models
             endSpan = endRangeEnd.Subtract(endRangeBegin);
 
             int val = beginSpan.Days - endSpan.Days;
-            if ((DateTime.IsLeapYear(startRangeBegin.Year) && val == 1 && beginSpan.Days == 366)
-                || (DateTime.IsLeapYear(endRangeBegin.Year) && val == 1 && endSpan.Days == 366))
-	        {
-                return true;
-	        }
+
             return val == 0;
         }
 
@@ -51,7 +47,7 @@ namespace MarketingDashboardAPI.Models
             {
                 TimeSpan span;
                 span = end.Value.Subtract(start.Value);
-                this._numberOfDays = span.Days;
+                this._numberOfDays = span.Days + 1 ;
             }
             else
             {

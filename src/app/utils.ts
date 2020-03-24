@@ -1,28 +1,19 @@
 import { IRange } from './models/range';
-
-
-function isLeapYear(year) {
-  return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
-}
+import * as moment from 'moment';
 
 
 export function getDateRange(numberOfDays: number): IRange {
-
-  const dayMiliseconds = 1000 * 60 * 60 * 24;
-  if (!numberOfDays) {
-    numberOfDays = 365;
-  }
 
   const current = new Date();
 
   const range = {
     endRangeEnd: current,
 
-    endRangeBegin: new Date(current.getTime() - dayMiliseconds * numberOfDays),
+    endRangeBegin: moment(current).subtract(numberOfDays - 1 , 'days').toDate(),
 
-    startRangeBegin: new Date(current.getTime() - dayMiliseconds * numberOfDays * 2),
+    startRangeBegin: moment(current).subtract((numberOfDays - 1) * 2 , 'days').toDate(),
 
-    startRangeEnd: new Date(current.getTime() - dayMiliseconds * numberOfDays)
+    startRangeEnd: moment(current).subtract(numberOfDays - 1, 'days').toDate()
   };
 
   return range;
