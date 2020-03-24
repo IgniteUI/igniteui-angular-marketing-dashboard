@@ -111,9 +111,8 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   public updateDates(rangePeriod: string) {
     let dateRange: IRange;
-    const current = new Date();
+    const date = new Date();
     let days = 0;
-    const dayMiliseconds = 1000 * 60 * 60 * 24;
 
     switch (rangePeriod) {
       case this.resources.One_week.value:
@@ -122,22 +121,23 @@ export class NavbarComponent implements OnInit, AfterViewInit {
         this.period = 'One_week';
         break;
       case this.resources.One_month.value:
-        current.setMonth(current.getMonth() - 1);
-        days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
+        date.setMonth(date.getMonth() - 1);
+        days = moment(date).daysInMonth();
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
         this.period = 'One_month';
         break;
       case this.resources.Three_months.value:
-        current.setMonth(current.getMonth() - 3);
-        days = (new Date().getTime() - current.getTime()) / dayMiliseconds;
+        date.setMonth(date.getMonth() - 3);
+        days = moment(new Date()).diff(date, 'days') + 1;
         dateRange = getDateRange(days);
         this.applyRanges(dateRange);
         this.period = 'Three_months';
         break;
       case this.resources.One_year.value:
       default:
-        dateRange = getDateRange(365);
+        days = moment(date).isLeapYear() ? 366 : 365;
+        dateRange = getDateRange(days);
         this.applyRanges(dateRange);
         this.period = 'One_year';
         break;
@@ -206,7 +206,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       endRangeEnd: this.endRangeEnd
     };
     this.currentRange = range;
-    this.dataService.getSummaryData(range);
+    this.updateDates(this.resources.One_year);
 
     this.dataService.onError.subscribe(err => {
       this.errorDialog.message = err;
@@ -218,8 +218,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
         if (dates.length >= 7) {
           const temp = new Date();
+          const lastDate = dates[dates.length - 1];
           this.startRangeBegin = dates[0];
-          this.startRangeEnd = new Date(dates[dates.length - 1].getFullYear(), dates[dates.length - 1].getMonth(), dates[dates.length - 1].getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
+          this.startRangeEnd = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
           if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
             this.endRangeBegin = new Date(this.startRangeEnd.getTime());
           }
