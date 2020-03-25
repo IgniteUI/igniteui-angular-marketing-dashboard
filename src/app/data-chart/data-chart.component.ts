@@ -31,13 +31,13 @@ export class DataChartComponent implements OnInit {
   @ViewChild('yAxis', { read: IgxNumericYAxisComponent, static: true })
   public yAxis: IgxNumericYAxisComponent;
 
-  @ViewChild('areaChartTooltipTemplate', {read: TemplateRef, static: false})
+  @ViewChild('areaChartTooltipTemplate', { read: TemplateRef })
   public areaChartTooltipTemplate: TemplateRef<any>;
 
-  @ViewChild('emptyAreChartTooltipTemplate', {read: TemplateRef, static: false})
+  @ViewChild('emptyAreChartTooltipTemplate', { read: TemplateRef })
   public emptyreAChartTooltipTemplate: TemplateRef<any>;
 
-  @ViewChild('columnChartTooltipTemplate', {read: TemplateRef, static: false})
+  @ViewChild('columnChartTooltipTemplate', { read: TemplateRef })
   public columnChartTooltipTemplate: TemplateRef<any>;
 
   public columnSeriesData: IColumnSeriesData[] = [];
