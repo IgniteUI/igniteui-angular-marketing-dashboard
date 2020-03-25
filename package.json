@@ -31,7 +31,7 @@
     "jszip": "^3.1.5",
     "minireset.css": "~0.0.6",
     "moment": "^2.24.0",
-    "rxjs": "~6.5.3",
+    "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.2"
