@@ -24,16 +24,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   @ViewChild('errorDialog', { static: true })
   public errorDialog: IgxDialogComponent;
 
-  @ViewChild('startRange', {static: false})
+  @ViewChild('startRange')
   public startDatePicker: IgxDatePickerComponent;
 
-  @ViewChild('endRange', { static: false})
+  @ViewChild('endRange')
   public endDatePicker: IgxDatePickerComponent;
 
-  @ViewChild('startDialog', { static: false})
+  @ViewChild('startDialog')
   public startCalendarDialog: IgxDialogComponent;
 
-  @ViewChild('endDialog', { static: false})
+  @ViewChild('endDialog')
   public endCalendarDialog: IgxDialogComponent;
 
   @ViewChild('start', {static: true})

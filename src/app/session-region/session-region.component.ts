@@ -58,10 +58,10 @@ export class SessionByRegionComponent implements OnInit {
   @ViewChild('map', {static: true})
     public map: IgxGeographicMapComponent;
 
-    @ViewChild('template', {static: false})
+    @ViewChild('template')
     public toolTipTemplate: TemplateRef<any>;
 
-    @ViewChild(IgxLinearProgressBarComponent, {static: false})
+    @ViewChild(IgxLinearProgressBarComponent)
     public linearBar: IgxLinearProgressBarComponent;
 
   ngOnInit() {
