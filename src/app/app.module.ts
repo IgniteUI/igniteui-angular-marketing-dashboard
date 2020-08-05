@@ -4,7 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
-import { IgxNavbarModule, IgxButtonGroupModule, IgxDividerModule, IgxButtonModule, IgxDatePickerModule, IgxInputGroupModule, IgxIconModule, IgxMaskModule, IgxDialogModule, IgxCardModule, IgxProgressBarModule, IgxListModule, IgxRippleModule, IgxSelectModule, IgxDropDownModule, IgxToggleModule, IgxCalendarModule } from 'igniteui-angular';
+// tslint:disable-next-line: max-line-length
+import { IgxNavbarModule, IgxButtonGroupModule, IgxDividerModule, IgxButtonModule, IgxDatePickerModule, IgxInputGroupModule, IgxIconModule, IgxMaskModule, IgxDialogModule, IgxCardModule, IgxProgressBarModule, IgxListModule, IgxRippleModule, IgxSelectModule, IgxDropDownModule, IgxToggleModule, IgxCalendarModule, IgxDateRangePickerModule } from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './data.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -73,7 +74,8 @@ import { LocalizationService } from './localization.service';
     IgxDropDownModule,
     IgxToggleModule,
     IgxCalendarModule,
-    HammerModule
+    HammerModule,
+    IgxDateRangePickerModule
   ],
   providers: [DataService, LocalizationService],
   bootstrap: [AppComponent]

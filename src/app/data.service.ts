@@ -39,10 +39,10 @@ export class DataService {
 
   public getSummaryData(range: IRange) {
       const params = new HttpParams().
-      set('startRangeBegin', range.startRangeBegin.toLocaleString()).
-      set('startRangeEnd', range.startRangeEnd.toLocaleString()).
-      set('endRangeBegin', range.endRangeBegin.toLocaleString()).
-      set('endRangeEnd', range.endRangeEnd.toLocaleString()).
+      set('startRangeBegin', range.startRange.start.toLocaleString()).
+      set('startRangeEnd', range.startRange.end.toLocaleString()).
+      set('endRangeBegin', range.endRange.start.toLocaleString()).
+      set('endRangeEnd', range.endRange.end.toLocaleString()).
       set('locale', window.localStorage.getItem('locale'));
 
       this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
@@ -50,12 +50,12 @@ export class DataService {
 
   handleError(error) {
     let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // server-side error
+    if (typeof error.error === 'string') {
       errorMessage = error.error;
+    } else if (error.error instanceof ProgressEvent) {
+      errorMessage = `Error: ${error.message}`;
+    } else {
+      errorMessage = `Error: ${error.error.message}`;
     }
     return throwError(errorMessage);
   }

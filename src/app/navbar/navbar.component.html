@@ -6,12 +6,13 @@
       <div class="md-navbar-element">
 
         <div class="md-navbar-actions">
-        <span class="md-navbar-label">
-          {{resources.Select_Range.value}}
-        </span>
+          <span class="md-navbar-label">
+            {{resources.Select_Range.value}}
+          </span>
 
           <igx-buttongroup [multiSelection]="false">
-            <button igxRipple igxButton  *ngFor="let range of ranges" [selected]="range.selected" (click)="updateDates(resources[range.period].value)">
+            <button igxRipple igxButton *ngFor="let range of ranges" [selected]="range.selected"
+              (click)="updateDates(resources[range.period].value)">
               {{resources[range.period].value}}
             </button>
           </igx-buttongroup>
@@ -21,65 +22,39 @@
         <span class="md-navbar-label">{{resources.Compare.value}}</span>
         <div class="datePicker-container md-compare">
           <div class="ranges">
-            <button igxButton="flat" displayDensity="compact" (click)="toggleStartDialog($event.target)">
-              {{startRangeBegin | date:'shortDate'}} - {{startRangeEnd | date:'shortDate'}}
-            </button>
-          </div>
-          <span class="md-date-separator md-navbar-label">{{resources.And.value}}</span>
-          <div class="ranges">
-              <button igxButton="flat" displayDensity="compact" (click)="toggleEndDialog($event.target)">
-                {{endRangeBegin | date:'shortDate'}} - {{endRangeEnd | date:'shortDate'}}
-              </button>
+            <igx-date-range-picker #startRangePicker [overlaySettings]="startDialogOverlaySettings" [(ngModel)]="startRange" [locale]="version">
+              <igx-date-range-start>
+                <input igxInput igxDateTimeEditor type="text">
+                <igx-picker-toggle igxPrefix>
+                  <igx-icon>calendar_today</igx-icon>
+                </igx-picker-toggle>
+              </igx-date-range-start>
+
+              <ng-template igxDateRangeSeparator>- </ng-template>
+
+              <igx-date-range-end>
+                <input igxInput igxDateTimeEditor type="text">
+              </igx-date-range-end>
+            </igx-date-range-picker>
+
+            <span class="md-date-separator md-navbar-label">{{resources.And.value}}</span>
+
+            <igx-date-range-picker #endRangePicker [overlaySettings]="endDialogOverlaySettings" [(ngModel)]="endRange" [locale]="version">
+              <igx-date-range-start>
+                <input igxInput igxDateTimeEditor type="text">
+                <igx-picker-toggle igxPrefix>
+                  <igx-icon>calendar_today</igx-icon>
+                </igx-picker-toggle>
+              </igx-date-range-start>
+
+              <ng-template igxDateRangeSeparator>- </ng-template>
+
+              <igx-date-range-end>
+                <input igxInput igxDateTimeEditor type="text">
+              </igx-date-range-end>
+            </igx-date-range-picker>
           </div>
         </div>
-
-        <igx-dialog #startDialog>
-            <div>
-                <igx-calendar #start selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
-            </div>
-          <div igxDialogActions class="dialog-container dialog-actions">
-              <span class="range-label" *ngIf="start.selectedDates.length > 0 && start.isDefaultView">{{ start.selectedDates.length }} days selected </span>
-              <div class="igx-dialog__window-actions">
-                  <ng-container *ngIf="start.isDefaultView">
-                      <button igxButton="icon" (click)="changeMonthsNumber(start, 1)">
-                          <igx-icon color="#72da67">
-                            add
-                          </igx-icon>
-                        </button>
-                        <button igxButton="icon" (click)="changeMonthsNumber(start, -1)">
-                          <igx-icon color="#72da67">
-                            remove
-                          </igx-icon>
-                        </button>
-                        <button igxButton (click)="startDialog.close()">Close</button>
-                    </ng-container>
-              </div>
-          </div>
-        </igx-dialog>
-
-        <igx-dialog #endDialog>
-            <div>
-                <igx-calendar #end selection="range" [hasHeader]="false" [locale]="version" [hideOutsideDays]="'true'"></igx-calendar>
-            </div>
-            <div igxDialogActions class="dialog-container dialog-actions">
-                <span class="range-label" *ngIf="end.selectedDates.length > 0 && start.isDefaultView">{{ end.selectedDates.length }} days selected </span>
-                <div class="igx-dialog__window-actions">
-                    <ng-container *ngIf="end.isDefaultView">
-                        <button igxButton="icon" (click)="changeMonthsNumber(end, 1)">
-                            <igx-icon color="#72da67">
-                              add
-                            </igx-icon>
-                          </button>
-                          <button igxButton="icon" (click)="changeMonthsNumber(end, -1)">
-                            <igx-icon color="#72da67">
-                              remove
-                            </igx-icon>
-                          </button>
-                          <button igxButton (click)="endDialog.close()">Close</button>
-                      </ng-container>
-                </div>
-            </div>
-        </igx-dialog>
 
         <button class="md-compare" igxRipple igxButton="raised" (click)="compareRanges($event)">
           {{resources.Compare.value}}
@@ -89,25 +64,27 @@
         </button>
 
         <div class="language-btn">
-          <button igxButton="icon" [igxToggleAction]="langMenu" [igxToggleOutlet]="outlet" [overlaySettings]="overlaySettings" [igxDropDownItemNavigation]="langMenu"><igx-icon>language</igx-icon></button>
+          <button igxButton="icon" [igxToggleAction]="langMenu" [igxToggleOutlet]="outlet"
+            [overlaySettings]="overlaySettings" [igxDropDownItemNavigation]="langMenu">
+            <igx-icon>language</igx-icon>
+          </button>
         </div>
       </div>
     </div>
 
     <igx-drop-down #langMenu (onSelection)="changeLocale($event.newSelection.value)">
-      <igx-drop-down-item value="en" [selected]= "version === 'en'">
-        <img src="./assets/united-states.png" alt="US" >
+      <igx-drop-down-item value="en" [selected]="version === 'en'">
+        <img src="./assets/united-states.png" alt="US">
         EN
       </igx-drop-down-item>
-      <igx-drop-down-item value="ja" [selected]= "version === 'ja'">
+      <igx-drop-down-item value="ja" [selected]="version === 'ja'">
         <img src="./assets/japan.png" alt="JA">
         JA
       </igx-drop-down-item>
     </igx-drop-down>
   </igx-navbar>
-  <igx-dialog #errorDialog [title]="resources.Error_Message.value"
-              [rightButtonLabel]="resources.Confirm_button.value"
-              (onRightButtonSelect)="errorDialog.close()">
+  <igx-dialog #errorDialog [title]="resources.Error_Message.value" [rightButtonLabel]="resources.Confirm_button.value"
+    (onRightButtonSelect)="errorDialog.close()">
   </igx-dialog>
 </div>
 <div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>

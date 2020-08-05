@@ -1,8 +1,8 @@
+import { DateRange } from 'igniteui-angular';
+
 export interface IRange {
-   startRangeBegin: Date;
-   startRangeEnd: Date;
-   endRangeBegin: Date;
-   endRangeEnd: Date;
+   startRange: DateRange;
+   endRange: DateRange;
 }
 
 export interface IRangeData {

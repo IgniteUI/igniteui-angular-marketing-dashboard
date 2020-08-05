@@ -4,16 +4,13 @@ import * as moment from 'moment';
 
 export function getDateRange(numberOfDays: number): IRange {
 
-  const current = new Date();
-
+  const today = new Date();
+  const startRangeBegin = moment(today).subtract((numberOfDays - 1) * 2 , 'days').toDate();
+  const startRangeEnd = moment(today).subtract(numberOfDays - 1, 'days').toDate();
+  const endRangeBegin = moment(today).subtract(numberOfDays - 1, 'days').toDate();
   const range = {
-    endRangeEnd: current,
-
-    endRangeBegin: moment(current).subtract(numberOfDays - 1 , 'days').toDate(),
-
-    startRangeBegin: moment(current).subtract((numberOfDays - 1) * 2 , 'days').toDate(),
-
-    startRangeEnd: moment(current).subtract(numberOfDays - 1, 'days').toDate()
+    endRange: {start: endRangeBegin, end: today},
+    startRange: {start: startRangeBegin, end: startRangeEnd},
   };
 
   return range;

@@ -6,12 +6,15 @@ import {
   IgxDatePickerComponent,
   IgxCalendarComponent,
   OverlaySettings,
-  IgxButtonGroupComponent
+  IgxButtonGroupComponent,
+  DateRange,
+  IgxDateRangePickerComponent
 } from 'igniteui-angular';
 import { DataService } from '../data.service';
 import { IRange } from '../models/range';
 import { LocalizationService } from '../localization.service';
 import * as moment from 'moment';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -27,40 +30,26 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   @ViewChild('startRange')
   public startDatePicker: IgxDatePickerComponent;
 
-  @ViewChild('endRange')
-  public endDatePicker: IgxDatePickerComponent;
+  @ViewChild('startRangePicker', {static: true})
+  public startRangePicker: IgxDateRangePickerComponent;
 
-  @ViewChild('startDialog')
-  public startCalendarDialog: IgxDialogComponent;
-
-  @ViewChild('endDialog')
-  public endCalendarDialog: IgxDialogComponent;
-
-  @ViewChild('start', {static: true})
-  public startCalendar: IgxCalendarComponent;
-
-  @ViewChild('end', {static: true})
-  public endCalendar: IgxCalendarComponent;
+  @ViewChild('endRangePicker', {static: true})
+  public endRangePicker: IgxDateRangePickerComponent;
 
   @ViewChild(IgxButtonGroupComponent, {static: true})
   public buttonGroup: IgxButtonGroupComponent;
 
   public today = new Date();
-  public startRangeBegin: Date;
-  public startRangeEnd: Date;
-  public endRangeBegin: Date;
-  public endRangeEnd: Date;
-
-  public rangeLength: number;
-
   public version = '';
+  public startRange: DateRange;
+  public endRange: DateRange;
   public currentRange: IRange;
+  public startRangeMaxDate: Date;
+  public endRangeMinDate: Date;
+  public rangeLength: number;
   public resources;
   public ranges;
   public period;
-
-  public startRange: Date[];
-  public endRange: Date[];
 
   public overlaySettings: OverlaySettings = {
     positionStrategy: new ConnectedPositioningStrategy({
@@ -78,6 +67,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       verticalStartPoint: VerticalAlignment.Bottom
     }),
     modal: false,
+    closeOnOutsideClick: true,
     scrollStrategy: new NoOpScrollStrategy()
   };
 
@@ -88,17 +78,24 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       verticalStartPoint: VerticalAlignment.Bottom
     }),
     modal: false,
-        closeOnOutsideClick: true,
-
+    closeOnOutsideClick: true,
     scrollStrategy: new NoOpScrollStrategy()
   };
 
   constructor(private dataService: DataService, private localeService: LocalizationService, private cdr: ChangeDetectorRef) {
     // tslint:disable: max-line-length
-    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.endRangeEnd = this.today;
+    const startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
+    const startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
+
+    const endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
+    const endRangeEnd = this.today;
+
+    this.startRange = {start: startRangeBegin, end: startRangeEnd};
+    this.endRange = {start: endRangeBegin, end: endRangeEnd};
+
+    this.startRangeMaxDate = endRangeBegin;
+    this.endRangeMinDate = startRangeEnd;
+
     this.resources = this.localeService.getLocale();
     this.version = window.localStorage.getItem('locale');
     this.period = 'One_year';
@@ -146,27 +143,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.dataService.getSummaryData(dateRange);
   }
 
-  private applyRanges(ranges: IRange): void {
-    this.endRangeEnd = ranges.endRangeEnd;
-    this.endRangeBegin = ranges.endRangeBegin;
-    this.startRangeEnd = ranges.startRangeEnd;
-    this.startRangeBegin = ranges.startRangeBegin;
-
-    const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
-    };
-    this.currentRange = range;
+  private applyRanges(range: IRange): void {
+    this.startRange = range.startRange;
+    this.endRange = range.endRange;
+    this.currentRange = Object.assign({}, range);
   }
 
   public compareRanges(event) {
     const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
+      startRange: this.startRange,
+      endRange: this.endRange
     };
     this.currentRange = range;
     this.dataService.getSummaryData(range);
@@ -179,13 +165,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.updateDates(this.resources['One_year'].value);
       this.buttonGroup.selectButton(3);
       this.version = version;
-      if (this.startCalendar.selectedDates.length > 0) {
-        this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
-      }
-
-      if (this.endCalendar.selectedDates.length > 0 ) {
-        this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
-      }
       this.dataService.getSummaryData(this.currentRange);
     }
   }
@@ -197,14 +176,11 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.version = window.localStorage.getItem('locale');
     });
 
-
-
     const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
+      startRange: this.startRange,
+      endRange: this.endRange,
     };
+
     this.currentRange = range;
     this.updateDates(this.resources.One_year);
 
@@ -213,103 +189,62 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.errorDialog.open();
     });
 
-    this.startCalendar.onSelection.subscribe((dates: Date[]) => {
-      if (dates.length > 1) {
+    this.startRangePicker.rangeSelected.subscribe((r: DateRange) => {
+      if (r.start === r.end) {
+        return;
+      }
+      const start = moment(r.start);
+      const end = moment(r.end);
+      const daysCount = end.diff(start, 'days') + 1;
+      if (daysCount < 7) {
+            this.startRangePicker.close();
+            this.errorDialog.message = 'The date range must be at least 7 days';
+            this.errorDialog.open();
+            return;
+      }
+      let endRangeStartDate = this.endRange.start;
 
-        if (dates.length >= 7) {
-          const temp = new Date();
-          const lastDate = dates[dates.length - 1];
-          this.startRangeBegin = dates[0];
-          this.startRangeEnd = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
-          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
-            this.endRangeBegin = new Date(this.startRangeEnd.getTime());
-          }
-          this.endRangeEnd = moment(this.endRangeBegin).add(dates.length - 1, 'days').toDate();
-        } else {
-          this.startCalendarDialog.close();
-          this.errorDialog.message = 'The date range must be at least 7 days';
-          this.errorDialog.open();
-        }
-
-        const btn = this.buttonGroup.buttons.find(b => b.selected);
-        if (btn) {
-          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
-        }
-
-      } else {
-        this.startRangeBegin = dates[0];
+      if (r.end >= this.endRange.start) {
+        endRangeStartDate = new Date(r.end.getTime());
+      }
+      const endRangeEndDate = moment(endRangeStartDate).add(daysCount - 1, 'days').toDate();
+      this.endRange = {start: endRangeStartDate, end: endRangeEndDate};
+      const btn = this.buttonGroup.buttons.find(b => b.selected);
+      if (btn) {
+        this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
       }
     });
 
-    this.endCalendar.onSelection.subscribe((dates: Date[]) => {
-      if (dates.length > 1) {
-        if (dates.length >= 7) {
-          const temp = new Date();
-          this.endRangeBegin = dates[0];
-          this.endRangeEnd = new Date(dates[dates.length - 1].getFullYear(), dates[dates.length - 1].getMonth(), dates[dates.length - 1].getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
-          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
-            this.startRangeEnd = new Date(this.endRangeBegin.getTime());
-          }
-          this.startRangeBegin = moment(this.startRangeEnd).subtract(dates.length - 1, 'days').toDate();
-        } else {
-          this.endCalendarDialog.close();
-          this.errorDialog.message = 'The date range must be at least 7 days';
-          this.errorDialog.open();
-        }
-
-        const btn = this.buttonGroup.buttons.find(b => b.selected);
-        if (btn) {
-          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
-        }
-      } else {
-        this.endRangeBegin = dates[0];
+    this.endRangePicker.rangeSelected.subscribe((r: DateRange) => {
+      if (r.start === r.end) {
+        return;
       }
+      const start = moment(r.start);
+      const end = moment(r.end);
+      const daysCount = start.diff(end, 'days') + 1;
+      if (daysCount < 7) {
+        this.endRangePicker.close();
+        this.errorDialog.message = 'The date range must be at least 7 days';
+        this.errorDialog.open();
+        return;
+      }
+      let startRangeEndDate = this.startRange.end;
+      if (r.start < this.startRange.end) {
+        startRangeEndDate = new Date(r.end.getTime());
+      }
+      const startRangeStartDate = moment(startRangeEndDate).subtract(daysCount - 1, 'days').toDate();
+      this.startRange = {start: startRangeStartDate, end: startRangeEndDate};
+      const btn = this.buttonGroup.buttons.find(b => b.selected);
+
+      if (btn) {
+        this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
+      }
+
     });
   }
 
-  public toggleStartDialog(target: HTMLElement) {
-    if (this.startCalendarDialog.isOpen) {
-      this.startCalendarDialog.close();
-    } else {
-      this.startDialogOverlaySettings.positionStrategy.settings.target = target;
-      this.startCalendarDialog.open(this.startDialogOverlaySettings);
-
-    }
-  }
-
-  public toggleEndDialog(target: HTMLElement) {
-    if (this.endCalendarDialog.isOpen) {
-      this.startCalendarDialog.close();
-    } else {
-      this.endDialogOverlaySettings.positionStrategy.settings.target = target;
-      this.endCalendarDialog.open(this.endDialogOverlaySettings);
-    }
-  }
-
-  public changeMonthsNumber(calendar: IgxCalendarComponent, change: number) {
-    if (calendar.monthsViewNumber === 3 && change === 1) {
-      return;
-    }
-    calendar.monthsViewNumber += change;
-  }
-
-  ngAfterViewInit() {
-    this.startCalendarDialog.onOpen.subscribe( evt => {
-      this.startCalendar.selectDate([this.startRangeBegin, this.startRangeEnd]);
-      this.startCalendar.viewDate = this.startRangeEnd;
-    });
-
-    this.endCalendarDialog.onOpen.subscribe( evt => {
-      this.endCalendar.selectDate([this.endRangeBegin, this.endRangeEnd]);
-      this.endCalendar.viewDate = this.endRangeEnd;
-    });
-
-    this.startCalendarDialog.onClose.subscribe(evt => {
-      this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
-    });
-
-    this.endCalendarDialog.onClose.subscribe(evt => {
-      this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
-    });
+  public ngAfterViewInit() {
+    this.endDialogOverlaySettings.positionStrategy.settings.target = this.endRangePicker.element.nativeElement;
+    this.startDialogOverlaySettings.positionStrategy.settings.target = this.startRangePicker.element.nativeElement;
   }
 }
