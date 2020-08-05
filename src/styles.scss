@@ -9,7 +9,7 @@
 // $app-palette: igx-palette($primary, $secondary);
 
 @include igx-core();
-@include igx-dark-theme($green-palette);
+@include igx-dark-theme($green-palette, ('bullet-graph', 'data-chart', 'doughnut-chart', 'geo-map'));
 
 @import "var";
 
