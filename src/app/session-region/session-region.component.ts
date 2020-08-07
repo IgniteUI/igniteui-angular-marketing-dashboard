@@ -31,8 +31,8 @@ export class SessionByRegionComponent implements OnInit {
 
     this.proportionalSymbolModel = {
                     name: 'countryTraffic',
-                    latitudeMemberPath: 'latitude',
-                    longitudeMemberPath: 'longitude',
+                    latitudeMemberPath: 'Latitude',
+                    longitudeMemberPath: 'Longitude',
                     markerType: MarkerType.Circle,
                     radiusMemberPath: 'scaledSessions',
                     markerOutline: '#000',

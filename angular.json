@@ -122,6 +122,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "marketing-dashboard"
+    }
+  },
+  "defaultProject": "marketing-dashboard",
+  "cli": {
+    "analytics": false
+  }
 }
