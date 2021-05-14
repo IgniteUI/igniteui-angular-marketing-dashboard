@@ -213,7 +213,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.errorDialog.open();
     });
 
-    this.startCalendar.onSelection.subscribe((dates: Date[]) => {
+    this.startCalendar.selected.subscribe((dates: Date[]) => {
       if (dates.length > 1) {
 
         if (dates.length >= 7) {
@@ -241,7 +241,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.endCalendar.onSelection.subscribe((dates: Date[]) => {
+    this.endCalendar.selected.subscribe((dates: Date[]) => {
       if (dates.length > 1) {
         if (dates.length >= 7) {
           const temp = new Date();
