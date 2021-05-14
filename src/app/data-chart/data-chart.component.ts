@@ -7,8 +7,8 @@ import { IRangeData } from '../models/range';
 import { IgxColumnSeriesComponent } from 'igniteui-angular-charts';
 import { IgxAreaSeriesComponent } from 'igniteui-angular-charts';
 import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts';
-import { RESOURCES} from '../i18n/locale-en.json';
-import { JA_RESOURCES} from '../i18n/locale-ja.json';
+import { RESOURCES} from '../i18n/locale-en';
+import { JA_RESOURCES} from '../i18n/locale-ja';
 import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
 import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts';
 import { LocalizationService } from '../localization.service';
@@ -203,7 +203,7 @@ export class DataChartComponent implements OnInit {
   public addToolTipLayer() {
     const toolTipLayer = new IgxCategoryToolTipLayerComponent();
     toolTipLayer.name = 'categorySeries';
-    toolTipLayer.i.m5  = CategoryTooltipLayerPosition.InsideEnd;
+    toolTipLayer.i.m  = CategoryTooltipLayerPosition.InsideEnd;
     toolTipLayer.transitionDuration = 200;
     this.chart.series.add(toolTipLayer);
   }

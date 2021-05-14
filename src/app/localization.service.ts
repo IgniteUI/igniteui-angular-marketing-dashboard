@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { RESOURCES } from './i18n/locale-en.json';
-import { JA_RESOURCES } from './i18n/locale-ja.json';
+import { RESOURCES } from './i18n/locale-en';
+import { JA_RESOURCES } from './i18n/locale-ja';
 import { Subject } from 'rxjs';
 
 @Injectable({
