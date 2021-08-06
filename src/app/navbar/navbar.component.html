@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <igx-drop-down #langMenu (onSelection)="changeLocale($event.newSelection.value)">
+    <igx-drop-down #langMenu (selectionChanging)="changeLocale($event.newSelection.value)">
       <igx-drop-down-item value="en" [selected]= "version === 'en'">
         <img src="./assets/united-states.png" alt="US" >
         EN
@@ -107,7 +107,7 @@
   </igx-navbar>
   <igx-dialog #errorDialog [title]="resources.Error_Message.value"
               [rightButtonLabel]="resources.Confirm_button.value"
-              (onRightButtonSelect)="errorDialog.close()">
+              (rightButtonSelect)="errorDialog.close()">
   </igx-dialog>
 </div>
 <div class="overlayOutlet" igxOverlayOutlet #outlet="overlay-outlet"></div>

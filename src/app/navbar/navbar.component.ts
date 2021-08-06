@@ -294,21 +294,21 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.startCalendarDialog.onOpen.subscribe( evt => {
+    this.startCalendarDialog.opening.subscribe( evt => {
       this.startCalendar.selectDate([this.startRangeBegin, this.startRangeEnd]);
       this.startCalendar.viewDate = this.startRangeEnd;
     });
 
-    this.endCalendarDialog.onOpen.subscribe( evt => {
+    this.endCalendarDialog.opening.subscribe( evt => {
       this.endCalendar.selectDate([this.endRangeBegin, this.endRangeEnd]);
       this.endCalendar.viewDate = this.endRangeEnd;
     });
 
-    this.startCalendarDialog.onClose.subscribe(evt => {
+    this.startCalendarDialog.closing.subscribe(evt => {
       this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
     });
 
-    this.endCalendarDialog.onClose.subscribe(evt => {
+    this.endCalendarDialog.closing.subscribe(evt => {
       this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
     });
   }
