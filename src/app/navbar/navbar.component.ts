@@ -1,315 +1,311 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { getDateRange } from '../../app/utils';
+import { DatePipe } from '@angular/common';
 import {
-  DisplayDensityToken, DisplayDensity, IgxDialogComponent, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment,
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  afterNextRender,
+  effect,
+  inject,
+  signal,
+  viewChild
+} from '@angular/core';
+import {
+  ConnectedPositioningStrategy,
+  HorizontalAlignment,
   NoOpScrollStrategy,
-  IgxDatePickerComponent,
-  IgxCalendarComponent,
   OverlaySettings,
-  IgxButtonGroupComponent
-} from 'igniteui-angular';
+  VerticalAlignment
+} from 'igniteui-angular/core';
+import {
+  IgxButtonDirective,
+  IgxDividerComponent,
+  IgxIconButtonDirective,
+  IgxRippleDirective,
+  IgxToggleActionDirective
+} from 'igniteui-angular/directives';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+import { IgxCalendarComponent } from 'igniteui-angular/calendar';
+import { IGX_DIALOG_DIRECTIVES, IgxDialogComponent } from 'igniteui-angular/dialog';
+import {
+  ISelectionEventArgs,
+  IgxDropDownComponent,
+  IgxDropDownItemComponent,
+  IgxDropDownItemNavigationDirective
+} from 'igniteui-angular/drop-down';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { DataService } from '../data.service';
+import { addDays, daysInMonth, diffInDays, isLeapYear, subtractDays, subtractMonths } from '../date-utils';
+import { Locale, LocalizationService } from '../localization.service';
 import { IRange } from '../models/range';
-import { LocalizationService } from '../localization.service';
-import * as moment from 'moment';
+import { getDateRange } from '../utils';
+
+/** The preset comparison windows offered by the button group. */
+type RangePeriod = 'One_week' | 'One_month' | 'Three_months' | 'One_year';
+
+const RANGES: readonly RangePeriod[] = ['One_week', 'One_month', 'Three_months', 'One_year'];
+const DEFAULT_RANGE_INDEX = RANGES.indexOf('One_year');
+const MIN_RANGE_DAYS = 7;
+
+const connectedBelowLeft = (): ConnectedPositioningStrategy =>
+  new ConnectedPositioningStrategy({
+    horizontalDirection: HorizontalAlignment.Left,
+    horizontalStartPoint: HorizontalAlignment.Right,
+    verticalStartPoint: VerticalAlignment.Bottom
+  });
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
-  providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './navbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DatePipe,
+    IgxNavbarComponent,
+    IgxButtonGroupComponent,
+    IgxButtonDirective,
+    IgxIconButtonDirective,
+    IgxRippleDirective,
+    IgxDividerComponent,
+    IgxIconComponent,
+    IgxCalendarComponent,
+    IgxDropDownComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective,
+    IgxToggleActionDirective,
+    IGX_DIALOG_DIRECTIVES
+  ]
 })
-export class NavbarComponent implements OnInit, AfterViewInit {
+export class NavbarComponent {
+  private readonly dataService = inject(DataService);
+  private readonly localeService = inject(LocalizationService);
+  private readonly injector = inject(Injector);
 
-  @ViewChild('errorDialog', { static: true })
-  public errorDialog: IgxDialogComponent;
+  /**
+   * The only remaining view query. The button group reconciles selection
+   * imperatively - it sets classes through Renderer and reads `[selected]`
+   * on its buttons only at init - so its state cannot be driven by a binding.
+   */
+  private readonly buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
-  @ViewChild('startRange')
-  public startDatePicker: IgxDatePickerComponent;
+  public readonly resources = this.localeService.resources;
+  public readonly locale = this.localeService.locale;
 
-  @ViewChild('endRange')
-  public endDatePicker: IgxDatePickerComponent;
+  public readonly ranges = RANGES;
+  public readonly defaultRangeIndex = DEFAULT_RANGE_INDEX;
 
-  @ViewChild('startDialog')
-  public startCalendarDialog: IgxDialogComponent;
+  public readonly startRangeBegin = signal(new Date());
+  public readonly startRangeEnd = signal(new Date());
+  public readonly endRangeBegin = signal(new Date());
+  public readonly endRangeEnd = signal(new Date());
 
-  @ViewChild('endDialog')
-  public endCalendarDialog: IgxDialogComponent;
+  public readonly errorMessage = signal<string | null>(null);
+  public readonly errorOpen = signal(false);
 
-  @ViewChild('start', {static: true})
-  public startCalendar: IgxCalendarComponent;
-
-  @ViewChild('end', {static: true})
-  public endCalendar: IgxCalendarComponent;
-
-  @ViewChild(IgxButtonGroupComponent, {static: true})
-  public buttonGroup: IgxButtonGroupComponent;
-
-  public today = new Date();
-  public startRangeBegin: Date;
-  public startRangeEnd: Date;
-  public endRangeBegin: Date;
-  public endRangeEnd: Date;
-
-  public rangeLength: number;
-
-  public version = '';
-  public currentRange: IRange;
-  public resources;
-  public ranges;
-  public period;
-
-  public startRange: Date[];
-  public endRange: Date[];
-
-  public overlaySettings: OverlaySettings = {
-    positionStrategy: new ConnectedPositioningStrategy({
-      horizontalDirection: HorizontalAlignment.Left,
-      horizontalStartPoint: HorizontalAlignment.Right,
-      verticalStartPoint: VerticalAlignment.Bottom
-    }),
+  public readonly overlaySettings: OverlaySettings = {
+    positionStrategy: connectedBelowLeft(),
     scrollStrategy: new NoOpScrollStrategy()
   };
 
-  public startDialogOverlaySettings: OverlaySettings = {
-    positionStrategy: new ConnectedPositioningStrategy({
-      horizontalDirection: HorizontalAlignment.Left,
-      horizontalStartPoint: HorizontalAlignment.Right,
-      verticalStartPoint: VerticalAlignment.Bottom
-    }),
+  private readonly startDialogOverlaySettings: OverlaySettings = {
+    positionStrategy: connectedBelowLeft(),
     modal: false,
     scrollStrategy: new NoOpScrollStrategy()
   };
 
-  public endDialogOverlaySettings: OverlaySettings = {
-    positionStrategy: new ConnectedPositioningStrategy({
-      horizontalDirection: HorizontalAlignment.Left,
-      horizontalStartPoint: HorizontalAlignment.Right,
-      verticalStartPoint: VerticalAlignment.Bottom
-    }),
+  private readonly endDialogOverlaySettings: OverlaySettings = {
+    positionStrategy: connectedBelowLeft(),
     modal: false,
-        closeOnOutsideClick: true,
-
+    closeOnOutsideClick: true,
     scrollStrategy: new NoOpScrollStrategy()
   };
 
-  constructor(private dataService: DataService, private localeService: LocalizationService, private cdr: ChangeDetectorRef) {
-    // tslint:disable: max-line-length
-    this.startRangeBegin = new Date(this.today.getFullYear() - 2, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.startRangeEnd = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.endRangeBegin = new Date(this.today.getFullYear() - 1, this.today.getMonth(), this.today.getDate(), this.today.getHours(), this.today.getMinutes(), this.today.getSeconds(), this.today.getMilliseconds());
-    this.endRangeEnd = this.today;
-    this.resources = this.localeService.getLocale();
-    this.version = window.localStorage.getItem('locale');
-    this.period = 'One_year';
-    this.ranges = [
-      { text: this.resources.One_week.value, selected: false, period: 'One_week' },
-      { text: this.resources.One_month.value, selected: false, period: 'One_month' },
-      { text: this.resources.Three_months.value, selected: false, period: 'Three_months' },
-      { text: this.resources.One_year.value, selected: true, period: 'One_year' }];
-  }
+  constructor() {
+    this.applyRanges(getDateRange(this.daysFor('One_year')));
+    this.fetch();
 
-  public updateDates(rangePeriod: string) {
-    let dateRange: IRange;
-    const date = new Date();
-    let days = 0;
-
-    switch (rangePeriod) {
-      case this.resources.One_week.value:
-        dateRange = getDateRange(7);
-        this.applyRanges(dateRange);
-        this.period = 'One_week';
-        break;
-      case this.resources.One_month.value:
-        date.setMonth(date.getMonth() - 1);
-        days = moment(date).daysInMonth();
-        dateRange = getDateRange(days);
-        this.applyRanges(dateRange);
-        this.period = 'One_month';
-        break;
-      case this.resources.Three_months.value:
-        date.setMonth(date.getMonth() - 3);
-        days = moment(new Date()).diff(date, 'days') + 1;
-        dateRange = getDateRange(days);
-        this.applyRanges(dateRange);
-        this.period = 'Three_months';
-        break;
-      case this.resources.One_year.value:
-      default:
-        days = moment(date).isLeapYear() ? 366 : 365;
-        dateRange = getDateRange(days);
-        this.applyRanges(dateRange);
-        this.period = 'One_year';
-        break;
-    }
-    this.currentRange = dateRange;
-    this.dataService.getSummaryData(dateRange);
-  }
-
-  private applyRanges(ranges: IRange): void {
-    this.endRangeEnd = ranges.endRangeEnd;
-    this.endRangeBegin = ranges.endRangeBegin;
-    this.startRangeEnd = ranges.startRangeEnd;
-    this.startRangeBegin = ranges.startRangeBegin;
-
-    const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
-    };
-    this.currentRange = range;
-  }
-
-  public compareRanges(event) {
-    const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
-    };
-    this.currentRange = range;
-    this.dataService.getSummaryData(range);
-  }
-
-  public changeLocale(version) {
-    if (version !== this.version) {
-      window.localStorage.setItem('locale', version);
-      this.localeService.setLocale(version);
-      this.updateDates(this.resources['One_year'].value);
-      this.buttonGroup.selectButton(3);
-      this.version = version;
-      if (this.startCalendar.selectedDates.length > 0) {
-        this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
-      }
-
-      if (this.endCalendar.selectedDates.length > 0 ) {
-        this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
-      }
-      this.dataService.getSummaryData(this.currentRange);
-    }
-  }
-
-  ngOnInit() {
-
-    this.localeService.languageLocalizer.subscribe(resources => {
-      this.resources = resources;
-      this.version = window.localStorage.getItem('locale');
-    });
-
-
-
-    const range: IRange = {
-      startRangeBegin: this.startRangeBegin,
-      startRangeEnd: this.startRangeEnd,
-      endRangeBegin: this.endRangeBegin,
-      endRangeEnd: this.endRangeEnd
-    };
-    this.currentRange = range;
-    this.updateDates(this.resources.One_year);
-
-    this.dataService.onError.subscribe(err => {
-      this.errorDialog.message = err;
-      this.errorDialog.open();
-    });
-
-    this.startCalendar.selected.subscribe((dates: Date[]) => {
-      if (dates.length > 1) {
-
-        if (dates.length >= 7) {
-          const temp = new Date();
-          const lastDate = dates[dates.length - 1];
-          this.startRangeBegin = dates[0];
-          this.startRangeEnd = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
-          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
-            this.endRangeBegin = new Date(this.startRangeEnd.getTime());
-          }
-          this.endRangeEnd = moment(this.endRangeBegin).add(dates.length - 1, 'days').toDate();
-        } else {
-          this.startCalendarDialog.close();
-          this.errorDialog.message = 'The date range must be at least 7 days';
-          this.errorDialog.open();
-        }
-
-        const btn = this.buttonGroup.buttons.find(b => b.selected);
-        if (btn) {
-          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
-        }
-
-      } else {
-        this.startRangeBegin = dates[0];
-      }
-    });
-
-    this.endCalendar.selected.subscribe((dates: Date[]) => {
-      if (dates.length > 1) {
-        if (dates.length >= 7) {
-          const temp = new Date();
-          this.endRangeBegin = dates[0];
-          this.endRangeEnd = new Date(dates[dates.length - 1].getFullYear(), dates[dates.length - 1].getMonth(), dates[dates.length - 1].getDate(), temp.getHours(), temp.getMinutes(), temp.getMilliseconds());
-          if (this.endRangeBegin.getTime() < this.startRangeEnd.getTime()) {
-            this.startRangeEnd = new Date(this.endRangeBegin.getTime());
-          }
-          this.startRangeBegin = moment(this.startRangeEnd).subtract(dates.length - 1, 'days').toDate();
-        } else {
-          this.endCalendarDialog.close();
-          this.errorDialog.message = 'The date range must be at least 7 days';
-          this.errorDialog.open();
-        }
-
-        const btn = this.buttonGroup.buttons.find(b => b.selected);
-        if (btn) {
-          this.buttonGroup.deselectButton(this.buttonGroup.buttons.indexOf(btn));
-        }
-      } else {
-        this.endRangeBegin = dates[0];
+    // Surface fetch failures in the same dialog used for validation messages.
+    effect(() => {
+      const error = this.dataService.error();
+      if (error) {
+        this.showError(error.message);
       }
     });
   }
 
-  public toggleStartDialog(target: HTMLElement) {
-    if (this.startCalendarDialog.isOpen) {
-      this.startCalendarDialog.close();
-    } else {
-      this.startDialogOverlaySettings.positionStrategy.settings.target = target;
-      this.startCalendarDialog.open(this.startDialogOverlaySettings);
-
-    }
+  public updateDates(period: RangePeriod): void {
+    this.applyRanges(getDateRange(this.daysFor(period)));
+    this.fetch();
   }
 
-  public toggleEndDialog(target: HTMLElement) {
-    if (this.endCalendarDialog.isOpen) {
-      this.startCalendarDialog.close();
-    } else {
-      this.endDialogOverlaySettings.positionStrategy.settings.target = target;
-      this.endCalendarDialog.open(this.endDialogOverlaySettings);
-    }
+  public compareRanges(): void {
+    this.fetch();
   }
 
-  public changeMonthsNumber(calendar: IgxCalendarComponent, change: number) {
-    if (calendar.monthsViewNumber === 3 && change === 1) {
+  public changeLocale(event: ISelectionEventArgs): void {
+    const locale = event.newSelection?.value as Locale | undefined;
+    if (!locale || locale === this.locale()) {
       return;
     }
-    calendar.monthsViewNumber += change;
+
+    this.localeService.setLocale(locale);
+    this.updateDates('One_year');
+    this.buttonGroup().selectButton(DEFAULT_RANGE_INDEX);
   }
 
-  ngAfterViewInit() {
-    this.startCalendarDialog.opening.subscribe( evt => {
-      this.startCalendar.selectDate([this.startRangeBegin, this.startRangeEnd]);
-      this.startCalendar.viewDate = this.startRangeEnd;
-    });
+  public toggleStartDialog(dialog: IgxDialogComponent, event: Event): void {
+    this.toggleDialog(dialog, this.startDialogOverlaySettings, event);
+  }
 
-    this.endCalendarDialog.opening.subscribe( evt => {
-      this.endCalendar.selectDate([this.endRangeBegin, this.endRangeEnd]);
-      this.endCalendar.viewDate = this.endRangeEnd;
-    });
+  public toggleEndDialog(dialog: IgxDialogComponent, event: Event): void {
+    this.toggleDialog(dialog, this.endDialogOverlaySettings, event);
+  }
 
-    this.startCalendarDialog.closing.subscribe(evt => {
-      this.startCalendar.deselectDate([this.startRangeBegin, this.startRangeEnd]);
-    });
+  public changeMonthsNumber(calendar: IgxCalendarComponent, change: number): void {
+    const next = calendar.monthsViewNumber + change;
+    if (next < 1 || next > 3) {
+      return;
+    }
+    calendar.monthsViewNumber = next;
+  }
 
-    this.endCalendarDialog.closing.subscribe(evt => {
-      this.endCalendar.deselectDate([this.endRangeBegin, this.endRangeEnd]);
-    });
+  /** Mirrors the stored range into the calendar as the dialog opens. */
+  public onCalendarDialogOpening(calendar: IgxCalendarComponent, begin: Date, end: Date): void {
+    calendar.selectDate([begin, end]);
+    calendar.viewDate = end;
+  }
+
+  public onCalendarDialogClosing(calendar: IgxCalendarComponent, begin: Date, end: Date): void {
+    calendar.deselectDate([begin, end]);
+  }
+
+  public onStartRangeSelected(dialog: IgxDialogComponent, dates: Date | Date[]): void {
+    const selected = Array.isArray(dates) ? dates : [dates];
+
+    if (selected.length <= 1) {
+      this.startRangeBegin.set(selected[0]);
+      return;
+    }
+
+    if (selected.length < MIN_RANGE_DAYS) {
+      dialog.close();
+      this.showError(`The date range must be at least ${MIN_RANGE_DAYS} days`);
+      return;
+    }
+
+    this.startRangeBegin.set(selected[0]);
+    this.startRangeEnd.set(this.atCurrentTimeOfDay(selected[selected.length - 1]));
+
+    if (this.endRangeBegin().getTime() < this.startRangeEnd().getTime()) {
+      this.endRangeBegin.set(new Date(this.startRangeEnd().getTime()));
+    }
+    this.endRangeEnd.set(addDays(this.endRangeBegin(), selected.length - 1));
+
+    this.clearRangeButton();
+  }
+
+  public onEndRangeSelected(dialog: IgxDialogComponent, dates: Date | Date[]): void {
+    const selected = Array.isArray(dates) ? dates : [dates];
+
+    if (selected.length <= 1) {
+      this.endRangeBegin.set(selected[0]);
+      return;
+    }
+
+    if (selected.length < MIN_RANGE_DAYS) {
+      dialog.close();
+      this.showError(`The date range must be at least ${MIN_RANGE_DAYS} days`);
+      return;
+    }
+
+    this.endRangeBegin.set(selected[0]);
+    this.endRangeEnd.set(this.atCurrentTimeOfDay(selected[selected.length - 1]));
+
+    if (this.endRangeBegin().getTime() < this.startRangeEnd().getTime()) {
+      this.startRangeEnd.set(new Date(this.endRangeBegin().getTime()));
+    }
+    this.startRangeBegin.set(subtractDays(this.startRangeEnd(), selected.length - 1));
+
+    this.clearRangeButton();
+  }
+
+  private toggleDialog(dialog: IgxDialogComponent, settings: OverlaySettings, event: Event): void {
+    if (dialog.isOpen) {
+      dialog.close();
+      return;
+    }
+    // Since 21.2 the attach target is part of OverlaySettings, not PositionSettings.
+    dialog.open({ ...settings, target: event.target as HTMLElement });
+
+    // The overlay measures the content and positions it once, synchronously,
+    // inside open() - which happens before the calendar has re-rendered with
+    // the range applied by the `opening` handler. After that it only
+    // recalculates on window resize, which is why the dialog could land in the
+    // wrong place until the window was resized. Reposition once the DOM has
+    // actually settled.
+    afterNextRender(() => dialog.toggleRef.reposition(), { injector: this.injector });
+  }
+
+  private clearRangeButton(): void {
+    const group = this.buttonGroup();
+    const selected = group.buttons.find(button => button.selected);
+    if (selected) {
+      group.deselectButton(group.buttons.indexOf(selected));
+    }
+  }
+
+  private showError(message: string): void {
+    this.errorMessage.set(message);
+    this.errorOpen.set(true);
+  }
+
+  private currentRange(): IRange {
+    return {
+      startRangeBegin: this.startRangeBegin(),
+      startRangeEnd: this.startRangeEnd(),
+      endRangeBegin: this.endRangeBegin(),
+      endRangeEnd: this.endRangeEnd()
+    };
+  }
+
+  private applyRanges(range: IRange): void {
+    this.startRangeBegin.set(range.startRangeBegin);
+    this.startRangeEnd.set(range.startRangeEnd);
+    this.endRangeBegin.set(range.endRangeBegin);
+    this.endRangeEnd.set(range.endRangeEnd);
+  }
+
+  private fetch(): void {
+    this.dataService.getSummaryData(this.currentRange(), this.locale());
+  }
+
+  /** How many days the given preset spans, relative to today. */
+  private daysFor(period: RangePeriod): number {
+    const now = new Date();
+    switch (period) {
+      case 'One_week':
+        return 7;
+      case 'One_month': {
+        const previousMonth = subtractMonths(now, 1);
+        return daysInMonth(previousMonth.getFullYear(), previousMonth.getMonth());
+      }
+      case 'Three_months':
+        return diffInDays(now, subtractMonths(now, 3)) + 1;
+      case 'One_year':
+        return isLeapYear(now.getFullYear()) ? 366 : 365;
+    }
+  }
+
+  /** Ranges are date-only; carry today's clock time so comparisons stay stable. */
+  private atCurrentTimeOfDay(date: Date): Date {
+    const now = new Date();
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      now.getHours(),
+      now.getMinutes(),
+      now.getMilliseconds()
+    );
   }
 }

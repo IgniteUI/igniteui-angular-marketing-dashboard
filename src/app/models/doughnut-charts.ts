@@ -1,24 +1,18 @@
-export interface IDoughnutColors {
-  ppc: {
-    end: { value: string, bkg: string, label: string },
-    start: { value: string, bkg: string, label: string }
-  };
-  email: {
-    end: { value: string, bkg: string, label: string },
-    start: { value: string, bkg: string, label: string }
-  };
-  banners: {
-    end: { value: string, bkg: string, label: string },
-    start: { value: string, bkg: string, label: string }
-  };
-  thirdParty: {
-    end: { value: string, bkg: string, label: string },
-    start: { value: string, bkg: string, label: string }
-  };
+import { AdModel, Numeric } from './range';
+
+export interface IDoughnutPalette {
+  value: string;
+  bkg: string;
+  label: string;
 }
+
+/** Ring colours per channel, for the previous (`start`) and current (`end`) period. */
+export type IDoughnutColors = Record<AdModel, Record<'start' | 'end', IDoughnutPalette>>;
 
 export interface IDoughnutDataRecord {
   label: string;
-  value: string;
-  prev: string;
+  value: Numeric;
+  prev: Numeric;
+  /** Toggled by slice selection to reveal the percentage label. */
+  showLabel?: boolean;
 }

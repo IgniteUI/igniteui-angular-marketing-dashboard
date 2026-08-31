@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://www.infragistics.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": "/angular-sample-apps/marketing-dashboard-api/api"
+    }
+  }
+}

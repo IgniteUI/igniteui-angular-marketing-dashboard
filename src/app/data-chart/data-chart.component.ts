@@ -1,235 +1,275 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  effect,
+  inject,
+  signal,
+  viewChild
+} from '@angular/core';
+import {
+  CategoryTooltipLayerPosition,
+  IgxAreaSeriesComponent,
+  IgxCategoryToolTipLayerComponent,
+  IgxCategoryXAxisComponent,
+  IgxColumnSeriesComponent,
+  IgxDataChartComponent,
+  IgxLegendComponent,
+  IgxNumericYAxisComponent
+} from 'igniteui-angular-charts';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { DataService } from '../data.service';
-import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts';
-import { IgxDataChartComponent } from 'igniteui-angular-charts';
-import { IgxNumericYAxisComponent } from 'igniteui-angular-charts';
-import { IRangeData } from '../models/range';
-import { IgxColumnSeriesComponent } from 'igniteui-angular-charts';
-import { IgxAreaSeriesComponent } from 'igniteui-angular-charts';
-import { IgxCategoryToolTipLayerComponent} from 'igniteui-angular-charts';
-import { RESOURCES} from '../i18n/locale-en';
-import { JA_RESOURCES} from '../i18n/locale-ja';
-import { IColumnSeriesData, IColumnChartDataRecord, IAreaChartDataRecord, IAreaSeriesData } from '../models/charts';
-import { CategoryTooltipLayerPosition } from 'igniteui-angular-charts';
-import { LocalizationService } from '../localization.service';
+import { LocalizationService, ResourceKey } from '../localization.service';
+import { IAreaSeriesData, IColumnSeriesData } from '../models/charts';
+import { ITrafficMedium, ITrafficStat } from '../models/range';
+
+/** Series that plot the previous period rather than the current one. */
+const PREVIOUS_SERIES: ReadonlySet<string> = new Set(['PrevSession', 'PrevConversions']);
+
 @Component({
   selector: 'app-data-chart',
   templateUrl: './data-chart.component.html',
-  styleUrls: ['./data-chart.component.scss']
+  styleUrl: './data-chart.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    UpperCasePipe,
+    IgxButtonGroupComponent,
+    IgxButtonDirective,
+    IgxRippleDirective,
+    IgxDataChartComponent,
+    IgxCategoryXAxisComponent,
+    IgxNumericYAxisComponent,
+    IgxLegendComponent
+  ]
 })
-export class DataChartComponent implements OnInit {
+export class DataChartComponent {
+  private readonly service = inject(DataService);
 
-  @ViewChild(IgxDataChartComponent, { static: true })
-  public chart: IgxDataChartComponent;
+  public readonly resources = inject(LocalizationService).resources;
 
-  @ViewChild('time', { read: IgxCategoryXAxisComponent, static: true })
-  public time: IgxCategoryXAxisComponent;
+  private readonly chart = viewChild(IgxDataChartComponent);
+  private readonly timeAxis = viewChild<IgxCategoryXAxisComponent>('time');
+  private readonly timeConversAxis = viewChild<IgxCategoryXAxisComponent>('timeConvers');
+  private readonly yAxis = viewChild<IgxNumericYAxisComponent>('yAxis');
 
-  @ViewChild('timeConvers', { read: IgxCategoryXAxisComponent, static: true })
-  public timeConvers: IgxCategoryXAxisComponent;
+  private readonly areaTooltip = viewChild.required<TemplateRef<unknown>>('areaChartTooltipTemplate');
+  private readonly emptyAreaTooltip = viewChild.required<TemplateRef<unknown>>('emptyAreaChartTooltipTemplate');
+  private readonly columnTooltip = viewChild.required<TemplateRef<unknown>>('columnChartTooltipTemplate');
 
-  @ViewChild('yAxis', { read: IgxNumericYAxisComponent, static: true })
-  public yAxis: IgxNumericYAxisComponent;
+  /** `false` plots sessions/conversions as columns, `true` plots traffic by medium as areas. */
+  public readonly mediumMode = signal(false);
 
-  @ViewChild('areaChartTooltipTemplate', { read: TemplateRef })
-  public areaChartTooltipTemplate: TemplateRef<any>;
+  /** Bound to the chart's dataSource; the series carry their own sources on top. */
+  public readonly chartData = signal<readonly (ITrafficStat | ITrafficMedium)[]>([]);
 
-  @ViewChild('emptyAreChartTooltipTemplate', { read: TemplateRef })
-  public emptyreAChartTooltipTemplate: TemplateRef<any>;
+  private columnSeriesData: IColumnSeriesData[] = [];
+  private areaSeriesData: IAreaSeriesData[] = [];
 
-  @ViewChild('columnChartTooltipTemplate', { read: TemplateRef })
-  public columnChartTooltipTemplate: TemplateRef<any>;
+  private columnChartData: ITrafficStat[] = [];
+  private areaChartData: ITrafficMedium[] = [];
+  private prevSeriesDataSource: ITrafficStat[] = [];
 
-  public columnSeriesData: IColumnSeriesData[] = [];
+  private chartInitialised = false;
+  /** Which dataset the currently built series belong to. */
+  private renderedMode: 'column' | 'area' | null = null;
 
-  public areaSeriesData: IAreaSeriesData[] = [];
+  constructor() {
+    // Rebuild or refresh the chart whenever new data lands, or the mode changes.
+    effect(() => {
+      const chart = this.chart();
+      const yAxis = this.yAxis();
+      const data = this.service.summary();
+      const mediumMode = this.mediumMode();
 
-
-  public chartData: Array<IColumnChartDataRecord | IAreaChartDataRecord> = [];
-
-  public columnChartData: Array<IColumnChartDataRecord> = [];
-  public areaChartData: Array<IAreaChartDataRecord> = [];
-  public prevSeriesDataSource: Array<IColumnChartDataRecord> = [];
-  public chartLabelFormatter;
-  public mediumMode = false;
-  public chartInitialization = true;
-
-  public resources: typeof RESOURCES | typeof JA_RESOURCES;
-
-  constructor(private service: DataService, private localeService: LocalizationService) {
-    this.resources = this.localeService.getLocale();
-  }
-
-
-  ngOnInit() {
-
-    this.localeService.languageLocalizer.subscribe( (resources: typeof RESOURCES | typeof JA_RESOURCES )  => {
-      this.resources = resources;
-      this.changeChartSeriesTitle();
-    });
-    this.service.onDataFetch.subscribe((data: IRangeData) => {
+      if (!chart || !yAxis || !data) {
+        return;
+      }
 
       this.columnChartData = data.end.trafficStats;
-
       this.prevSeriesDataSource = data.start.trafficStats;
-
       this.areaChartData = data.end.trafficPerMedium;
 
-
-      if (this.chartInitialization) {
+      if (!this.chartInitialised) {
+        yAxis.formatLabel = (value: number) => (value >= 1000 ? `${value / 1000}K` : `${value}`);
         this.initChart();
-        this.yAxis.formatLabel = (value) => {
-          let label = value;
-          if (value >= 1000) { label = `${(value / 1000)}K`; }
-          return label;
-        };
-        this.chartInitialization = false;
-      } else if (this.mediumMode) {
-          this.yAxis.isLogarithmic = false;
-          this.yAxis.title = '';
-          this.chartData = this.areaChartData;
-        } else {
-          this.yAxis.title = 'LOG';
-          this.yAxis.titleAngle = 270;
-          this.yAxis.isLogarithmic = true;
-          this.chartData = data.end.trafficStats;
-          this.chart.actualSeries.forEach(s => {
-            if (s.name === 'PrevSession' || s.name === 'PrevConversions') {
-             s.dataSource = data.start.trafficStats;
-            } else {
-             s.dataSource =  data.end.trafficStats;
-            }
-           });
+        this.chartInitialised = true;
+        return;
+      }
+
+      // The series set only has to be rebuilt when the mode changed.
+      if ((mediumMode ? 'area' : 'column') !== this.renderedMode) {
+        this.buildSeries();
+        return;
+      }
+
+      this.refreshData();
+    });
+
+    // Series titles are localised, so re-label them when the locale changes.
+    effect(() => {
+      const chart = this.chart();
+      const resources = this.resources();
+      if (!chart) {
+        return;
+      }
+      for (const series of chart.actualSeries) {
+        if (series instanceof IgxColumnSeriesComponent || series instanceof IgxAreaSeriesComponent) {
+          const key = series.name as ResourceKey;
+          if (resources[key]) {
+            series.title = resources[key].value.toUpperCase();
+          }
         }
+      }
     });
   }
 
-  public setSeries(isMediumMode: boolean) {
-    this.mediumMode = isMediumMode;
-    if (this.mediumMode === false && this.chartData !== this.columnChartData) {
-      this.chart.series.clear();
-      this.chartData = this.columnChartData;
-      for (const seriesData of this.columnSeriesData) {
-        const series = new IgxColumnSeriesComponent();
-        series.name = seriesData.name;
-        series.valueMemberPath = seriesData.valueMemberPath;
-        series.xAxis = seriesData.xAxis;
-        this.time.label = 'title';
-        this.yAxis.title = 'LOG';
-        this.yAxis.titleAngle = 270;
-        this.yAxis.isLogarithmic = true;
-        series.yAxis = this.yAxis;
-        series.title = this.resources[seriesData.name].value;
-        series.brush = seriesData.brush;
-        series.outline = seriesData.outline;
-        series.isTransitionInEnabled = true;
-        series.transitionDuration = 800;
-        series.radiusX = 0;
-        series.radiusY = 0;
-        series.tooltipTemplate = this.columnChartTooltipTemplate;
-        if (seriesData.name === 'PrevSession' || seriesData.name === 'PrevConversions') {
-          series.dataSource = this.prevSeriesDataSource;
-         } else {
-          series.dataSource =  this.columnChartData;
-         }
-        this.chart.series.add(series);
-      }
-      this.addToolTipLayer();
-    } else if (this.mediumMode === true && this.chartData !== this.areaChartData) {
-      this.chart.series.clear();
-      this.chartData = this.areaChartData;
-      let count = 0;
-      for (const seriesData of this.areaSeriesData) {
-        const series = new IgxAreaSeriesComponent();
-        series.name = seriesData.name;
-        series.valueMemberPath = seriesData.valueMemberPath;
-        series.xAxis = this.time;
-        this.yAxis.isLogarithmic = false;
-        this.yAxis.title = '';
-        series.yAxis = this.yAxis;
-        series.brush = seriesData.color;
-        series.title = (this.resources[seriesData.name].value as string).toUpperCase();
-        series.outline = seriesData.color;
-        series.isTransitionInEnabled = true;
-        series.transitionDuration = 800;
-        series.areaFillOpacity = 0.5;
-        if (count > 0) {
-          series.tooltipTemplate = this.emptyreAChartTooltipTemplate;
-        }  else {
-          series.tooltipTemplate = this.areaChartTooltipTemplate;
-        }
-        this.chart.series.add(series);
-        count++;
-      }
-      this.addToolTipLayer();
+  public setSeries(isMediumMode: boolean): void {
+    this.mediumMode.set(isMediumMode);
+  }
+
+  /** Applies new data to the series already on the chart. */
+  private refreshData(): void {
+    const chart = this.chart();
+    const yAxis = this.yAxis();
+    if (!chart || !yAxis) {
+      return;
+    }
+
+    if (this.mediumMode()) {
+      yAxis.isLogarithmic = false;
+      yAxis.title = '';
+      this.chartData.set(this.areaChartData);
+      return;
+    }
+
+    yAxis.title = 'LOG';
+    yAxis.titleAngle = 270;
+    yAxis.isLogarithmic = true;
+    this.chartData.set(this.columnChartData);
+
+    for (const series of chart.actualSeries) {
+      series.dataSource = PREVIOUS_SERIES.has(series.name)
+        ? this.prevSeriesDataSource
+        : this.columnChartData;
     }
   }
 
-  public setColumnSeriesData(name: string,
-                             xAxis: IgxCategoryXAxisComponent,
-                             valueMemberPath: string,
-                             brush: string,
-                             outline: string,
-                             dataSource?: any): IColumnSeriesData {
-    if (dataSource) {
-      return {
-        name: name,
-        xAxis: xAxis,
-        valueMemberPath: valueMemberPath,
-        brush: brush,
-        outline: outline,
-        dataSource: dataSource
-      };
+  private buildSeries(): void {
+    return this.mediumMode() ? this.buildAreaSeries() : this.buildColumnSeries();
+  }
+
+  private buildColumnSeries(): void {
+    const chart = this.chart();
+    const yAxis = this.yAxis();
+    const timeAxis = this.timeAxis();
+    if (!chart || !yAxis || !timeAxis) {
+      return;
     }
-    return {
-      name: name,
-      xAxis: xAxis,
-      valueMemberPath: valueMemberPath,
-      brush: brush,
-      outline: outline
-    };
+
+    chart.series.clear();
+    this.chartData.set(this.columnChartData);
+
+    timeAxis.label = 'title';
+    yAxis.title = 'LOG';
+    yAxis.titleAngle = 270;
+    yAxis.isLogarithmic = true;
+
+    for (const seriesData of this.columnSeriesData) {
+      const series = new IgxColumnSeriesComponent();
+      series.name = seriesData.name;
+      series.valueMemberPath = seriesData.valueMemberPath;
+      series.xAxis = seriesData.xAxis;
+      series.yAxis = yAxis;
+      series.title = this.resources()[seriesData.name].value;
+      series.brush = seriesData.brush;
+      series.outline = seriesData.outline;
+      series.isTransitionInEnabled = true;
+      series.transitionDuration = 800;
+      series.radiusX = 0;
+      series.radiusY = 0;
+      series.tooltipTemplate = this.columnTooltip();
+      series.dataSource = PREVIOUS_SERIES.has(seriesData.name)
+        ? this.prevSeriesDataSource
+        : this.columnChartData;
+      chart.series.add(series);
+    }
+
+    this.addToolTipLayer();
+    this.renderedMode = 'column';
   }
 
-  public setAreaSeriesData(name: string,
-                           valueMemberPath: string,
-                           color: string): IAreaSeriesData {
-    return {
-      name: name,
-      valueMemberPath: valueMemberPath,
-      color: color
-    };
+  private buildAreaSeries(): void {
+    const chart = this.chart();
+    const yAxis = this.yAxis();
+    const timeAxis = this.timeAxis();
+    if (!chart || !yAxis || !timeAxis) {
+      return;
+    }
+
+    chart.series.clear();
+    this.chartData.set(this.areaChartData);
+
+    yAxis.isLogarithmic = false;
+    yAxis.title = '';
+
+    this.areaSeriesData.forEach((seriesData, index) => {
+      const series = new IgxAreaSeriesComponent();
+      series.name = seriesData.name;
+      series.valueMemberPath = seriesData.valueMemberPath;
+      series.xAxis = timeAxis;
+      series.yAxis = yAxis;
+      series.brush = seriesData.color;
+      series.outline = seriesData.color;
+      series.title = this.resources()[seriesData.name].value.toUpperCase();
+      series.isTransitionInEnabled = true;
+      series.transitionDuration = 800;
+      series.areaFillOpacity = 0.5;
+      // Only the first series carries the tooltip; the rest render an empty one
+      // so the shared category tooltip is not repeated per layer.
+      series.tooltipTemplate = index > 0 ? this.emptyAreaTooltip() : this.areaTooltip();
+      chart.series.add(series);
+    });
+
+    this.addToolTipLayer();
+    this.renderedMode = 'area';
   }
 
-  public addToolTipLayer() {
+  private addToolTipLayer(): void {
+    const chart = this.chart();
+    if (!chart) {
+      return;
+    }
     const toolTipLayer = new IgxCategoryToolTipLayerComponent();
     toolTipLayer.name = 'categorySeries';
-    toolTipLayer.i.m  = CategoryTooltipLayerPosition.InsideEnd;
+    toolTipLayer.toolTipPosition = CategoryTooltipLayerPosition.InsideEnd;
     toolTipLayer.transitionDuration = 200;
-    this.chart.series.add(toolTipLayer);
+    chart.series.add(toolTipLayer);
   }
 
-  public initChart() {
-    // tslint:disable: max-line-length
-    this.columnSeriesData.push(this.setColumnSeriesData('Sessions', this.time, 'session', '#ffff33', '#ffff33'));
-    this.columnSeriesData.push(this.setColumnSeriesData('Conversions', this.timeConvers, 'conversion', '#66cc00', '#66cc00'));
+  private initChart(): void {
+    const timeAxis = this.timeAxis();
+    const timeConversAxis = this.timeConversAxis();
+    if (!timeAxis || !timeConversAxis) {
+      return;
+    }
 
-    this.columnSeriesData.push(this.setColumnSeriesData('PrevSession', this.time, 'session',  '#655F00', '#655F00', this.prevSeriesDataSource));
-    this.columnSeriesData.push(this.setColumnSeriesData('PrevConversions', this.timeConvers, 'conversion', '#295001', '#295001', this.prevSeriesDataSource));
+    this.columnSeriesData = [
+      { name: 'Sessions', xAxis: timeAxis, valueMemberPath: 'session', brush: '#ffff33', outline: '#ffff33' },
+      { name: 'Conversions', xAxis: timeConversAxis, valueMemberPath: 'conversion', brush: '#66cc00', outline: '#66cc00' },
+      { name: 'PrevSession', xAxis: timeAxis, valueMemberPath: 'session', brush: '#655F00', outline: '#655F00' },
+      { name: 'PrevConversions', xAxis: timeConversAxis, valueMemberPath: 'conversion', brush: '#295001', outline: '#295001' }
+    ];
 
-    this.areaSeriesData.push(this.setAreaSeriesData('Organic', 'organic', '#77B40D'));
-    this.areaSeriesData.push(this.setAreaSeriesData('Paid', 'paid', '#A9D120'));
-    this.areaSeriesData.push(this.setAreaSeriesData('Direct', 'direct', '#CCE575'));
-    this.areaSeriesData.push(this.setAreaSeriesData('Referral', 'referral', '#E1EEB5'));
-    this.areaSeriesData.push(this.setAreaSeriesData('Email', 'email', '#FFFFFF'));
+    this.areaSeriesData = [
+      { name: 'Organic', valueMemberPath: 'organic', color: '#77B40D' },
+      { name: 'Paid', valueMemberPath: 'paid', color: '#A9D120' },
+      { name: 'Direct', valueMemberPath: 'direct', color: '#CCE575' },
+      { name: 'Referral', valueMemberPath: 'referral', color: '#E1EEB5' },
+      { name: 'Email', valueMemberPath: 'email', color: '#FFFFFF' }
+    ];
 
-    this.setSeries(false);
-  }
-
-  public changeChartSeriesTitle() {
-      this.chart.actualSeries.forEach( s => {
-        if ( s instanceof IgxColumnSeriesComponent || s instanceof IgxAreaSeriesComponent) {
-          s.title = this.resources[s.name].value.toUpperCase();
-        }
-      });
+    this.buildSeries();
   }
 }

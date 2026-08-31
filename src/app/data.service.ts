@@ -1,62 +1,61 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError, Observer, BehaviorSubject, AsyncSubject, Subject } from 'rxjs';
-import { IRange, IRangeData } from './models/range';
+import { IPeriodData, IRange, IRangeData } from './models/range';
+import { Locale } from './localization.service';
 
+/**
+ * A failure carries a sequence number so that two consecutive identical
+ * messages are still distinct signal values - otherwise the second one
+ * would be swallowed by signal equality and the dialog would not reopen.
+ */
+export interface IFetchError {
+  message: string;
+  seq: number;
+}
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DataService {
+  private readonly http = inject(HttpClient);
+  private readonly headers = new HttpHeaders({ Accept: 'application/json' });
+  private readonly endApi = environment.endApi;
 
+  private readonly _summary = signal<IRangeData | null>(null);
+  private readonly _error = signal<IFetchError | null>(null);
+  private errorSeq = 0;
 
-  public summaryData: IRangeData;
-  public headers: HttpHeaders;
-  public onDataFetch: Subject<any> = new Subject();
-  public onError: EventEmitter<string> = new EventEmitter();
-  private dataObserver: Observer<any>;
+  /** The most recently fetched range comparison, or `null` before the first load. */
+  public readonly summary = this._summary.asReadonly();
 
-  private endApi = environment.endApi;
-  constructor(private http: HttpClient) {
-    this.headers = new HttpHeaders({
-      Accept: 'application/json'
-    });
+  /** The most recent fetch failure. */
+  public readonly error = this._error.asReadonly();
 
-    this.dataObserver = {
-      next: (data) => {
-        if (data) {
-          this.summaryData = {start: data[0], end: data[1]};
-          this.onDataFetch.next(this.summaryData);
-        }
-      },
-      error: (err) => this.onError.emit(err),
-      complete: () => {}
-    };
+  public getSummaryData(range: IRange, locale: Locale): void {
+    const params = new HttpParams()
+      .set('startRangeBegin', range.startRangeBegin.toLocaleString())
+      .set('startRangeEnd', range.startRangeEnd.toLocaleString())
+      .set('endRangeBegin', range.endRangeBegin.toLocaleString())
+      .set('endRangeEnd', range.endRangeEnd.toLocaleString())
+      .set('locale', locale);
+
+    this.http
+      .get<[IPeriodData, IPeriodData]>(this.endApi, { headers: this.headers, params })
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => this.toMessage(error))))
+      .subscribe({
+        next: data => {
+          if (data) {
+            this._summary.set({ start: data[0], end: data[1] });
+          }
+        },
+        error: (message: string) => this._error.set({ message, seq: ++this.errorSeq })
+      });
   }
 
-
-  public getSummaryData(range: IRange) {
-      const params = new HttpParams().
-      set('startRangeBegin', range.startRangeBegin.toLocaleString()).
-      set('startRangeEnd', range.startRangeEnd.toLocaleString()).
-      set('endRangeBegin', range.endRangeBegin.toLocaleString()).
-      set('endRangeEnd', range.endRangeEnd.toLocaleString()).
-      set('locale', window.localStorage.getItem('locale'));
-
-      this.http.get(this.endApi, { headers: this.headers, params }).pipe(catchError(this.handleError)).subscribe(this.dataObserver);
-  }
-
-  handleError(error) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // server-side error
-      errorMessage = error.error;
-    }
-    return throwError(errorMessage);
+  private toMessage(error: HttpErrorResponse): string {
+    // A client/network failure surfaces as an ErrorEvent; anything else came back from the server.
+    return error.error instanceof ErrorEvent
+      ? `Error: ${error.error.message}`
+      : (error.error ?? error.message);
   }
 }

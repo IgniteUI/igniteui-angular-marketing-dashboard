@@ -1,20 +1,27 @@
-import { Component } from '@angular/core';
-import { LocalizationService } from './localization.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { IgxDividerComponent } from 'igniteui-angular/directives';
+import { CampaignHealthComponent } from './campaign-health/campaign-health.component';
+import { CurrentTrendComponent } from './current-trend/current-trend.component';
+import { DataChartComponent } from './data-chart/data-chart.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { SessionByRegionComponent } from './session-region/session-region.component';
+import { SideNavIndicatorsComponent } from './side-nav-indicators/side-nav-indicators.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NavbarComponent,
+    CurrentTrendComponent,
+    DataChartComponent,
+    SessionByRegionComponent,
+    CampaignHealthComponent,
+    SideNavIndicatorsComponent,
+    IgxDividerComponent
+  ]
 })
 export class AppComponent {
-  title = 'marketing-dashboard';
-
-  constructor(private localeService: LocalizationService) {
-    if (!window.localStorage.getItem('locale')) {
-      window.localStorage.setItem('locale', 'en');
-      this.localeService.setLocale('en');
-    } else {
-      this.localeService.setLocale(window.localStorage.getItem('locale'));
-    }
-  }
+  public readonly title = 'marketing-dashboard';
 }

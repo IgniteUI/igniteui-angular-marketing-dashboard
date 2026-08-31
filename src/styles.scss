@@ -1,18 +1,22 @@
-// CSS Reset, comment out if not required or using a different module
-@import '~minireset.css/minireset';
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:meta';
+@use 'igniteui-angular/theming' as *;
+@use 'var' as *;
 
-@import "~igniteui-angular/lib/core/styles/themes/index";
-// Uncomment the following lines if you want to add a custom palette:
-// $primary: #731963 !default;
-// $secondary: #ce5712 !default;
-// $app-palette: igx-palette($primary, $secondary);
+// 22.1 puts component structural styles inside cascade layers. Unlayered CSS
+// beats layered CSS regardless of specificity, so a bare reset would otherwise
+// win against every component. `ig.reset` is the lowest-precedence layer the
+// theme declares, which is the supported way to combine the two.
+@layer ig.reset {
+  @include meta.load-css('minireset.css/minireset');
+}
 
-@include igx-core();
-@include igx-typography();
-@include igx-dark-theme($green-palette, ('bullet-graph', 'data-chart', 'doughnut-chart', 'geo-map'));
-
-@import "var";
+@include core();
+@include typography();
+@include theme(
+  $palette: $green-dark-palette,
+  $schema: $dark-schema,
+  $exclude: ('bullet-graph', 'data-chart', 'doughnut-chart', 'geo-map')
+);
 
 $dark-bg: #333;
 $light-color: #fff;
@@ -32,14 +36,17 @@ body {
   justify-content: space-between;
 }
 
-$md-navbar-theme: igx-navbar-theme(
+// The per-component wrapper mixins (igx-navbar/igx-card/igx-divider) were
+// removed in 22.1; `tokens()` replaces all of them.
+$md-navbar-theme: navbar-theme(
   $schema: $dark-schema,
   $background: #111
 );
 
-@include igx-navbar($md-navbar-theme);
+// Application-wide override, so the default global mode is what we want here.
+@include tokens($md-navbar-theme);
 
-$md-card-theme: igx-card-theme(
+$md-card-theme: card-theme(
   $schema: $dark-schema,
   $background: transparent,
   $resting-shadow: none,
@@ -47,7 +54,7 @@ $md-card-theme: igx-card-theme(
   $content-text-color: #444
 );
 
-$md-card-theme_2: igx-card-theme(
+$md-card-theme_2: card-theme(
   $schema: $dark-schema,
   $background: transparent,
   $resting-shadow: none,
@@ -55,36 +62,36 @@ $md-card-theme_2: igx-card-theme(
   $content-text-color: #ddd
 );
 
-$md-divider-theme: igx-divider-theme(
-  $color: #444
-);
-
-$md-divider-theme_2: igx-divider-theme(
+$md-divider-theme_2: divider-theme(
   $color: #d6d6d6
 );
 
+// These are component-local themes scoped to a subtree rather than app-wide
+// overrides, so they need `$mode: 'scoped'` to emit the component-local
+// variables the structural stylesheets actually read.
 .trend-container {
-  @include igx-card($md-card-theme_2);
+  @include tokens($md-card-theme_2, $mode: 'scoped');
 }
 
 .md-trend-container {
-  @include igx-card($md-card-theme);
-  @include igx-divider($md-divider-theme_2);
-
+  @include tokens($md-card-theme, $mode: 'scoped');
+  @include tokens($md-divider-theme_2, $mode: 'scoped');
 }
 
 .global-wrapper {
   max-width: 1300px;
   margin: 0 auto;
   box-shadow: 2px 2px 10px #111;
+
   &--nav {
     width: 100%;
     box-shadow: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     @media only screen and (max-width: $mobile) {
-      min-width: auto!important;
+      min-width: auto !important;
     }
   }
 

@@ -1,4 +1,4 @@
-@import "../../var";
+@use "../../var" as *;
 
 .map-container{
   margin: 10px 0;
@@ -73,7 +73,10 @@
 }
 
 :host ::ng-deep{
+  // The container sets its own near-black text colour, so background and text
+  // have to be overridden together. See data-chart.component.scss.
   .ig-tooltip-container .ig-tooltip-container-background {
     background-color: #333;
+    color: #fff;
   }
 }

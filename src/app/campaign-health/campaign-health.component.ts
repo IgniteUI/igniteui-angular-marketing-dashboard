@@ -1,239 +1,240 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  computed,
+  effect,
+  inject,
+  viewChild
+} from '@angular/core';
+import {
+  IgxDoughnutChartComponent,
+  IgxItemLegendComponent,
+  IgxRingSeriesComponent,
+  IgxSliceClickEventArgs,
+  LabelsPosition
+} from 'igniteui-angular-charts';
+import {
+  IgxAlignLinearGraphLabelEventArgs,
+  IgxBulletGraphComponent,
+  IgxFormatLinearGraphLabelEventArgs,
+  IgxLinearGraphRangeComponent
+} from 'igniteui-angular-gauges';
 import { DataService } from '../data.service';
-import { IDoughnutColors, IDoughnutDataRecord } from '../models/doughnut-charts';
-import { IRangeData } from '../models/range';
-import { IgxDoughnutChartComponent} from 'igniteui-angular-charts';
-import { IgxRingSeriesComponent} from 'igniteui-angular-charts';
-import { LabelsPosition } from 'igniteui-angular-charts';
+import { LocalizationService, ResourceKey } from '../localization.service';
 import { IBulletGraph } from '../models/bullet-graph';
-import {convertToInt} from '../utils';
-import { FormatLinearGraphLabelEventArgs } from 'igniteui-angular-gauges';
-import { AlignLinearGraphLabelEventArgs } from 'igniteui-angular-gauges';
+import { IDoughnutColors, IDoughnutDataRecord } from '../models/doughnut-charts';
+import { AdModel, IPeriodData, IRangeData } from '../models/range';
 import { ITrendItem, generateTrendItem } from '../models/trend-item';
-import { LocalizationService } from '../localization.service';
+import { TrendItemComponent } from '../trend-item/trend-item.component';
+import { convertToInt } from '../utils';
+
+const DOUGHNUT_COLORS: IDoughnutColors = {
+  ppc: {
+    end: { value: '#ffbf00', bkg: '#5c432b', label: '#222' },
+    start: { value: '#826100', bkg: '#402d32', label: '#ccc' }
+  },
+  email: {
+    end: { value: '#ff6600', bkg: '#5c2c2b', label: '#ccc' },
+    start: { value: '#732e00', bkg: '#402232', label: '#ccc' }
+  },
+  banners: {
+    end: { value: '#4ba4aa', bkg: '#2f3c55', label: '#ccc' },
+    start: { value: '#2d6165', bkg: '#2a2a47', label: '#ccc' }
+  },
+  thirdParty: {
+    end: { value: '#f0f0f0', bkg: '#584f67', label: '#222' },
+    start: { value: '#7f7f7f', bkg: '#3e334f', label: '#ccc' }
+  }
+};
+
+const AD_MODELS: readonly AdModel[] = ['ppc', 'email', 'banners', 'thirdParty'];
+const AD_MODEL_LABELS: Record<AdModel, ResourceKey> = {
+  ppc: 'PPC',
+  banners: 'Banners',
+  email: 'Email',
+  thirdParty: 'Third_Party'
+};
+
+const PERIODS = ['start', 'end'] as const;
+type Period = (typeof PERIODS)[number];
+
+/** `${channel}Target` is the paired target field on IPeriodData. */
+const targetField = (model: AdModel) => `${model}Target` as keyof IPeriodData;
+
 @Component({
   selector: 'app-campaign-health',
   templateUrl: './campaign-health.component.html',
-  styleUrls: ['./campaign-health.component.scss']
+  styleUrl: './campaign-health.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    UpperCasePipe,
+    TrendItemComponent,
+    IgxDoughnutChartComponent,
+    IgxItemLegendComponent,
+    IgxBulletGraphComponent,
+    IgxLinearGraphRangeComponent
+  ]
 })
-export class CampaignHealthComponent implements OnInit {
+export class CampaignHealthComponent {
+  private readonly service = inject(DataService);
 
-  public doughnutChartColors: IDoughnutColors;
-  public doughnutData: IDoughnutDataRecord[];
-  public bulletGraphs: IBulletGraph[] = [];
-  private formatter;
-  public trendItem: ITrendItem;
-  public resources;
+  public readonly resources = inject(LocalizationService).resources;
 
-  constructor(private service: DataService, private localeService: LocalizationService) {
+  private readonly chart = viewChild(IgxDoughnutChartComponent);
+  private readonly legend = viewChild<TemplateRef<unknown>>('legend');
 
-    this.doughnutChartColors = {
-      ppc: {
-        end: { value: '#ffbf00', bkg: '#5c432b', label: '#222' },
-        start: { value: '#826100', bkg: '#402d32', label: '#ccc' }
-      },
-      email: {
-        end: { value: '#ff6600', bkg: '#5c2c2b', label: '#ccc' },
-        start: { value: '#732e00', bkg: '#402232', label: '#ccc' }
-      },
-      banners: {
-        end: { value: '#4ba4aa', bkg: '#2f3c55', label: '#ccc' },
-        start: { value: '#2d6165', bkg: '#2a2a47', label: '#ccc' }
-      },
-      thirdParty: {
-        end: { value: '#f0f0f0', bkg: '#584f67', label: '#222' },
-        start: { value: '#7f7f7f', bkg: '#3e334f', label: '#ccc' }
-      }
-    };
+  public readonly adModels = AD_MODELS;
 
-    this.resources = this.localeService.getLocale();
+  public readonly trendItem = computed<ITrendItem | null>(() => {
+    const data = this.service.summary();
+    return data ? generateTrendItem('conversions', data, 'Conversions') : null;
+  });
 
-    this.trendItem = {
-      name: undefined,
-      end: undefined,
-      start: undefined,
-      percent: undefined,
-      direction: undefined,
-      directionColor: undefined,
-      endRes: undefined,
-      labelP: 'Conversions'
-    };
-    for (let index = 0; index < 8; index++) {
-        this.bulletGraphs.push(
-          {
-          adModel: undefined,
-          value: undefined,
-          maximumValue: undefined,
-          valueBrush: undefined,
-          bkgBrush: undefined,
-          labelBrush: undefined,
-          target: undefined
-         });
+  public readonly doughnutData = computed<IDoughnutDataRecord[]>(() => {
+    const data = this.service.summary();
+    const resources = this.resources();
+    if (!data) {
+      return [];
+    }
+    // Ring order must match the colour order handed to the series.
+    return (['ppc', 'banners', 'email', 'thirdParty'] as const).map(model => ({
+      label: resources[AD_MODEL_LABELS[model]].value,
+      value: data.end[model],
+      prev: data.start[model]
+    }));
+  });
+
+  /** Two graphs per channel: the previous period, then the current one. */
+  public readonly bulletGraphs = computed<IBulletGraph[]>(() => {
+    const data = this.service.summary();
+    if (!data) {
+      return [];
+    }
+    return AD_MODELS.flatMap(model => PERIODS.map(period => this.toBulletGraph(data, model, period)));
+  });
+
+  private chartInitialised = false;
+
+  constructor() {
+    effect(() => {
+      const chart = this.chart();
+      const data = this.doughnutData();
+      if (!chart || data.length === 0) {
+        return;
       }
 
+      if (!this.chartInitialised) {
+        this.renderDoughnutChart(chart);
+        this.chartInitialised = true;
+        return;
+      }
 
-    this.formatter = (context) => {
-      if (!context.item.showLabel) { return ''; }
-      return Math.round(context.percentValue) + '%';
-    };
-  }
-
-  @ViewChild(IgxDoughnutChartComponent, {static: true})
-  chart: IgxDoughnutChartComponent;
-
-  @ViewChild('legend', {static: true})
-  legend: TemplateRef<any>;
-
-  public adModels = ['ppc', 'email', 'banners', 'thirdParty'];
-  public init = true;
-  ngOnInit() {
-
-    this.localeService.languageLocalizer.subscribe( resources => {
-      this.resources = resources;
-    });
-
-    this.chart.sliceClick.subscribe( event => {
-      event.args.i.dataContext.showLabel = event.args.i.slice.isSelected;
-      this.chart.series.toArray().forEach(s => {
-        s.formatLabel = this.formatter;
-      });
-    });
-
-    this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.trendItem = generateTrendItem('conversions', data, 'Conversions');
-      this.doughnutData = [
-        { label: this.resources['PPC'].value, value: data.end.ppc , prev: data.start.ppc},
-        { label: this.resources['Banners'].value, value: data.end.banners, prev: data.start.banners },
-        { label: this.resources['Email'].value, value: data.end.email, prev: data.start.email },
-        { label: this.resources['Third_Party'].value, value: data.end.thirdParty, prev: data.start.thirdParty }
-      ];
-      if (this.init) {
-          this.renderDoughnutChart(this.chart, this.doughnutChartColors);
-          this.renderBulletGraphs(data, this.doughnutChartColors);
-          this.init = false;
-        } else {
-          this.setData(data);
-        }
-
+      // `doughnutData` is a fresh array on every fetch, so the rings have to be
+      // re-pointed at it - the original code left them on the first snapshot.
+      for (const series of chart.series.toArray()) {
+        series.dataSource = data;
+      }
     });
   }
 
-  public renderDoughnutChart(chart: IgxDoughnutChartComponent, doughnutColors: IDoughnutColors) {
-      chart.width = '120%';
-      chart.height = '500px';
-      chart.innerExtent = 20;
-      chart.allowSliceSelection = true;
-      chart.selectedSliceStrokeThickness = 7;
-      const colors = [];
-      const fadedColors = [];
-
-      Object.keys(doughnutColors).forEach(key => {
-        colors.push(doughnutColors[key].end.value);
-        fadedColors.push(doughnutColors[key].start.value);
-      });
-
-      this.generateSeries('End', this.doughnutData, colors, fadedColors).forEach(s => {
-        chart.series.add(s);
-      });
+  public graphsFor(model: AdModel): IBulletGraph[] {
+    return this.bulletGraphs().filter(graph => graph.adModel === model);
   }
 
- public getbulletGraphModels(model) {
-    return this.bulletGraphs.filter(g => {
-      return g.adModel === model;
-    });
-  }
-
-  public generateSeries(name: string, data: IDoughnutDataRecord[], colors: string[], fadedColors: string[]) {
-    const series = [];
-
-    for (let index = 0; index < 2; index++) {
-      const ringSeries = new IgxRingSeriesComponent();
-      if (index === 0 ) {
-        ringSeries.i.name = `${name}2`;
-        ringSeries.brushes = fadedColors;
-        ringSeries.outlines = fadedColors;
-        ringSeries.valueMemberPath = 'prev';
-        ringSeries.radiusFactor = 0.8;
-
-      } else {
-        ringSeries.i.name = name;
-        ringSeries.brushes = colors;
-        ringSeries.outlines = colors;
-        ringSeries.valueMemberPath = 'value';
-        ringSeries.legend = this.legend;
-      }
-
-      ringSeries.labelsPosition = LabelsPosition.Center;
-      ringSeries.dataSource = data;
-      ringSeries.startAngle = -90;
-      ringSeries.labelMemberPath = 'label';
-      ringSeries.formatLabel = this.formatter;
-
-      series.push(ringSeries);
+  public onSliceClick(event: { args: IgxSliceClickEventArgs }): void {
+    const chart = this.chart();
+    if (!chart) {
+      return;
     }
-
-    return series;
-  }
-
-  public renderBulletGraphs(data: IRangeData, colors: IDoughnutColors) {
-    const periods = ['start', 'end'];
-
-    let graphIndex = 0;
-    for (let index = 0; index < this.adModels.length; index++) {
-      for (let i = 0; i < periods.length; i++) {
-         this.bulletGraphs[graphIndex].adModel = this.adModels[index];
-         this.bulletGraphs[graphIndex].value = data[periods[i]][this.adModels[index]];
-         this.bulletGraphs[graphIndex].maximumValue = data[periods[i]].conversions;
-         this.bulletGraphs[graphIndex].valueBrush = colors[this.adModels[index]][periods[i]].value;
-         this.bulletGraphs[graphIndex].bkgBrush = colors[this.adModels[index]][periods[i]].bkg;
-         this.bulletGraphs[graphIndex].labelBrush =  colors[this.adModels[index]][periods[i]].label;
-         this.bulletGraphs[graphIndex].target = data[periods[i]][`${this.adModels[index]}Target`];
-
-         graphIndex++;
-      }
+    const context = event.args.dataContext as IDoughnutDataRecord | undefined;
+    if (context) {
+      context.showLabel = event.args.isSelected;
+    }
+    // Reassigning the formatter is what forces the labels to re-render.
+    for (const series of chart.series.toArray()) {
+      series.formatLabel = this.formatSliceLabel;
     }
   }
 
-  public setData(data) {
-      const periods = ['start', 'end'];
-
-      let graphIndex = 0;
-      for (let index = 0; index < this.adModels.length; index++) {
-        for (let i = 0; i < periods.length; i++) {
-           this.bulletGraphs[graphIndex].value = data[periods[i]][this.adModels[index]];
-           this.bulletGraphs[graphIndex].maximumValue = data[periods[i]].conversions;
-           this.bulletGraphs[graphIndex].target = data[periods[i]][`${this.adModels[index]}Target`];
-           graphIndex++;
-        }
-    }
+  public getMaxValue(value: IBulletGraph['maximumValue']): number {
+    return value ? convertToInt(value) : 0;
   }
 
-  public getMaxValue(value): number {
-    if (value) {
-      return convertToInt(value);
-    }
-    return 0;
-  }
-
-  public formatLabel( args: FormatLinearGraphLabelEventArgs, graphModel: IBulletGraph) {
-    args.label = ` ${args.label}`;
+  public formatLabel(args: IgxFormatLinearGraphLabelEventArgs, graph: IBulletGraph): void {
+    const value = convertToInt(graph.value);
     if (args.value === 0) {
-        if (graphModel.value >= 1000) {
-          args.label = `${(graphModel.value / 1000).toFixed(1)}K`;
-        } else {
-          args.label = `${(graphModel.value / 1000)}`;
-        }
-    } else {
-      args.label = `${Math.round((graphModel.value / args.value * 2) * 100)}%`;
+      args.label = value >= 1000 ? `${(value / 1000).toFixed(1)}K` : `${value / 1000}`;
+      return;
     }
+    args.label = `${Math.round(((value / args.value) * 2) * 100)}%`;
   }
 
-  public alignLabel( args: AlignLinearGraphLabelEventArgs) {
+  public alignLabel(args: IgxAlignLinearGraphLabelEventArgs): void {
     args.height = 0;
-    if (args.value === 0) {
-      args.offsetX += 25;
-    } else {
-      args.offsetX -= 25;
+    args.offsetX += args.value === 0 ? 25 : -25;
+  }
+
+  private toBulletGraph(data: IRangeData, model: AdModel, period: Period): IBulletGraph {
+    const periodData = data[period];
+    const colors = DOUGHNUT_COLORS[model][period];
+    return {
+      adModel: model,
+      value: periodData[model],
+      maximumValue: periodData.conversions,
+      target: periodData[targetField(model)] as IBulletGraph['target'],
+      valueBrush: colors.value,
+      bkgBrush: colors.bkg,
+      labelBrush: colors.label
+    };
+  }
+
+  private renderDoughnutChart(chart: IgxDoughnutChartComponent): void {
+    chart.width = '120%';
+    chart.height = '500px';
+    chart.innerExtent = 20;
+    chart.allowSliceSelection = true;
+    chart.selectedSliceStrokeThickness = 7;
+
+    const colors = AD_MODELS.map(model => DOUGHNUT_COLORS[model].end.value);
+    const fadedColors = AD_MODELS.map(model => DOUGHNUT_COLORS[model].start.value);
+
+    for (const series of this.generateSeries(colors, fadedColors)) {
+      chart.series.add(series);
     }
   }
+
+  /** Inner ring plots the previous period, outer ring the current one. */
+  private generateSeries(colors: string[], fadedColors: string[]): IgxRingSeriesComponent[] {
+    return [false, true].map(isCurrent => {
+      const series = new IgxRingSeriesComponent();
+
+      if (isCurrent) {
+        series.brushes = colors;
+        series.outlines = colors;
+        series.valueMemberPath = 'value';
+        series.legend = this.legend();
+      } else {
+        series.brushes = fadedColors;
+        series.outlines = fadedColors;
+        series.valueMemberPath = 'prev';
+        series.radiusFactor = 0.8;
+      }
+
+      series.labelsPosition = LabelsPosition.Center;
+      series.dataSource = this.doughnutData();
+      series.startAngle = -90;
+      series.labelMemberPath = 'label';
+      series.formatLabel = this.formatSliceLabel;
+
+      return series;
+    });
+  }
+
+  /** Bound as a callback, so it must not close over `this`. */
+  private readonly formatSliceLabel = (context: {
+    item: IDoughnutDataRecord;
+    percentValue: number;
+  }): string => (context.item.showLabel ? `${Math.round(context.percentValue)}%` : '');
 }

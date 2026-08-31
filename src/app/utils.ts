@@ -1,39 +1,22 @@
-import { IRange } from './models/range';
-import * as moment from 'moment';
-
+import { subtractDays } from './date-utils';
+import { IRange, Numeric } from './models/range';
 
 export function getDateRange(numberOfDays: number): IRange {
-
   const current = new Date();
 
-  const range = {
+  return {
     endRangeEnd: current,
-
-    endRangeBegin: moment(current).subtract(numberOfDays - 1 , 'days').toDate(),
-
-    startRangeBegin: moment(current).subtract((numberOfDays - 1) * 2 , 'days').toDate(),
-
-    startRangeEnd: moment(current).subtract(numberOfDays - 1, 'days').toDate()
+    endRangeBegin: subtractDays(current, numberOfDays - 1),
+    startRangeBegin: subtractDays(current, (numberOfDays - 1) * 2),
+    startRangeEnd: subtractDays(current, numberOfDays - 1)
   };
-
-  return range;
 }
 
-export function convertToInt(numStr: string) {
-  return parseInt(numStr.replace(/,/g, ''));
-}
-
-export function setTitle(title: string): string {
-  let res = '';
-  const upperCaseChars = title.match(/[A-Z]{1,}/g);
-  for (let index = 0; index < upperCaseChars.length; index++) {
-    if (!(index === upperCaseChars.length - 1)) {
-      res += title.substring(title.indexOf(upperCaseChars[index]),
-        title.indexOf(upperCaseChars[index + 1])) + ' ';
-    } else {
-      res += title.substring(0, title.indexOf(upperCaseChars[index])) + ' ';
-      res += title.substring(title.indexOf(upperCaseChars[index]));
-    }
+/** Normalises a formatted count ("12,345") or a raw number to an integer. */
+export function convertToInt(value: Numeric): number {
+  if (typeof value === 'number') {
+    return value;
   }
-  return res;
+  const parsed = parseInt(value.replace(/,/g, ''), 10);
+  return Number.isNaN(parsed) ? 0 : parsed;
 }

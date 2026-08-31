@@ -1,4 +1,4 @@
-@import "../../var";
+@use "../../var" as *;
 :host ::ng-deep{
   .md-button-group {
     transform: scale(.8);
@@ -62,11 +62,16 @@
 }
 ::ng-deep{
   .ui-chart-pointer-tooltip-content-container {
-
     .ig-tooltip-container {
+      // IgxTooltipContainerComponent sets its own `color: rgba(34,34,34,.8)`
+      // here, which beats the inherited #fff below - so the text colour has to
+      // be restated alongside the background.
       .ig-tooltip-container-background {
         background-color: #453f4e;
+        color: #fff;
         padding: 0;
+        // The outer container already draws a 2px white border.
+        border-width: 0;
       }
     }
   }

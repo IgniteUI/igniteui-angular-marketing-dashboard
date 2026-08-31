@@ -1,61 +1,67 @@
 <div class="stats-container">
   <div class="trends-container">
-      <app-trend-item *ngFor="let item of trendItems"
-                        [direction]="item.direction"
-                        [directionColor]="item.directionColor"
-                        [percent]="item.percent"
-                        [name]="resources[item.labelP].value"
-                        [end]="item.end"
-                        [start]="item.start"
-                        [endRes]="item.endRes"
-                        [prevString]="resources['Start'].value"
-                        [currentString]="resources['End'].value">
+    @for (item of trendItems(); track item.name) {
+      <app-trend-item
+        [direction]="item.direction"
+        [directionColor]="item.directionColor"
+        [percent]="item.percent"
+        [name]="resources()[item.labelP].value"
+        [end]="item.end"
+        [start]="item.start"
+        [endRes]="item.endRes"
+        [prevString]="resources().Start.value"
+        [currentString]="resources().End.value">
       </app-trend-item>
+    }
   </div>
   <div class="keywords-container">
     <igx-list>
-      <igx-list-item isHeader>{{resources['Top_Unbranded_Keywords'].value}}</igx-list-item>
-      <igx-list-item *ngFor="let word of endKeywords; let i = index" [ngClass]="{'last': i === endKeywords.length - 1}">
-        <div igxListLine class=".end" style="font-weight: bold">{{i + 1}}. {{word | uppercase}}</div>
-        <div igxListLine class=".start" style="font-weight: bold; color: #969595">{{i + 1}}. {{startKeywords[i]  | uppercase}}</div>
-      </igx-list-item>
+      <igx-list-item [isHeader]="true">{{ resources().Top_Unbranded_Keywords.value }}</igx-list-item>
+      @for (word of keywords(); track $index; let last = $last) {
+        <igx-list-item [class.last]="last">
+          <div igxListLine class="keyword-current">{{ $index + 1 }}. {{ word.end | uppercase }}</div>
+          <div igxListLine class="keyword-previous">{{ $index + 1 }}. {{ word.start | uppercase }}</div>
+        </igx-list-item>
+      }
     </igx-list>
   </div>
   <div class="dialog-info">
-      <div class="dialog-icon">
-        <button igxButton="icon" (click)="dialog.open()"><igx-icon>help</igx-icon></button>
-      </div>
+    <div class="dialog-icon">
+      <button type="button" igxIconButton="flat" (click)="infoOpen.set(true)">
+        <igx-icon>help</igx-icon>
+      </button>
+    </div>
   </div>
 
-  <igx-dialog #dialog>
-      <div class="md-dialog-overflow">
-        <igx-card class="md-dialog">
-          <igx-card-header>
-            <h1 igxCardHeaderTitle>
-              {{resources['Welcome_message'].value}}
-            </h1>
-            <h2 igxCardHeaderSubtitle>
-              {{resources['Alert_info'].value}}
-            </h2>
-          </igx-card-header>
+  <igx-dialog [(isOpen)]="infoOpen">
+    <div class="md-dialog-overflow">
+      <igx-card class="md-dialog">
+        <igx-card-header>
+          <h1 igxCardHeaderTitle>
+            {{ resources().Welcome_message.value }}
+          </h1>
+          <h2 igxCardHeaderSubtitle>
+            {{ resources().Alert_info.value }}
+          </h2>
+        </igx-card-header>
 
-          <igx-card-content>
-            <span>{{resources['Alert_Text_Title_Data'].value}}</span>
-            <p>
-              {{resources['Alert_Paragraph_Data'].value}}
-            </p>
-            <span>{{resources['Alert_Text_Title_BarChart'].value}}</span>
-            <p>
-              <img src="{{resources['Chart_PNG'].value}}">
-              {{resources['Alert_Paragraph_BarChart'].value}}
-            </p>
-          </igx-card-content>
-          <igx-card-actions [reverse]="true">
-            <button igxButton="raised" (click)="dialog.close()">got it!</button>
-          </igx-card-actions>
-        </igx-card>
-      </div>
+        <igx-card-content>
+          <span>{{ resources().Alert_Text_Title_Data.value }}</span>
+          <p>
+            {{ resources().Alert_Paragraph_Data.value }}
+          </p>
+          <span>{{ resources().Alert_Text_Title_BarChart.value }}</span>
+          <p>
+            <img [src]="resources().Chart_PNG.value" alt="">
+            {{ resources().Alert_Paragraph_BarChart.value }}
+          </p>
+        </igx-card-content>
+        <igx-card-actions>
+          <button type="button" igxEnd igxButton="contained" (click)="infoOpen.set(false)">
+            got it!
+          </button>
+        </igx-card-actions>
+      </igx-card>
+    </div>
   </igx-dialog>
 </div>
-
-

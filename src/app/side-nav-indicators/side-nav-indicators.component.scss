@@ -1,4 +1,4 @@
-@import "../../var";
+@use "../../var" as *;
 
 .list-container {
   display: flex;
@@ -73,6 +73,15 @@
   .igx-icon {
     color: #666
   }
+}
+
+.keyword-current {
+  font-weight: bold;
+}
+
+.keyword-previous {
+  font-weight: bold;
+  color: #969595;
 }
 
 .md-dialog-overflow {
