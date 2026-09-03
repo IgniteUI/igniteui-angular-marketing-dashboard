@@ -1,4 +1,9 @@
 export const environment = {
   production: true,
-  endApi: 'https://localhost:44351/api/summary'
+
+  useMockData: false,
+
+  // Relative, so staging never calls production's API. Resolves against
+  // <base href>, which the deploy emits with a trailing slash.
+  endApi: '../marketing-dashboard-api/api/summary'
 };

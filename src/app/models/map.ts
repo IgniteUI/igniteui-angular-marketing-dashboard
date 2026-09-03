@@ -1,4 +1,3 @@
-import { IRangeData } from './range';
 import { MarkerType } from 'igniteui-angular-charts';
 
 export interface IGeographicShapeSeries {
@@ -7,7 +6,7 @@ export interface IGeographicShapeSeries {
   databaseSource: string;
   brush: string;
   outline: string;
- }
+}
 
 export interface IGeographicProportionalSymbolSeries {
   name: string;
@@ -17,8 +16,4 @@ export interface IGeographicProportionalSymbolSeries {
   radiusMemberPath: string;
   markerOutline: string;
   markerBrush: string;
- }
-
-export interface IMapData extends IRangeData {
-  mapCurrent: any;
 }

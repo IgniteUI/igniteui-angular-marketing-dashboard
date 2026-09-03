@@ -1,86 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { DataService } from '../data.service';
-import { IRangeData } from '../models/range';
-import { generateTrendItem, ITrendItem } from '../models/trend-item';
-import { LocalizationService } from '../localization.service';
+import { LocalizationService, ResourceKey } from '../localization.service';
+import { TrendField } from '../models/range';
+import { ITrendItem, generateTrendItem } from '../models/trend-item';
+import { convertToInt } from '../utils';
+import { TrendItemComponent } from '../trend-item/trend-item.component';
 
-class TrendIndicator {
-  sessions: any;
-  conversions: any;
-  spend: any;
-  conversionCosts: any;
-  constructor() {
-    this.sessions = undefined;
-    this.conversions = undefined;
-    this.spend = undefined;
-    this.conversionCosts = undefined;
-  }
+type TrendStatus = 'positive' | 'neutral' | 'negative';
+
+interface ITrendDescriptor {
+  valueP: TrendField;
+  labelP: ResourceKey;
+  /** Costs invert the styling: going up is bad news. */
+  invert?: boolean;
 }
+
+const TREND_ITEMS: readonly ITrendDescriptor[] = [
+  { valueP: 'sessions', labelP: 'Sessions' },
+  { valueP: 'conversions', labelP: 'Conversions' },
+  { valueP: 'spend', labelP: 'Spend', invert: true },
+  { valueP: 'conversionCosts', labelP: 'Conversion_Costs', invert: true }
+];
 
 @Component({
   selector: 'app-current-trend',
   templateUrl: './current-trend.component.html',
-  styleUrls: ['./current-trend.component.scss']
+  styleUrl: './current-trend.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [UpperCasePipe, IgxIconComponent, TrendItemComponent]
 })
-export class CurrentTrendComponent implements OnInit {
+export class CurrentTrendComponent {
+  private readonly service = inject(DataService);
 
-  status: string;
-  public trendItems: ITrendItem[] = [];
-  public trendItemData = [];
-  public resources;
-  constructor(private service: DataService, private localeService: LocalizationService) {
-    this.resources = this.localeService.getLocale();
+  public readonly resources = inject(LocalizationService).resources;
 
-    this.trendItemData = [
-        {valueP: 'sessions', labelP: 'Sessions'},
-        {valueP: 'conversions', labelP: 'Conversions'},
-        {valueP: 'spend',  labelP: 'Spend'},
-        {valueP:  'conversionCosts',  labelP: 'Conversion_Costs'}];
-
-  }
-  public trendIndicators = [
-    { period: 'start', indicator: new TrendIndicator() },
-    { period: 'end', indicator: new TrendIndicator() }];
-
-  ngOnInit() {
-    this.localeService.languageLocalizer.subscribe(resources => {
-      this.resources = resources;
-    });
-
-    this.service.onDataFetch.subscribe((data: IRangeData) => {
-      this.trendItems = [];
-      this.initTrendIndicators(data);
-      this.trendItemData.forEach(item => {
-        if (item.valueP === 'spend' || item.valueP === 'conversionCosts') {
-          this.trendItems.push(generateTrendItem(item.valueP, data, item.labelP, true));
-        } else {
-          this.trendItems.push(generateTrendItem(item.valueP, data, item.labelP));
-        }
-      });
-      this.setStatus();
-    });
-  }
-
-  private setStatus(): void {
-    const previous = this.trendIndicators[0].indicator;
-    const current = this.trendIndicators[1].indicator;
-
-    if (current.conversions > previous.conversions &&
-      current.conversionCosts < previous.conversionCosts) {
-      this.status = 'positive';
-    } else if (current.conversions === previous.conversions &&
-      current.conversionCosts === previous.conversionCosts) {
-      this.status = 'neutral';
-    } else {
-      this.status = 'negative';
+  public readonly trendItems = computed<ITrendItem[]>(() => {
+    const data = this.service.summary();
+    if (!data) {
+      return [];
     }
-  }
+    return TREND_ITEMS.map(item => generateTrendItem(item.valueP, data, item.labelP, item.invert));
+  });
 
-  private initTrendIndicators(data: IRangeData) {
-    this.trendIndicators.forEach(item => {
-      Object.keys(item.indicator).forEach(key => {
-        item.indicator[key] = parseInt(data[item.period][key].replace(/,/g, ''));
-      });
-    });
-  }
+  public readonly status = computed<TrendStatus>(() => {
+    const data = this.service.summary();
+    if (!data) {
+      return 'neutral';
+    }
+
+    const previousConversions = convertToInt(data.start.conversions);
+    const currentConversions = convertToInt(data.end.conversions);
+    const previousCosts = convertToInt(data.start.conversionCosts);
+    const currentCosts = convertToInt(data.end.conversionCosts);
+
+    if (currentConversions > previousConversions && currentCosts < previousCosts) {
+      return 'positive';
+    }
+    if (currentConversions === previousConversions && currentCosts === previousCosts) {
+      return 'neutral';
+    }
+    return 'negative';
+  });
+
+  public readonly statusIcon = computed(() => {
+    switch (this.status()) {
+      case 'positive':
+        return 'sentiment_very_satisfied';
+      case 'negative':
+        return 'sentiment_very_dissatisfied';
+      default:
+        return 'sentiment_neutral';
+    }
+  });
 }

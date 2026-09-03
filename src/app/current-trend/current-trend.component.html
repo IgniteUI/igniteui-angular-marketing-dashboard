@@ -1,26 +1,27 @@
 <div class="md-trend-container">
   <div class="md-trend-container__inner">
     <div class="image-container">
-      <igx-icon>
-        sentiment_{{status==='neutral' ? 'neutral' : status==='negative' ? 'very_dissatisfied' : 'very_satisfied'}}
-      </igx-icon>
+      <igx-icon>{{ statusIcon() }}</igx-icon>
       <div>
-        <span>{{ resources['Current'].value | uppercase}}</span>
-        <span>{{ resources['Trend'].value | uppercase}}</span>
+        <span>{{ resources().Current.value | uppercase }}</span>
+        <span>{{ resources().Trend.value | uppercase }}</span>
       </div>
     </div>
     <div class="trend-items">
-      <app-trend-item class="md-trend-item" *ngFor="let item of trendItems"
-        [direction]="item.direction"
-        [directionColor]="item.directionColor"
-        [percent]="item.percent"
-        [name]="resources[item.labelP].value"
-        [end]="item.end"
-        [start]="item.start"
-        [endRes]="item.endRes"
-        [prevString]="resources['Previous'].value"
-        [currentString]="resources['Current'].value">
-      </app-trend-item>
+      @for (item of trendItems(); track item.name) {
+        <app-trend-item
+          class="md-trend-item"
+          [direction]="item.direction"
+          [directionColor]="item.directionColor"
+          [percent]="item.percent"
+          [name]="resources()[item.labelP].value"
+          [end]="item.end"
+          [start]="item.start"
+          [endRes]="item.endRes"
+          [prevString]="resources().Previous.value"
+          [currentString]="resources().Current.value">
+        </app-trend-item>
+      }
     </div>
   </div>
 </div>

@@ -1,37 +1,20 @@
 import { IgxCategoryXAxisComponent } from 'igniteui-angular-charts';
+import { ResourceKey } from '../localization.service';
+import { ITrafficStat } from './range';
 
-// Series data struct
+/** Configuration for one dynamically created column series. */
 export interface IColumnSeriesData {
-  name: string;
+  name: ResourceKey;
   xAxis: IgxCategoryXAxisComponent;
   valueMemberPath: string;
   brush: string;
   outline: string;
-  dataSource?: any;
+  dataSource?: ITrafficStat[];
 }
 
+/** Configuration for one dynamically created area series. */
 export interface IAreaSeriesData {
-  name: string;
+  name: ResourceKey;
   valueMemberPath: string;
   color: string;
-}
-
-
-// Chart data struct
-export interface IColumnChartDataRecord {
-  title: any;
-  session: any;
-  conversion: any;
-}
-
-
-export interface IAreaChartDataRecord {
-  conversion: number;
-  direct: number;
-  email: number;
-  organic: number;
-  paid: number;
-  referral: number;
-  session: number;
-  title: string;
 }

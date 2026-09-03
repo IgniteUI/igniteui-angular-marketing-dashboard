@@ -108,7 +108,7 @@ export const RESOURCES ={
         "value": "START"
       },
       "Support_Text": {
-        "value": "<p class=\"lead\">This dashboard is unsupported on small devices.<\/p> Much data awaits you! Please switch to a larger screen to see the dashboard in all its glory."
+        "value": "<p class=\"lead\">This dashboard is unsupported on small devices.</p> Much data awaits you! Please switch to a larger screen to see the dashboard in all its glory."
       },
       "Target": {
         "value": "TARGET"

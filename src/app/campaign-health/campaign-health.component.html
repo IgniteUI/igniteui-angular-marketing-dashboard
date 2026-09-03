@@ -1,49 +1,66 @@
 <div class="md-data-filter">
-  <h5>{{resources['Campaign_Health'].value}}</h5>
+  <h5>{{ resources().Campaign_Health.value }}</h5>
 </div>
 
 <div class="doughnut-container">
-  <igx-doughnut-chart #doughnut></igx-doughnut-chart>
+  <igx-doughnut-chart #doughnut (sliceClick)="onSliceClick($event)"></igx-doughnut-chart>
   <div class="trend-container">
-    <app-trend-item [direction]="trendItem.direction"
-      [directionColor]="trendItem.directionColor"
-      [percent]="trendItem.percent"
-      [name]="resources[trendItem.labelP].value"
-      [end]="trendItem.end"
-      [start]="trendItem.start"
-      [endRes]="trendItem.endRes"
-      [prevString]="resources['Previous'].value"
-      [currentString]="resources['Current'].value">
-    </app-trend-item>
+    @if (trendItem(); as item) {
+      <app-trend-item
+        [direction]="item.direction"
+        [directionColor]="item.directionColor"
+        [percent]="item.percent"
+        [name]="resources()[item.labelP].value"
+        [end]="item.end"
+        [start]="item.start"
+        [endRes]="item.endRes"
+        [prevString]="resources().Previous.value"
+        [currentString]="resources().Current.value">
+      </app-trend-item>
+    }
     <igx-item-legend class="legend" #legend></igx-item-legend>
   </div>
 </div>
 
 <div class="labels">
-  <div id="conversions-label">{{resources['Conversions'].value | uppercase}}</div>
-  <div id="target-label">{{resources['Target'].value}}</div>
+  <div id="conversions-label">{{ resources().Conversions.value | uppercase }}</div>
+  <div id="target-label">{{ resources().Target.value }}</div>
 </div>
 
 <div class="graphs-container">
-  <div *ngFor= "let model of adModels" class= "graph-container">
-      <igx-bullet-graph *ngFor="let graph of getbulletGraphModels(model); let i = index"
-        class="{{ i=== 0 ? model : ''}}"
-        height="40px"
-        width="100%"
-        [minimumValue]="0"
-        [maximumValue]="getMaxValue(graph.maximumValue)"
-        backingBrush="transparent"
-        backingOutline = "transparent"
-        [interval]="getMaxValue(graph.maximumValue)"
-        transitionDuration = "800"
-        labelExtent = "0.4"
-        font = "bold 14px Helvetica, Arial, sans-serif"
-        [fontBrush]="graph.labelBrush"
-        [targetValue]="graph.target"
-        (formatLabel)="formatLabel($event.args, graph)"
-        (alignLabel)="alignLabel($event.args)">
-        <igx-linear-graph-range name="value" [startValue]="0" [endValue]="graph.value" [brush]="graph.valueBrush"></igx-linear-graph-range>
-        <igx-linear-graph-range name="remaining" [startValue]="graph.value" [endValue]="getMaxValue(graph.maximumValue)" [brush]="graph.bkgBrush"></igx-linear-graph-range>
-      </igx-bullet-graph>
-  </div>
+  @for (model of adModels; track model) {
+    <div class="graph-container">
+      @for (graph of graphsFor(model); track $index) {
+        <igx-bullet-graph
+          [class]="$first ? model : ''"
+          height="40px"
+          width="100%"
+          [minimumValue]="0"
+          [maximumValue]="getMaxValue(graph.maximumValue)"
+          backingBrush="transparent"
+          backingOutline="transparent"
+          [interval]="getMaxValue(graph.maximumValue)"
+          [transitionDuration]="800"
+          [labelExtent]="0.4"
+          font="bold 14px Helvetica, Arial, sans-serif"
+          [fontBrush]="graph.labelBrush"
+          [targetValue]="getMaxValue(graph.target)"
+          (formatLabel)="formatLabel($event.args, graph)"
+          (alignLabel)="alignLabel($event.args)">
+          <igx-linear-graph-range
+            name="value"
+            [startValue]="0"
+            [endValue]="getMaxValue(graph.value)"
+            [brush]="graph.valueBrush">
+          </igx-linear-graph-range>
+          <igx-linear-graph-range
+            name="remaining"
+            [startValue]="getMaxValue(graph.value)"
+            [endValue]="getMaxValue(graph.maximumValue)"
+            [brush]="graph.bkgBrush">
+          </igx-linear-graph-range>
+        </igx-bullet-graph>
+      }
+    </div>
+  }
 </div>

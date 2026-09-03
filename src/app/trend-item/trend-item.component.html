@@ -1,21 +1,23 @@
 <article class="card-wrapper">
   <igx-card>
     <igx-card-content>
-      <strong>{{name | uppercase}}</strong>
-      <div class="md-trend-value {{directionColor}}">
-        <igx-icon *ngIf="direction">trending_{{direction}}</igx-icon>
+      <strong>{{ name() | uppercase }}</strong>
+      <div class="md-trend-value {{ directionColor() }}">
+        @if (direction()) {
+          <igx-icon>trending_{{ direction() }}</igx-icon>
+        }
         <div class="percent-container">
-          <span class="{{directionColor}}">{{percent}}</span>
-          <span class="{{directionColor}}">%</span>
+          <span class="{{ directionColor() }}">{{ percent() }}</span>
+          <span class="{{ directionColor() }}">%</span>
         </div>
       </div>
       <div class="data-container">
         <div class="start-end-container">
           <div class="start-container">
-            <span>{{start}} {{prevString}}</span>
+            <span>{{ start() }} {{ prevString() }}</span>
           </div>
-          <div class="end-container {{endRes}}">
-            <span>{{end}} {{currentString}}</span>
+          <div class="end-container {{ endRes() }}">
+            <span>{{ end() }} {{ currentString() }}</span>
           </div>
         </div>
       </div>

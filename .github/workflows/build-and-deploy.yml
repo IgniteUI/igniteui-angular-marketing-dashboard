@@ -1,0 +1,60 @@
+name: Build and Deploy App
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build -- --configuration production --base-href /angular-sample-apps/marketing-dashboard/
+
+      - name: Copy IIS configuration
+        run: cp web.config dist/marketing-dashboard/web.config
+
+      - name: Upload deployment artifact
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: marketing-dashboard-artifact
+          path: dist/marketing-dashboard
+
+      - name: Trigger staging deployment
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          github-token: ${{ secrets.CLASSIC_PAT_GITHUB }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'IgniteUI',
+              repo: 'igniteui-actions',
+              event_type: 'marketing-dashboard-cd',
+              client_payload: {
+                calling_branch: context.ref,
+                repository: context.repo.owner + '/' + context.repo.repo,
+                run_id: context.runId
+              }
+            });

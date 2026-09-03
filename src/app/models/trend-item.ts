@@ -1,73 +1,61 @@
 import { convertToInt } from '../utils';
-import { IRangeData } from './range';
+import { ResourceKey } from '../localization.service';
+import { IRangeData, Numeric, TrendField } from './range';
+
+export type TrendDirection = 'up' | 'down' | 'flat';
 
 export interface ITrendItem {
   name: string;
-  end: string;
-  start: string;
+  end: Numeric;
+  start: Numeric;
   percent: number;
-  direction: string;
+  direction: TrendDirection;
   directionColor: string;
   endRes: string;
-  labelP: string;
+  labelP: ResourceKey;
 }
 
-export function generateTrendItem(inditicatorName: string, data: IRangeData, labelP: string, invertStyleRule?: boolean): ITrendItem {
-  const endString = data.end[inditicatorName];
-  const end = convertToInt(endString);
-  const startString = data.start[inditicatorName];
-  const start = convertToInt(startString);
+/** @param invertStyleRule for cost-like metrics, where a rise is bad news. */
+export function generateTrendItem(
+  indicatorName: TrendField,
+  data: IRangeData,
+  labelP: ResourceKey,
+  invertStyleRule = false
+): ITrendItem {
+  const endValue = data.end[indicatorName];
+  const startValue = data.start[indicatorName];
+  const end = convertToInt(endValue);
+  const start = convertToInt(startValue);
   const change = end - start;
-  const isPositiveChange = change >= 0;
-  const dec = change / start;
-  const percent = Math.abs(Math.round(dec * 100));
+  const percent = start === 0 ? 0 : Math.abs(Math.round((change / start) * 100));
 
-
-  let direction = 'down';
-  let endRes = 'danger';
-
-  if (isPositiveChange) {
-    direction = 'up';
-    endRes = 'success';
-  }
+  let direction: TrendDirection = change >= 0 ? 'up' : 'down';
+  let endRes = change >= 0 ? 'success' : 'danger';
 
   if (percent === 0) {
     direction = 'flat';
     endRes = '';
   }
 
-
-  if (invertStyleRule) {
-    endRes = (endRes === 'success') ? 'danger' : 'success';
+  if (invertStyleRule && endRes) {
+    endRes = endRes === 'success' ? 'danger' : 'success';
   }
 
-  let directionColor = 'success';
+  let directionColor = '';
   if (direction === 'up') {
-    directionColor = 'success';
+    directionColor = invertStyleRule ? 'danger' : 'success';
   } else if (direction === 'down') {
-    directionColor = 'danger';
-  } else {
-    directionColor = '';
-  }
-
-  if (invertStyleRule) {
-    if (direction === 'up') {
-      directionColor = 'danger';
-    } else if (direction === 'down') {
-      directionColor = 'success';
-    } else {
-      directionColor = '';
-    }
+    directionColor = invertStyleRule ? 'success' : 'danger';
   }
 
   return {
-    name: inditicatorName,
-    end: endString,
-    start: startString,
-    percent: percent,
-    direction: direction,
-    directionColor: directionColor,
-    endRes: endRes,
-    labelP: labelP
+    name: indicatorName,
+    end: endValue,
+    start: startValue,
+    percent,
+    direction,
+    directionColor,
+    endRes,
+    labelP
   };
 }

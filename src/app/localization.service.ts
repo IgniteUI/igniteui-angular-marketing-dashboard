@@ -1,35 +1,50 @@
-import { Injectable } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeJa from '@angular/common/locales/ja';
+import { Injectable, computed, signal } from '@angular/core';
 import { RESOURCES } from './i18n/locale-en';
 import { JA_RESOURCES } from './i18n/locale-ja';
-import { Subject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+// Angular ships locale data only for 'en'; an unregistered locale makes
+// IgxCalendar's locale setter throw. Here rather than main.ts so tests get it.
+registerLocaleData(localeJa, 'ja');
+
+export type Locale = 'en' | 'ja';
+
+/** The shape of a resource bundle, derived from the English one. */
+export type Resources = typeof RESOURCES;
+export type ResourceKey = keyof Resources;
+
+/** Compile-time guarantee that the Japanese bundle covers every English key. */
+const BUNDLES: Record<Locale, Resources> = {
+  en: RESOURCES,
+  ja: JA_RESOURCES
+};
+
+const STORAGE_KEY = 'locale';
+
+const isLocale = (value: string | null): value is Locale => value === 'en' || value === 'ja';
+
+@Injectable({ providedIn: 'root' })
 export class LocalizationService {
+  private readonly _locale = signal<Locale>(this.readStoredLocale());
 
-  public currentVersion = '';
+  /** The active locale. */
+  public readonly locale = this._locale.asReadonly();
 
-  constructor() {
-    this.currentVersion = window.localStorage.getItem('locale');
+  /** The resource bundle for the active locale. Templates read this directly. */
+  public readonly resources = computed<Resources>(() => BUNDLES[this._locale()]);
+
+  public setLocale(locale: Locale): void {
+    window.localStorage.setItem(STORAGE_KEY, locale);
+    this._locale.set(locale);
   }
 
-  public languageLocalizer: Subject<any> = new Subject();
-  public setLocale(version: string) {
-    if (version === 'en') {
-     this.languageLocalizer.next(RESOURCES);
-     this.currentVersion = 'en';
-    } else {
-      this.languageLocalizer.next(JA_RESOURCES);
-      this.currentVersion = 'ja';
+  private readStoredLocale(): Locale {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (isLocale(stored)) {
+      return stored;
     }
-  }
-
-  public getLocale() {
-    if (this.currentVersion === 'en') {
-      return RESOURCES;
-    } else {
-      return JA_RESOURCES;
-    }
+    window.localStorage.setItem(STORAGE_KEY, 'en');
+    return 'en';
   }
 }
