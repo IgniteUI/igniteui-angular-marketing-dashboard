@@ -3,12 +3,8 @@ import { TypeRegistrar } from 'igniteui-angular-core';
 import { appConfig } from './app.config';
 
 /**
- * The chart packages register internal types in a global TypeRegistrar, and
- * that registration lives in their NgModules - never in the standalone
- * components. Importing only the components builds and type-checks fine, then
- * fails at runtime the first time a series resolves one of these types
- * (`TypeRegistrar.get(...)` returns null). Guard the registrations the
- * dashboard actually depends on.
+ * These registrations live in the chart packages' NgModules, not the standalone
+ * components - so the app builds fine and fails at runtime without them.
  */
 describe('appConfig chart type registrations', () => {
   const REQUIRED: Record<string, string> = {

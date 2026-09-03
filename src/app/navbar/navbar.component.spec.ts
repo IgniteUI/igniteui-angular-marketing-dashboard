@@ -3,13 +3,20 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { getLocaleFirstDayOfWeek } from '@angular/common';
+import { MockSummaryDataSource } from '../data/mock-summary-data-source';
+import { SummaryDataSource } from '../data/summary-data-source';
 import { NavbarComponent } from './navbar.component';
 import { LocalizationService } from '../localization.service';
 
 async function renderNavbar(): Promise<ComponentFixture<NavbarComponent>> {
   await TestBed.configureTestingModule({
     imports: [NavbarComponent],
-    providers: [provideAnimations(), provideHttpClient(), provideHttpClientTesting()]
+    providers: [
+      { provide: SummaryDataSource, useClass: MockSummaryDataSource },
+      provideAnimations(),
+      provideHttpClient(),
+      provideHttpClientTesting()
+    ]
   }).compileComponents();
 
   const fixture = TestBed.createComponent(NavbarComponent);
@@ -34,11 +41,8 @@ describe('NavbarComponent', () => {
   });
 
   /**
-   * IgxCalendar's `locale` setter runs the value through Angular's locale data.
-   * Angular resolves 'en' from its built-in data but throws for anything else
-   * unless registered, and the setter turns that throw into an unguarded
-   * `undefined`, killing the whole change-detection pass. Guard the locales the
-   * language switcher can actually select.
+   * An unregistered locale makes IgxCalendar's setter throw, killing the whole
+   * change-detection pass. Guard every locale the switcher can select.
    */
   describe('calendar locales', () => {
     for (const locale of ['en', 'ja']) {

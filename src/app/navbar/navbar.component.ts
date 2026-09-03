@@ -81,11 +81,7 @@ export class NavbarComponent {
   private readonly localeService = inject(LocalizationService);
   private readonly injector = inject(Injector);
 
-  /**
-   * The only remaining view query. The button group reconciles selection
-   * imperatively - it sets classes through Renderer and reads `[selected]`
-   * on its buttons only at init - so its state cannot be driven by a binding.
-   */
+  /** Imperative by necessity: the group reads `[selected]` only at init. */
   private readonly buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
   public readonly resources = this.localeService.resources;
@@ -237,12 +233,8 @@ export class NavbarComponent {
     // Since 21.2 the attach target is part of OverlaySettings, not PositionSettings.
     dialog.open({ ...settings, target: event.target as HTMLElement });
 
-    // The overlay measures the content and positions it once, synchronously,
-    // inside open() - which happens before the calendar has re-rendered with
-    // the range applied by the `opening` handler. After that it only
-    // recalculates on window resize, which is why the dialog could land in the
-    // wrong place until the window was resized. Reposition once the DOM has
-    // actually settled.
+    // open() positions before the calendar re-renders, and only recalculates on
+    // window resize - so reposition once the DOM has settled.
     afterNextRender(() => dialog.toggleRef.reposition(), { injector: this.injector });
   }
 

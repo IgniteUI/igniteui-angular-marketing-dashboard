@@ -2,13 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { MockSummaryDataSource } from './data/mock-summary-data-source';
+import { SummaryDataSource } from './data/summary-data-source';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideAnimations(), provideHttpClient(), provideHttpClientTesting()]
+      providers: [
+      { provide: SummaryDataSource, useClass: MockSummaryDataSource },
+      provideAnimations(),
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
   });
 

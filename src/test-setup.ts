@@ -1,8 +1,4 @@
-/**
- * jsdom ships no canvas implementation, and the Ignite UI chart/map components
- * ask for a 2D context as soon as they render. Stub it so component tests that
- * merely instantiate a dashboard view do not drown in "Not implemented" noise.
- */
+/** jsdom has no canvas; the charts ask for a 2D context as soon as they render. */
 const noop = () => undefined;
 
 const context2d = new Proxy(

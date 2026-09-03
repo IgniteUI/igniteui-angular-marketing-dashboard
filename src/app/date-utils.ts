@@ -1,7 +1,6 @@
 /**
- * Calendar arithmetic in local time, replacing the handful of `moment` calls
- * the dashboard used. All of these preserve the time-of-day across DST, which
- * plain millisecond arithmetic does not.
+ * Local-time calendar arithmetic (replaces `moment`). Preserves time-of-day
+ * across DST, which plain millisecond maths does not.
  */
 
 const MS_PER_DAY = 86_400_000;
@@ -21,10 +20,7 @@ export function subtractDays(date: Date, days: number): Date {
   return addDays(date, -days);
 }
 
-/**
- * Steps back whole months, clamping the day to the target month's length so
- * that e.g. 31 March minus one month is 28 February rather than 3 March.
- */
+/** Clamps to the month's length: 31 Mar minus 1 month is 28 Feb, not 3 Mar. */
 export function subtractMonths(date: Date, months: number): Date {
   const day = date.getDate();
   const result = new Date(date.getTime());

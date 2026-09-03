@@ -1,10 +1,12 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection
+  provideBrowserGlobalErrorListeners
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { environment } from '../environments/environment';
+import { MockSummaryDataSource } from './data/mock-summary-data-source';
+import { HttpSummaryDataSource, SummaryDataSource } from './data/summary-data-source';
 import {
   provideIgxAreaSeries,
   provideIgxCategoryToolTipLayer,
@@ -23,18 +25,12 @@ import { provideIgxBulletGraph, provideIgxLinearGraphRange } from 'igniteui-angu
 import { provideIgxGeographicMap } from 'igniteui-angular-maps';
 
 /**
- * The chart/gauge/map packages register their internal types in a global
- * TypeRegistrar, and that registration lives in the NgModules - never in the
- * standalone components. Importing only the components compiles and renders
- * blank or throws at runtime (e.g. TypeRegistrar.get("LegendTemplates") is
- * null the moment a series resolves its legend template). These provideIgx*
- * functions are the standalone-app equivalent of the old NgModule imports;
- * each one composes everything its module used to bring in.
+ * The chart packages register internal types in a global TypeRegistrar, and
+ * that registration lives in their NgModules, not the standalone components.
+ * Without these the app builds but series fail at runtime on a null lookup.
  */
 const igniteUiChartProviders = [
-  // Chart and map tooltips: without this, SeriesViewer.createTooltip() returns
-  // null (it is guarded by TypeRegistrar.isRegistered, so it fails silently)
-  // and the app's .ig-tooltip-container styling never has anything to apply to.
+  // Chart/map tooltips; without it createTooltip() silently returns null.
   provideIgxTooltipContainerDynamic(),
 
   // Data chart: core, category axes, and the series created imperatively.
@@ -61,12 +57,16 @@ const igniteUiChartProviders = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    // Zoneless is already the default on Angular v21+; this call is a no-op that
-    // documents the intent and makes a re-introduced provideZoneChangeDetection() conflict.
-    provideZonelessChangeDetection(),
     // Ignite UI overlays/animations still go through AnimationBuilder.
     provideAnimations(),
     provideHttpClient(withFetch()),
+
+    // Dev generates data locally; prod/staging call the hosted endpoint.
+    {
+      provide: SummaryDataSource,
+      useClass: environment.useMockData ? MockSummaryDataSource : HttpSummaryDataSource
+    },
+
     ...igniteUiChartProviders
   ]
 };

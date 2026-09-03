@@ -79,11 +79,7 @@ export class SessionByRegionComponent implements AfterViewInit {
 
   public readonly inProgressMode = signal(false);
 
-  /**
-   * Playback position. Bound into the progress bar rather than assigned onto
-   * the component instance, so the interval tick still updates the UI with
-   * zone.js gone.
-   */
+  /** Bound into the progress bar, so the interval tick still updates the UI. */
   public readonly progress = signal(0);
 
   private intervalId: number | undefined;
@@ -91,9 +87,7 @@ export class SessionByRegionComponent implements AfterViewInit {
   constructor() {
     inject(DestroyRef).onDestroy(() => this.stopPlayback());
 
-    // Data only. Assigning `dataSource` before the series exist is safe: the
-    // map guards bindData() on having series, and any series attached later is
-    // handed the current dataSource as it is added.
+    // Safe before the series exist: series attached later get this dataSource.
     effect(() => {
       const map = this.map();
       const data = this.service.summary();
@@ -109,11 +103,8 @@ export class SessionByRegionComponent implements AfterViewInit {
   }
 
   /**
-   * Configure the map and attach its series here rather than from the data
-   * effect. The map builds its series adapter in its own ngAfterContentInit,
-   * and adding a series before that throws on a null `_seriesAdapter`. A
-   * parent's ngAfterViewInit is guaranteed to run after every child has
-   * finished initialising, so this cannot race.
+   * Not in the data effect: the map builds its series adapter in its own
+   * ngAfterContentInit, and adding a series before that throws.
    */
   public ngAfterViewInit(): void {
     const map = this.map();
@@ -144,10 +135,7 @@ export class SessionByRegionComponent implements AfterViewInit {
     this.applyLocations(stats[next].perLocation);
   }
 
-  /**
-   * The map is bound to the first snapshot's `perLocation` array, so playback
-   * mutates that array in place and notifies the map per item.
-   */
+  /** Playback mutates the bound array in place and notifies the map per item. */
   private applyLocations(source: ILocationStat[]): void {
     const map = this.map();
     const target = this.service.summary()?.end.trafficStats[0]?.perLocation;

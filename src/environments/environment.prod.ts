@@ -1,6 +1,9 @@
-// The deployed dashboard is served from the same origin as the API, so it can
-// address it directly without a proxy.
 export const environment = {
   production: true,
-  endApi: 'https://www.infragistics.com/angular-sample-apps/marketing-dashboard-api/api/summary'
+
+  useMockData: false,
+
+  // Relative, so staging never calls production's API. Resolves against
+  // <base href>, which the deploy emits with a trailing slash.
+  endApi: '../marketing-dashboard-api/api/summary'
 };

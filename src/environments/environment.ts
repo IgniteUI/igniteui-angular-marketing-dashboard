@@ -1,11 +1,11 @@
 // Replaced during a production build by environment.prod.ts
 // (see the `fileReplacements` entry in angular.json).
-//
-// A relative path so the request is same-origin and the dev server proxies it
-// to the hosted API (see proxy.conf.json). The API advertises CORS methods and
-// headers but never sends Access-Control-Allow-Origin, so a browser cannot call
-// it cross-origin directly.
 export const environment = {
   production: false,
+
+  // Generated locally, so the sample runs with no backend. Set false to hit the
+  // hosted endpoint instead; proxy.conf.json forwards the path below.
+  useMockData: true,
+
   endApi: '/api/summary'
 };

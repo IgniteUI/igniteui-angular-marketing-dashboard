@@ -4,14 +4,8 @@ import { Injectable, computed, signal } from '@angular/core';
 import { RESOURCES } from './i18n/locale-en';
 import { JA_RESOURCES } from './i18n/locale-ja';
 
-// Angular only resolves 'en' out of the box (core falls back to its built-in
-// localeEn); every other locale must be registered or findLocaleData throws.
-// IgxCalendar's locale setter calls verifyLocale(), which swallows that throw
-// and returns undefined, then immediately passes the undefined back into
-// getLocaleFirstDayOfWeek - so an unregistered locale surfaces as
-// "Cannot read properties of undefined (reading 'toLowerCase')" and aborts the
-// change-detection pass. Registered here, next to the bundles it belongs with,
-// so tests get it too.
+// Angular ships locale data only for 'en'; an unregistered locale makes
+// IgxCalendar's locale setter throw. Here rather than main.ts so tests get it.
 registerLocaleData(localeJa, 'ja');
 
 export type Locale = 'en' | 'ja';

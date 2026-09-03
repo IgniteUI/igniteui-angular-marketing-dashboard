@@ -2,10 +2,8 @@
 @use 'igniteui-angular/theming' as *;
 @use 'var' as *;
 
-// 22.1 puts component structural styles inside cascade layers. Unlayered CSS
-// beats layered CSS regardless of specificity, so a bare reset would otherwise
-// win against every component. `ig.reset` is the lowest-precedence layer the
-// theme declares, which is the supported way to combine the two.
+// Unlayered CSS beats layered regardless of specificity, so an unwrapped reset
+// would win against every component. `ig.reset` is the lowest theme layer.
 @layer ig.reset {
   @include meta.load-css('minireset.css/minireset');
 }

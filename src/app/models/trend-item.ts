@@ -15,11 +15,7 @@ export interface ITrendItem {
   labelP: ResourceKey;
 }
 
-/**
- * Builds the display model for one trend tile.
- *
- * @param invertStyleRule for cost-like metrics, where a rise is bad news.
- */
+/** @param invertStyleRule for cost-like metrics, where a rise is bad news. */
 export function generateTrendItem(
   indicatorName: TrendField,
   data: IRangeData,

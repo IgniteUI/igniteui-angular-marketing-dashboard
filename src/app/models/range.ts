@@ -1,8 +1,4 @@
-/**
- * Counts come back from the summary endpoint as formatted strings ("12,345"),
- * but the backend is not part of this repo - accept a raw number too and let
- * `convertToInt` normalise. See src/app/utils.ts.
- */
+/** The endpoint mixes formatted strings ("12,345") with raw numbers; see `convertToInt`. */
 export type Numeric = string | number;
 
 export interface IRange {
